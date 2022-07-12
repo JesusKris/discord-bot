@@ -1,2 +1,6 @@
 node_modules
-./src/sequelize
+src/orm/*
+package.json
+.env
+package-lock.json
+README.md
