@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Guilds.init({
-    id: DataTypes.INTEGER,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     owner_id: DataTypes.INTEGER,
     prefix: DataTypes.STRING,
     setup_status: DataTypes.STRING

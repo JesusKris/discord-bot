@@ -3,9 +3,9 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Guilds', {
       id: {
+        primaryKey: true,
         unique: true,
         allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
       },
       owner_id: {
