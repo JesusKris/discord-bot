@@ -19,7 +19,8 @@
         "dotenv": "^16.0.1",
         "mariadb": "^3.0.0",
         "mysql2": "^2.3.3",
-        "sequelize": "^6.21.2"
+        "sequelize": "^6.21.2",
+        "stack-trace": "^1.0.0-pre1"
     },
     "devDependencies": {
         "@babel/core": "^7.18.6",
