@@ -1,4 +1,0 @@
-var path = require('path');
-module.exports = {
-    'config': path.resolve('./src/orm/config/', 'config.js')
-};

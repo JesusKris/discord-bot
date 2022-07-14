@@ -58,7 +58,7 @@ _in progress_
 
 
 ## Acknowledgements
-_to be added_
+- [AnIdiotsGuide](https://github.com/AnIdiotsGuide/guidebot) - This showed me the basics of building a discord bot.
 
 
 ## Contact

@@ -1,6 +1,4 @@
 {
-    "type": "commonjs",
-    "main": "src/engine.js",
     "name": "kood-bot",
     "version": "1.0.0",
     "description": "This is package.json for kood-bot. It will have all the dependencies required for the features to function.",
@@ -9,18 +7,18 @@
         "url": "git+https://github.com/JesusKris/kood-bot.git"
     },
     "author": "JesusKris",
-    "license": "ISC",
     "scripts": {
-        "lint": "eslint --debug src/",
-        "start": "node --experimental-modules ./src/engine.js"
+        "lint": "eslint --debug src/"
     },
     "homepage": "https://github.com/JesusKris/kood-bot#readme",
     "dependencies": {
-        "axios": "^0.27.2",
+        "@discordjs/builders": "^0.15.0",
+        "@sapphire/time-utilities": "^1.7.4",
+        "colorette": "^2.0.19",
         "discord.js": "^13.8.1",
         "dotenv": "^16.0.1",
-        "express": "^4.18.1",
         "mariadb": "^3.0.0",
+        "mysql2": "^2.3.3",
         "sequelize": "^6.21.2"
     },
     "devDependencies": {
