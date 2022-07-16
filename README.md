@@ -2,7 +2,7 @@
 # kood-bot - A Discord bot
 
 
-## A discord bot made with to improve the overall experience of [kood/Johvi](https://kood.tech/) Discord server for the students and school staff.
+## A discord bot made with the intent to improve the overall experience of [kood/Johvi](https://kood.tech/) Discord server for the students and school staff.
 
 
 ## Table of Contents
