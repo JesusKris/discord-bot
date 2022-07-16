@@ -1,24 +1,31 @@
 const logger = require('./logger.js');
 const uuid = require('uuid');
 const db = require('../data/models/index.js');
-/* const Errors = require("../data/models/errors.js") */
-
-// error.stack -> to log it into console + save it to database
+const { Op } = require('sequelize');
+const config = require('../appconfig.js');
 // error.name -> to send it to discord log channel
-//
+
 exports.handleError = async (type, error) => {
 	const errorId = uuid.v4();
 	logger.error(`Unexpected error: ${error.stack} \n    id ${errorId}`);
 
 	try {
-		await db.sequelize.models.Errors.create({ id: errorId, name: error.name, trace: error.stack, createdAt: new Date() });
 		await clearExpiredErrorLogs();
+		await db.sequelize.models.Errors.create(
+			{
+				id: errorId,
+				name: error.name,
+				trace: error.stack,
+				createdAt: new Date(),
+			});
 	}
 	catch (error1) {
 		logger.error(`Failed to save error to database: ${error1.stack}`);
 	}
 
 	try {
+
+		// TO DO :
 		// for loop over all guild ids the bot is part, then send that log msg to every specified log channel
 		// await sendErrorToDiscord(client, error.name, errorId)
 	}
@@ -31,7 +38,14 @@ exports.handleError = async (type, error) => {
 
 async function clearExpiredErrorLogs() {
 	try {
-		// delete everything from errors table where log is older than 14days
+
+		await db.sequelize.models.Errors.destroy({
+			where: {
+				createdAt: {
+					[Op.lte]: config.errorLogs.expired,
+				},
+			},
+		});
 
 	}
 	catch (error) {

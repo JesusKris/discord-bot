@@ -21,4 +21,20 @@ module.exports = {
 			timer: 15000,
 		},
 	},
+
+	// ./modules/error-handling.js
+	errorLogs: {
+		// time ago when error logs are considered expired
+		// current date - days * hours * minutes * seconds * milliseconds
+		expired: (new Date() - 7 * 24 * 60 * 60 * 1000),
+	},
+
+	statusChecks: {
+		// ./events/ready.js
+		// hours * minutes * seconds * milliseconds
+		databaseTimer: 3 * 60 * 60 * 1000,
+		webserverTimer: 3 * 60 * 60 * 1000,
+	},
+
+
 };

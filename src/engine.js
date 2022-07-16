@@ -5,8 +5,7 @@ if (Number(process.version.slice(1).split('.')[0]) < 16) logger.error('Node 17.x
 const config = require('./appconfig.js');
 const { Client, Collection } = require('discord.js');
 const { readdirSync } = require('fs');
-const db = require('./data/models/index.js');
-const { handleError } = require('./modules/error-handling.js');
+const utils = require('./modules/utils.js');
 
 // Utilizing discord client and providing intents -> what it will use/can use
 const client = new Client({
@@ -20,6 +19,8 @@ client.container = {
 };
 
 const initApp = async () => {
+
+	// TO DO: ADD COMMAND SAVER TO CACHE
 
 	/* 	    readdirSync('./commands/').forEach((dir) => {
 				const commands = readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
@@ -39,25 +40,9 @@ const initApp = async () => {
 		client.on(eventName, event.bind(null, client));
 	}
 
-	logger.log('Pinging database for connection pool..');
-	try {
-		await db.sequelize.authenticate();
-		logger.ready('Succesfully received back a connection pool..');
-	}
-	catch (error) {
-		handleError(client, error);
-	}
+	utils.pingDB();
 
 };
-
-client.on('messageCreate', (message) => {
-	if (message.mentions.users.has(client.user.id) && !message.author.bot) {
-		console.log(message);
-		message.channel.send(message.author.toString());
-		message.reply(`my prefix here is  ${message.author.toString()}`);
-		return;
-	}
-});
 
 initApp();
 client.login(config.client.token);
