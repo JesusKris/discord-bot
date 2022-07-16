@@ -1,11 +1,12 @@
+const logger = require('./modules/logger.js');
 // This will check if the node version you are running is the required Node version, if it isn't it will throw the following error to inform you.
-if (Number(process.version.slice(1).split('.')[0]) < 16) throw new Error('Node 17.x or higher is required. Update Node on your system.');
+if (Number(process.version.slice(1).split('.')[0]) < 16) logger.error('Node 17.x or higher is required. Update Node on your system.');
 
 const config = require('./appconfig.js');
 const { Client, Collection } = require('discord.js');
 const { readdirSync } = require('fs');
 const db = require('./data/models/index.js');
-const logger = require('./modules/logger.js');
+const { handleError } = require('./modules/error-handling.js');
 
 // Utilizing discord client and providing intents -> what it will use/can use
 const client = new Client({
@@ -44,7 +45,7 @@ const initApp = async () => {
 		logger.ready('Succesfully received back a connection pool..');
 	}
 	catch (error) {
-		logger.error(`Failed to get back a connection pool: ${error.stack}`);
+		handleError(client, error);
 	}
 
 };

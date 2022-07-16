@@ -10,5 +10,5 @@ module.exports = async client => {
 	setInterval(setActivityStatus, config.client.activityStatus.timer);
 
 
-	//TO DO ADD A DATABASE PINGER + WEB SERVER PINGER, EVERY X AMOUNT OF TIME SETINTERVAL
+	// TO DO ADD A DATABASE PINGER + WEB SERVER PINGER, EVERY X AMOUNT OF TIME SETINTERVAL
 };
