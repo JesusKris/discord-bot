@@ -1,7 +1,6 @@
+const db = require('../data/models/index.js');
 const { handleError } = require('../modules/errorHandling.js');
 const logger = require('../modules/logger.js');
-
-// This event executes when the bot leaves a guild.
 
 module.exports = async (client, guild) => {
 	// If there is an outage, return.
@@ -9,5 +8,13 @@ module.exports = async (client, guild) => {
 
 	logger.guild(`${guild.name}, (id:${guild.id}) removed the client.`);
 
-	// TO DO: ADD A FUNCTION THAT DELETES ALL DATA ASSOCIATED WITH THAT GUILD WHEN LEAVING
+	try {
+		await db.sequelize.models.Guilds.destroy({
+			where: { id: guild.id },
+		});
+	}
+	catch (error) {
+		handleError(client, error);
+	}
+
 };

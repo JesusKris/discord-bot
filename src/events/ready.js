@@ -1,6 +1,7 @@
 const config = require('./../appconfig.js');
 const logger = require('../modules/logger.js');
-const utils = require('../modules/utils.js');
+const { pingDB } = require('../modules/utils.js');
+
 module.exports = async client => {
 
 	logger.ready(`Succesfully started the application and logged in as ${client.user.tag}`);
@@ -13,8 +14,7 @@ module.exports = async client => {
 	}
 
 	setInterval(setActivityStatus, config.client.activityStatus.timer);
-
-	setInterval(utils.pingDB, config.statusChecks.databaseTimer);
+	setInterval(pingDB, config.statusChecks.databaseTimer);
 
 	// TO DO: WEB SERVER PINGER, EVERY X AMOUNT OF TIME SETINTERVAL
 };

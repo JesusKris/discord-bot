@@ -10,6 +10,7 @@ exports.handleError = async (type, error) => {
 	logger.error(`Unexpected error: ${error.stack} \n    id ${errorId}`);
 
 	try {
+
 		await clearExpiredErrorLogs();
 		await db.sequelize.models.Errors.create(
 			{
@@ -18,6 +19,7 @@ exports.handleError = async (type, error) => {
 				trace: error.stack,
 				createdAt: new Date(),
 			});
+
 	}
 	catch (error1) {
 		logger.error(`Failed to save error to database: ${error1.stack}`);

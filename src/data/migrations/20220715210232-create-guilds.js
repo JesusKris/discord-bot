@@ -4,11 +4,28 @@ module.exports = {
 		await queryInterface.createTable('Guilds', {
 			id: {
 				allowNull: false,
-				autoIncrement: true,
+				autoIncrement: false,
 				primaryKey: true,
-				type: Sequelize.INTEGER,
+				type: Sequelize.STRING,
 			},
-			setup_status: {
+			admin_role: {
+				allowNull: false,
+				type: Sequelize.STRING,
+			},
+			dev_role: {
+				allowNull: false,
+				type: Sequelize.STRING,
+			},
+			log_channel: {
+				allowNull: false,
+				type: Sequelize.STRING,
+			},
+			join_channel: {
+				allowNull: false,
+				type: Sequelize.STRING,
+			},
+			leave_channel: {
+				allowNull: false,
 				type: Sequelize.STRING,
 			},
 			createdAt: {
@@ -21,7 +38,7 @@ module.exports = {
 			},
 		});
 	},
-	async down(queryInterface, Sequelize) {
+	async down(queryInterface, Sequelize) { // eslint-disable-line
 		await queryInterface.dropTable('Guilds');
 	},
 };

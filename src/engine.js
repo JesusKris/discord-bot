@@ -1,4 +1,5 @@
 const logger = require('./modules/logger.js');
+
 // This will check if the node version you are running is the required Node version, if it isn't it will throw the following error to inform you.
 if (Number(process.version.slice(1).split('.')[0]) < 16) logger.error('Node 17.x or higher is required. Update Node on your system.');
 
@@ -33,7 +34,7 @@ const initApp = async () => {
 	const eventFiles = readdirSync('./events/').filter(file => file.endsWith('.js'));
 	for (const file of eventFiles) {
 		const eventName = file.split('.')[0];
-		logger.log(`Loading Event: ${eventName}`, 'log');
+		logger.log(`Loading Event: ${eventName}`);
 		const event = require(`./events/${file}`);
 
 		// Bind the client to any event, before the existing arguments provided by the discord.js event. This line is awesome by the way. Just sayin'.
