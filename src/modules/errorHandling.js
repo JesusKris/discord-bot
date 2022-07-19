@@ -3,6 +3,7 @@ const uuid = require('uuid');
 const db = require('../data/models/index.js');
 const { Op } = require('sequelize');
 const config = require('../appconfig.js');
+const { getErrorEmbed } = require('../bot-responses/errorEmbed.js');
 // error.name -> to send it to discord log channel
 
 exports.handleError = async (type, error) => {
@@ -26,10 +27,18 @@ exports.handleError = async (type, error) => {
 	}
 
 	try {
+		
+		const guildSettings = await db.sequelize.models.Guilds.findAll({
+			attributes: ['id', 'log_channel', 'dev_role'],
+			raw: true
+		})
 
-		// TO DO :
-		// for loop over all guild ids the bot is part, then send that log msg to every specified log channel
-		// await sendErrorToDiscord(client, error.name, errorId)
+		guildSettings.forEach(async (element) => {
+			const guild = await type.guilds.fetch(element.id)
+			const channel = await guild.channels.fetch(element.log_channel)
+			channel.send({embeds: [await getErrorEmbed(error.name, errorId, element.dev_role)]})
+		})
+
 	}
 	catch (error2) {
 		logger.error(`Failed to send error to discord: ${error2.stack}`);
