@@ -1,16 +1,16 @@
 const logger = require('./modules/logger.js');
 
 // This will check if the node version you are running is the required Node version, if it isn't it will throw the following error to inform you.
-if (Number(process.version.slice(1).split('.')[0]) < 16) logger.error('Node 17.x or higher is required. Update Node on your system.');
+if (Number(process.version.slice(1).split('.')[0]) < 17) logger.error('Node 17.x or higher is required. Update Node on your system.');
 
 const config = require('./appconfig.js');
-const { Client, Collection } = require('discord.js');
+const { Client, Collection, IntentsBitField } = require('discord.js');
 const { readdirSync } = require('fs');
 const utils = require('./modules/utils.js');
 
 // Utilizing discord client and providing intents -> what it will use/can use
 const client = new Client({
-	intents: config.client.intents,
+	intents: new IntentsBitField(config.client.intents),
 });
 
 const commands = new Collection();
@@ -23,13 +23,21 @@ const initApp = async () => {
 
 	// TO DO: ADD COMMAND SAVER TO CACHE
 
-	/* 	    readdirSync('./commands/').forEach((dir) => {
-				const commands = readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
-				for (const file of commands) {
-					const props = require(`./commands/${dir}/${file}`);
-					console.log(`Loading command: ${props.help}`)
-				}
-			}) */
+	const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+	for (const file of commands) {
+	  const props = require(`./commands/${file}`);
+	  logger.log(`Loading Command: ${props}`);
+/* 	  client.container.commands.set(props.help.name, props);
+ */	  /* props.conf.aliases.forEach(alias => {
+		client.container.aliases.set(alias, props.help.name);
+	  }); */
+	}
+
+	/* readdirSync('./commands/').forEach((dir) => {
+		
+			const props = require(`./commands/${dir}`);
+			console.log(`Loading command: ${props}`)
+	}) */
 
 	const eventFiles = readdirSync('./events/').filter(file => file.endsWith('.js'));
 	for (const file of eventFiles) {
