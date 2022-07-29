@@ -18,6 +18,10 @@ exports.sleep = ms => {
 	return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+exports.shuffleArray = async (array) => {
+	return array.sort(() => Math.random() - 0.5);
+};
+
 exports.checkValidChannel = async (guild, channelId) => {
 
 	try {
@@ -40,6 +44,41 @@ exports.checkValidChannel = async (guild, channelId) => {
 	}
 
 };
+
+exports.getGuildSettings = async (reference) => {
+	try {
+		const settings = await db.sequelize.models.Guilds.findAll({
+			where: {
+				id: reference.guildId
+			}
+		})
+		return settings
+
+	}
+	catch (error) {
+		handleError(null, error)
+	}
+}
+
+exports.getUserLevel = async (guildSettings, reference) => {
+	try {
+		if (!reference.member.roles.cache.has(guildSettings.admin_role) && !reference.member.roles.cache.has(guildSettings.dev_role)) {
+			return "User"
+		}
+		if (reference.member.roles.cache.has(guildSettings.admin_role)) {
+			return "Bot Admin"
+		}
+
+		if (reference.member.roles.cache.has(guildSettings.dev_role)) {
+			return "Bot Dev"
+		}
+
+	}
+	catch {
+		handleError(null, error)
+	}
+
+}
 
 /* exports.checkValidRole = async (guild, roleId) => {
 

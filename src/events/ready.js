@@ -1,6 +1,7 @@
 const config = require('./../appconfig.js');
 const logger = require('../modules/logger.js');
 const { pingDB } = require('../modules/utils.js');
+const { ActivityType } = require('discord.js');
 
 module.exports = async client => {
 
@@ -10,7 +11,7 @@ module.exports = async client => {
 
 	function setActivityStatus() {
 		const random = Math.floor(Math.random() * config.client.activityStatus.choices.length);
-		client.user.setActivity(`${config.client.activityStatus.choices[random]}`, { type: 'PLAYING' });
+		client.user.setActivity(`${config.client.activityStatus.choices[random]}`, { type: ActivityType.Playing });
 	}
 
 	setInterval(setActivityStatus, config.client.activityStatus.timer);

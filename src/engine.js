@@ -8,9 +8,12 @@ const { Client, Collection, IntentsBitField } = require('discord.js');
 const { readdirSync } = require('fs');
 const utils = require('./modules/utils.js');
 
+console.log(config.client.partials)
+
 // Utilizing discord client and providing intents -> what it will use/can use
 const client = new Client({
 	intents: new IntentsBitField(config.client.intents),
+	partials: config.client.partials,
 });
 
 const commands = new Collection();
@@ -23,21 +26,12 @@ const initApp = async () => {
 
 	// TO DO: ADD COMMAND SAVER TO CACHE
 
-	const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+	const commands = readdirSync('./commands/').filter(file => file.endsWith('.js'));
 	for (const file of commands) {
-	  const props = require(`./commands/${file}`);
-	  logger.log(`Loading Command: ${props}`);
-/* 	  client.container.commands.set(props.help.name, props);
- */	  /* props.conf.aliases.forEach(alias => {
-		client.container.aliases.set(alias, props.help.name);
-	  }); */
+		const props = require(`./commands/${file}`);
+		logger.log(`Loading Command: ${props.config.name}`);
+		client.container.commands.set(props.config.name, props);
 	}
-
-	/* readdirSync('./commands/').forEach((dir) => {
-		
-			const props = require(`./commands/${dir}`);
-			console.log(`Loading command: ${props}`)
-	}) */
 
 	const eventFiles = readdirSync('./events/').filter(file => file.endsWith('.js'));
 	for (const file of eventFiles) {
