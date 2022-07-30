@@ -1,7 +1,7 @@
 const db = require('../data/models/index.js');
 const { handleError } = require('../modules/errorHandling.js');
 const logger = require('./logger.js');
-const { MessageMentions: { CHANNELS_PATTERN } } = require('discord.js');
+const { MessageMentions: { ChannelsPattern } } = require('discord.js');
 
 exports.pingDB = async () => {
 	logger.log('Pinging database for connection pool..');
@@ -22,17 +22,18 @@ exports.shuffleArray = async (array) => {
 	return array.sort(() => Math.random() - 0.5);
 };
 
-exports.checkValidChannel = async (guild, channelId) => {
+exports.checkValidChannel = async (message, content) => {
 
 	try {
-		const match = await channelId.matchAll(CHANNELS_PATTERN).next().value;
+
+		const match = await content.match(ChannelsPattern);
 		if (!match) {
 			return false;
 		}
 
 		const id = match[1];
 
-		if (!await guild.channels.cache.get(id)) {
+		if (!await message.guild.channels.cache.get(id)) {
 			return false;
 		}
 
@@ -47,11 +48,16 @@ exports.checkValidChannel = async (guild, channelId) => {
 
 exports.getGuildSettings = async (reference) => {
 	try {
-		const settings = await db.sequelize.models.Guilds.findAll({
+		const settings = db.sequelize.models.Guilds.findOne({
 			where: {
-				id: reference.guildId
-			}
+				id: reference.guild.id
+			},
+			raw: true,
+			required: false,
 		})
+		if (settings === null) {
+			return null
+		}
 		return settings
 
 	}
@@ -61,18 +67,15 @@ exports.getGuildSettings = async (reference) => {
 }
 
 exports.getUserLevel = async (guildSettings, reference) => {
+	const userLevels = ['User']
 	try {
-		if (!reference.member.roles.cache.has(guildSettings.admin_role) && !reference.member.roles.cache.has(guildSettings.dev_role)) {
-			return "User"
-		}
 		if (reference.member.roles.cache.has(guildSettings.admin_role)) {
-			return "Bot Admin"
+			userLevels.push("Bot Admin")
 		}
-
 		if (reference.member.roles.cache.has(guildSettings.dev_role)) {
-			return "Bot Dev"
+			userLevels.push("Bot Dev")
 		}
-
+		return userLevels
 	}
 	catch {
 		handleError(null, error)

@@ -36,8 +36,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	const cmd = container.commands.get(command)
 
-	// using this const varName = thing OR otherThing; is a pretty efficient
-	// and clean way to grab one of 2 values!
+	//if cmd does not exist
 	if (!cmd) return;
 
 
@@ -48,12 +47,11 @@ module.exports = async (client, message) => { // eslint-disable-line
 	//check if enabled
 	if (!cmd.config.enabled) return;
 
-
+	/* console.log("hallo") */
 	const guildSettings = await getGuildSettings(message)
-	
 
 	//special case for setup
-	if (cmd.config.name == "setup" && guildSettings.setupStatus == undefined) {
+	if (cmd.config.name == "setup" && guildSettings == null) {
 		if (message.author.id == message.guild.ownerId && args.length == 0) {
 			try {
 				return await cmd.run(client, message, args);
@@ -61,22 +59,25 @@ module.exports = async (client, message) => { // eslint-disable-line
 				handleError(client, error)
 			}
 		}
-
+	} else if(cmd.config.name == "setup" && message.author.id == message.guild.ownerId) {
+		message.delete();
+		return message.author.send("You have already completed setup in that server!")
 	}
+	
 
 	// if setup is required but guild has not done setup
-	if (cmd.config.setupRequired && guildSettings.setupStatus == undefined) return;
+	if (cmd.config.setupRequired && guildSettings == null) return;
 
 
-	const userLevel = await getUserLevel(guildSettings, message)
-	console.log(userLevel)
+	const userLevels = await getUserLevel(guildSettings, message)
 
 	//if user has required permission level to run the command
-	if (cmd.config.requiredPermission == userLevel) {
+	if (userLevels.includes(cmd.config.requiredPermission)) {
 		try {
 			await cmd.run(client, message, args);
 		} catch (error) {
 			handleError(client, error)
 		}
 	}
+
 }

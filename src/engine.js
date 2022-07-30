@@ -8,7 +8,6 @@ const { Client, Collection, IntentsBitField } = require('discord.js');
 const { readdirSync } = require('fs');
 const utils = require('./modules/utils.js');
 
-console.log(config.client.partials)
 
 // Utilizing discord client and providing intents -> what it will use/can use
 const client = new Client({
@@ -23,8 +22,6 @@ client.container = {
 };
 
 const initApp = async () => {
-
-	// TO DO: ADD COMMAND SAVER TO CACHE
 
 	const commands = readdirSync('./commands/').filter(file => file.endsWith('.js'));
 	for (const file of commands) {

@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
 			primaryKey: true,
 			type: DataTypes.STRING,
 		},
+		setup_status: {
+			allowNull: false,
+			type: DataTypes.BOOLEAN,
+		},
 		admin_role: {
 			allowNull: false,
 			type: DataTypes.STRING,

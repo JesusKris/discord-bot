@@ -6,7 +6,7 @@ exports.config = {
     enabled: true,
     name: 'hello',
     setupRequired: false,
-    requiredPermission: 'User',
+    requiredPermission: 'Bot Dev',
     guildOnly: true,
     description: 'This will set the bot up in the server',
 };

@@ -8,6 +8,10 @@ module.exports = {
 				primaryKey: true,
 				type: Sequelize.STRING,
 			},
+			setup_status: {
+				allowNull: false,
+				type: Sequelize.BOOLEAN,
+			},
 			admin_role: {
 				allowNull: false,
 				type: Sequelize.STRING,
