@@ -2,6 +2,8 @@ const db = require('../data/models/index.js');
 const { handleError } = require('../modules/errorHandling.js');
 const logger = require('./logger.js');
 const { MessageMentions: { ChannelsPattern } } = require('discord.js');
+const { getStandardEmbed } = require('../bot-responses/embeds/standard.js');
+const { getWarningEmbed } = require('../bot-responses/embeds/warning.js');
 
 exports.pingDB = async () => {
 	logger.log('Pinging database for connection pool..');
@@ -50,42 +52,56 @@ exports.getGuildSettings = async (reference) => {
 	try {
 		const settings = db.sequelize.models.Guilds.findOne({
 			where: {
-				id: reference.guild.id
+				id: reference.guild.id,
 			},
 			raw: true,
 			required: false,
-		})
+		});
 		if (settings === null) {
-			return null
+			return null;
 		}
-		return settings
+		return settings;
 
 	}
 	catch (error) {
-		handleError(null, error)
+		handleError(null, error);
 	}
-}
+};
 
-exports.getUserLevel = async (guildSettings, reference) => {
-	const userLevels = ['User']
+exports.getUserLevels = async (guildSettings, message) => {
+	const userLevels = ['User'];
 	try {
-		if (reference.member.roles.cache.has(guildSettings.admin_role)) {
-			userLevels.push("Bot Admin")
+		if (guildSettings != null) {
+			if (message.member.roles.cache.has(guildSettings.admin_role)) {
+				userLevels.push('Bot Admin');
+			}
+			if (message.member.roles.cache.has(guildSettings.dev_role)) {
+				userLevels.push('Bot Developer');
+			}
 		}
-		if (reference.member.roles.cache.has(guildSettings.dev_role)) {
-			userLevels.push("Bot Dev")
+		if (message.author.id == message.guild.ownerId) {
+			userLevels.push('Guild Owner');
 		}
-		return userLevels
+		return userLevels;
 	}
 	catch {
-		handleError(null, error)
+		handleError(null, error);
 	}
 
-}
+};
 
-/* exports.checkValidRole = async (guild, roleId) => {
+exports.noPermissionReply = async (message) => {
+	const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, 'You dont have permission to use this command!')] });
 
-	if (guild.channels.exists())
+	await this.sleep(2500);
+	await warning.delete();
+	await message.delete();
+};
 
+exports.warningReply = async (messageObject, message) => {
+	const warning = await messageObject.channel.send({ embeds: [await getWarningEmbed(null, message)] });
 
-	} */
+	await this.sleep(2500);
+	await warning.delete();
+	await messageObject.delete();
+};

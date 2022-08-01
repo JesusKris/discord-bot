@@ -5,7 +5,7 @@ const config = require('../../appconfig.js');
 exports.getIntroductionMessage = async (client) => {
 
 	try {
-		return `A bird whipsers:\n\n "Hey! My name is Robert. To awaken ${Formatters.bold(config.client.name)}, you must type ${Formatters.bold('!setup')} in any channel.\n\n Don't mess this up!"`;
+		return `"Hey! My name is Robert. To awaken ${Formatters.bold(config.client.name)}, you must type ${Formatters.bold('!setup')} in any channel.\n\n Don't mess this up!"`;
 	}
 	catch (error) {
 		handleError(client, error);

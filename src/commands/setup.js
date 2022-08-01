@@ -1,7 +1,7 @@
-const { handleError } = require("../modules/errorHandling.js")
-const { ChannelType, PermissionsBitField } = require("discord.js")
-const { getSetupMessage } = require("../bot-responses/messages/setup.js")
-const { sleep, checkValidChannel } = require("../modules/utils.js")
+const { handleError } = require('../modules/errorHandling.js');
+const { ChannelType, PermissionsBitField } = require('discord.js');
+const { getSetupMessage } = require('../bot-responses/messages/setup.js');
+const { sleep, checkValidChannel } = require('../modules/utils.js');
 const { MessageMentions: { ChannelsPattern } } = require('discord.js');
 const db = require('../data/models/index.js');
 
@@ -38,11 +38,6 @@ exports.config = {
 	guildOnly: true,
 	description: 'This will set the bot up in the server',
 };
-
-
-
-
-
 
 
 async function createBotAdminRoles(message, dataObject) {
@@ -145,7 +140,7 @@ async function initiateSetupConversation(message, dataObject) {
 			time: 60 * 60 * 1000,
 		});
 
-		const idFromContent = await joinNotifChannel.first().content.match(ChannelsPattern)
+		const idFromContent = await joinNotifChannel.first().content.match(ChannelsPattern);
 		dataObject.joinNotifChannelId = idFromContent[1];
 
 
@@ -155,7 +150,7 @@ async function initiateSetupConversation(message, dataObject) {
 			max: 1,
 			time: 60 * 60 * 1000,
 		});
-		const idFromContent2 = await leaveNotifChannel.first().content.match(ChannelsPattern)
+		const idFromContent2 = await leaveNotifChannel.first().content.match(ChannelsPattern);
 		dataObject.leaveNotifChannelId = idFromContent2[1];
 
 		await setupChannel.send(await getSetupMessage(message, dataObject, 7));
@@ -165,7 +160,7 @@ async function initiateSetupConversation(message, dataObject) {
 
 
 		await setupChannel.send(await getSetupMessage(message, dataObject, 9));
-		await sleep(60000);
+		await sleep(30000);
 		await setupChannel.delete();
 	}
 	catch (error) {

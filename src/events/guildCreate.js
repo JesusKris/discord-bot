@@ -1,3 +1,4 @@
+const { getStandardEmbed } = require('../bot-responses/embeds/standard.js');
 const { getIntroductionMessage } = require('../bot-responses/messages/introduction.js');
 const { handleError } = require('../modules/errorHandling.js');
 const logger = require('../modules/logger.js');
@@ -18,7 +19,8 @@ async function sendIntroductionsToOwner(client, guild) {
 	try {
 
 		const user = await guild.members.fetch(guild.ownerId);
-		await user.send(await getIntroductionMessage(client));
+		await user.send({ embeds: [await getStandardEmbed('A bird whispers:', await getIntroductionMessage(client))] });
+
 	}
 	catch (error) {
 		handleError(client, error);
