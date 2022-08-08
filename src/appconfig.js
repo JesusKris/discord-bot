@@ -7,6 +7,9 @@ module.exports = {
 		prefix: process.env.PREFIX,
 		intents: JSON.parse(process.env.BOT_INTENTS),
 		partials: JSON.parse(process.env.BOT_PARTIALS),
+		Id: process.env.ID,
+		test_guild: process.env.TEST_GUILD,
+
 
 		// ./events/ready.js
 		activityStatus: {
@@ -22,7 +25,7 @@ module.exports = {
 			],
 			timer: 15000,
 		},
-
+		// ./events/messageCreate.js
 		pingResponses: {
 			choices: [
 				'You didn\'t survive PrintRune to just give up now, right!?',
@@ -89,7 +92,19 @@ module.exports = {
 				'“Hard work beats talent when talent fails to work hard.”',
 			],
 		},
+
+		commands: {
+			permissions: {
+				user: 'user',
+				admin: 'admin',
+				developer: 'developer',
+				guildOwner: 'owner',
+			},
+
+			defaultAwaitTimer: 3 * 60 * 1000,
+		},
 	},
+
 
 	// ./modules/error-handling.js
 	errorLogs: {

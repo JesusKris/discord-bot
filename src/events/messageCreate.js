@@ -2,7 +2,8 @@ const config = require('../appconfig.js');
 const { getStandardEmbed } = require('../bot-responses/embeds/standard.js');
 const { getWarningEmbed } = require('../bot-responses/embeds/warning.js');
 const { handleError } = require('../modules/errorHandling.js');
-const { shuffleArray, getGuildSettings, getUserLevels, sleep, noPermissionReply, warningReply } = require('../modules/utils.js');
+const { getUserPermissions } = require('../modules/permissions.js');
+const { shuffleArray, getGuildSettings, noPermissionReply, warningReply } = require('../modules/utils.js');
 module.exports = async (client, message) => { // eslint-disable-line
 	const { container } = client;
 
@@ -21,8 +22,11 @@ module.exports = async (client, message) => { // eslint-disable-line
 	// If the member on a guild is invisible or not cached, fetch them.
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author);
 
+	const prefix = new RegExp(`^\\${config.client.prefix}`).exec(message.content);
+	if (!prefix) return;
 
-	const commandAndInitialArgs = await getCommandAndInitialArgs(message.content);
+
+	const commandAndInitialArgs = await getCommandAndInitialArgs(message.content, prefix);
 
 
 	const cmd = await container.commands.get(commandAndInitialArgs.command);
@@ -39,14 +43,15 @@ module.exports = async (client, message) => { // eslint-disable-line
 	// check if enabled
 	if (!cmd.config.enabled) return;
 
+
 	const args = await getCorrectArgs(cmd, commandAndInitialArgs.args);
 	const guildSettings = await getGuildSettings(message);
-	const userLevels = await getUserLevels(guildSettings, message);
+	const userPermissions = await getUserPermissions(guildSettings, message);
 
 
 	// special case for setup
 	if (cmd.config.name == 'setup' && guildSettings == null) {
-		if (userLevels.includes(cmd.config.requiredPermission)) {
+		if (message.author.id === message.guild.ownerId) {
 			try {
 				return await cmd.run(client, message, args);
 			}
@@ -55,7 +60,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 			}
 		}
 	}
-	else if (cmd.config.name == 'setup' && userLevels.includes(cmd.config.requiredPermission)) {
+	else if (cmd.config.name == 'setup' && message.author.id === message.guild.ownerId) {
 		await message.delete();
 		return message.author.send({ embeds: [await getWarningEmbed(null, 'You have already completed setup in that server!')] });
 	}
@@ -63,14 +68,14 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	// if setup is required but guild has not done setup
 	if (cmd.config.setupRequired && guildSettings == null) {
-		return warningReply(message, 'The server owner has not completed setup process yet!')
+		return warningReply(message, 'The server owner has not completed setup process yet!');
 	}
 
 
 	// if user has required permission level to run the command
-	if (userLevels.includes(cmd.config.requiredPermission)) {
+	if (userPermissions.includes(cmd.config.requiredPermission)) {
 		try {
-			await cmd.run(client, message, args, userLevels);
+			await cmd.run(client, message, args, userPermissions);
 		}
 		catch (error) {
 			handleError(client, error);
@@ -82,13 +87,12 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 };
 
-async function getCommandAndInitialArgs(content) {
+async function getCommandAndInitialArgs(content, prefix) {
 	// if starts with prefix
-	const prefix = new RegExp(`^\\${config.client.prefix}`).exec(content);
-	if (!prefix) return;
 
 	const args = content.slice(prefix[0].length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
+
 
 	return { command, args };
 }

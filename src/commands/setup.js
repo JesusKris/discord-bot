@@ -4,8 +4,9 @@ const { getSetupMessage } = require('../bot-responses/messages/setup.js');
 const { sleep, checkValidChannel } = require('../modules/utils.js');
 const { MessageMentions: { ChannelsPattern } } = require('discord.js');
 const db = require('../data/models/index.js');
+const config = require('../appconfig.js');
 
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, permissions) => {
 	const savedData = {};
 	try {
 
@@ -34,9 +35,11 @@ exports.config = {
 	enabled: true,
 	name: 'setup',
 	setupRequired: false,
-	requiredPermission: 'Guild Owner',
+	requiredPermission: config.client.commands.permissions.guildOwner,
 	guildOnly: true,
 	description: 'This will set the bot up in the server',
+	args: '',
+	maxArgs: 0,
 };
 
 

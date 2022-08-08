@@ -4,6 +4,7 @@ const logger = require('./logger.js');
 const { MessageMentions: { ChannelsPattern } } = require('discord.js');
 const { getStandardEmbed } = require('../bot-responses/embeds/standard.js');
 const { getWarningEmbed } = require('../bot-responses/embeds/warning.js');
+const config = require('../appconfig.js');
 
 exports.pingDB = async () => {
 	logger.log('Pinging database for connection pool..');
@@ -68,30 +69,8 @@ exports.getGuildSettings = async (reference) => {
 	}
 };
 
-exports.getUserLevels = async (guildSettings, message) => {
-	const userLevels = ['User'];
-	try {
-		if (guildSettings != null) {
-			if (message.member.roles.cache.has(guildSettings.admin_role)) {
-				userLevels.push('Bot Admin');
-			}
-			if (message.member.roles.cache.has(guildSettings.dev_role)) {
-				userLevels.push('Bot Developer');
-			}
-		}
-		if (message.author.id == message.guild.ownerId) {
-			userLevels.push('Guild Owner');
-		}
-		return userLevels;
-	}
-	catch {
-		handleError(null, error);
-	}
-
-};
-
 exports.noPermissionReply = async (message) => {
-	const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, 'You dont have permission to use this command!')] });
+	const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, 'You don\'t have permission to use this command!')] });
 
 	await this.sleep(2500);
 	await warning.delete();
@@ -104,4 +83,8 @@ exports.warningReply = async (messageObject, message) => {
 	await this.sleep(2500);
 	await warning.delete();
 	await messageObject.delete();
+};
+
+exports.noPermissionsInteraction = async (interaction) => {
+	return await interaction.reply({ embeds: [await getWarningEmbed(null, 'You don\'t have permission to use this command!')], ephemeral: true });
 };

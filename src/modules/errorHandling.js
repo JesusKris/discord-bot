@@ -28,12 +28,12 @@ exports.handleError = async (client, error) => {
 
 	try {
 
-		const guildSettings = await db.sequelize.models.Guilds.findAll({
+		const allGuildSettings = await db.sequelize.models.Guilds.findAll({
 			attributes: ['id', 'log_channel', 'dev_role'],
 			raw: true,
 		});
 
-		guildSettings.forEach(async (element) => {
+		allGuildSettings.forEach(async (element) => {
 			const guild = await client.guilds.fetch(element.id);
 			const channel = await guild.channels.fetch(element.log_channel);
 			channel.send({ embeds: [await getErrorEmbed(error.name, errorId, element.dev_role)] });

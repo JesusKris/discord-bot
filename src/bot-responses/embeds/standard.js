@@ -1,4 +1,4 @@
-exports.getStandardEmbed = async (title = null, description = null, fields = []) => {
+exports.getStandardEmbed = async (title = null, description = null, fields = [], footer = {}) => {
 	const standardEmbed = {
 		color: 0xDCF900,
 		timestamp: new Date(),
@@ -14,5 +14,10 @@ exports.getStandardEmbed = async (title = null, description = null, fields = [])
 	if (fields.length != 0) {
 		standardEmbed.fields = fields;
 	}
+
+	if (footer.length != 0) {
+		standardEmbed.footer = footer;
+	}
+
 	return standardEmbed;
 };

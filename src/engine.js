@@ -4,9 +4,10 @@ const logger = require('./modules/logger.js');
 if (Number(process.version.slice(1).split('.')[0]) < 17) logger.error('Node 17.x or higher is required. Update Node on your system.');
 
 const config = require('./appconfig.js');
-const { Client, Collection, IntentsBitField } = require('discord.js');
+const { Client, Collection, IntentsBitField, Routes } = require('discord.js');
 const { readdirSync } = require('fs');
 const utils = require('./modules/utils.js');
+const { REST } = require('@discordjs/rest');
 
 
 // Utilizing discord client and providing intents -> what it will use/can use
@@ -16,13 +17,31 @@ const client = new Client({
 });
 
 const commands = new Collection();
+const slashCommands = new Collection();
 
 client.container = {
 	commands,
+	slashCommands,
 };
 
 const initApp = async () => {
 
+	// slash command schema builders
+	const slashBuilders = [];
+	const fsFiles = readdirSync('./slash-commands/builders').filter(file => file.endsWith('.js'));
+	for (const file of fsFiles) {
+		const command = require(`./slash-commands/builders/${file}`);
+		slashBuilders.push(command.data.toJSON());
+	}
+
+	// slash commands
+	const slashCommands = readdirSync('./slash-commands').filter(file => file.endsWith('.js'));
+	for (const file of slashCommands) {
+		const props = require(`./slash-commands/${file}`);
+		logger.log(`Loading Slash Command: ${props.config.name}`);
+		client.container.slashCommands.set(props.config.name, props);
+	}
+	// chat commands
 	const commands = readdirSync('./commands/').filter(file => file.endsWith('.js'));
 	for (const file of commands) {
 		const props = require(`./commands/${file}`);
@@ -30,6 +49,7 @@ const initApp = async () => {
 		client.container.commands.set(props.config.name, props);
 	}
 
+	// events
 	const eventFiles = readdirSync('./events/').filter(file => file.endsWith('.js'));
 	for (const file of eventFiles) {
 		const eventName = file.split('.')[0];
@@ -38,6 +58,23 @@ const initApp = async () => {
 
 		// Bind the client to any event, before the existing arguments provided by the discord.js event. This line is awesome by the way. Just sayin'.
 		client.on(eventName, event.bind(null, client));
+	}
+
+
+	// uploading slash command schema builders
+	const rest = new REST({ version: '10' }).setToken(config.client.token);
+	try {
+		logger.ready('Started refreshing application (/) commands.');
+
+		await rest.put(
+			Routes.applicationCommands(config.client.Id, config.client.test_guild),
+			{ body: slashBuilders },
+		);
+
+		logger.ready('Successfully reloaded application (/) commands.');
+	}
+	catch (error) {
+		console.error(error);
 	}
 
 	utils.pingDB();
