@@ -56,7 +56,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 				return await cmd.run(client, message, args);
 			}
 			catch (error) {
-				handleError(client, error);
+				handleError(error);
 			}
 		}
 	}
@@ -78,7 +78,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 			await cmd.run(client, message, args, userPermissions);
 		}
 		catch (error) {
-			handleError(client, error);
+			handleError(error);
 		}
 	}
 	else {

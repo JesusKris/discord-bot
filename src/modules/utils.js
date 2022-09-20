@@ -13,7 +13,7 @@ exports.pingDB = async () => {
 		logger.ready('Succesfully received back a connection pool..');
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 };
 
@@ -44,7 +44,7 @@ exports.checkValidChannel = async (message, content) => {
 
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 
 };
@@ -65,7 +65,7 @@ exports.getGuildSettings = async (reference) => {
 
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 };
 

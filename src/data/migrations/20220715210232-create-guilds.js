@@ -16,19 +16,7 @@ module.exports = {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			dev_role: {
-				allowNull: false,
-				type: Sequelize.STRING,
-			},
-			log_channel: {
-				allowNull: false,
-				type: Sequelize.STRING,
-			},
-			join_channel: {
-				allowNull: false,
-				type: Sequelize.STRING,
-			},
-			leave_channel: {
+			notificationChannel: {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},

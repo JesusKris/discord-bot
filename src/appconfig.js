@@ -97,7 +97,6 @@ module.exports = {
 			permissions: {
 				user: 'user',
 				admin: 'admin',
-				developer: 'developer',
 				guildOwner: 'owner',
 			},
 

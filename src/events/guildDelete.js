@@ -14,7 +14,7 @@ module.exports = async (client, guild) => {
 		});
 	}
 	catch (error) {
-		handleError(client, error);
+		handleError(error);
 	}
 
 };

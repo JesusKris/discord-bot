@@ -1,5 +1,6 @@
 const { InteractionType } = require('discord.js');
 const { getWarningEmbed } = require('../bot-responses/embeds/warning');
+const { handleError } = require('../modules/errorHandling');
 const { getUserPermissions } = require('../modules/permissions.js');
 const { getGuildSettings, noPermissionsInteraction } = require('../modules/utils');
 
@@ -38,7 +39,7 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 			await cmd.run(client, interaction, userPermissions);
 		}
 		catch (error) {
-			handleError(client, error);
+			handleError(error);
 		}
 	}
 	else {

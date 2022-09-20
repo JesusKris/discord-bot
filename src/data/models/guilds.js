@@ -28,23 +28,14 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
-		dev_role: {
-			allowNull: false,
-			type: DataTypes.STRING,
-		},
-		log_channel: {
-			allowNull: false,
-			type: DataTypes.STRING,
-		},
-		join_channel: {
-			allowNull: false,
-			type: DataTypes.STRING,
-		},
-		leave_channel: {
+		notificationChannel: {
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
 	}, {
+		timestamps: true,
+		createdAt: true,
+		updatedAt: true,
 		sequelize,
 		modelName: 'Guilds',
 	});

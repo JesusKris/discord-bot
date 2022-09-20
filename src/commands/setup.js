@@ -16,7 +16,7 @@ exports.run = async (client, message, args, permissions) => {
 
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 
 	try {
@@ -26,7 +26,7 @@ exports.run = async (client, message, args, permissions) => {
 
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 
 };
@@ -53,55 +53,32 @@ async function createBotAdminRoles(message, dataObject) {
 
 		dataObject.botAdminRoleId = botAdminRole.id;
 
-		const botDevRole = await message.guild.roles.create({
-			name: 'Bot Developer',
-			color: [255, 80, 80],
-		});
-
-		dataObject.botDevRoleId = botDevRole.id;
-
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 }
 
 async function createBotAdminChannels(message, dataObject) {
 
 	try {
-		const category = await message.guild.channels.create(
-			{
-				name: 'bot admin panel',
-				type: ChannelType.GuildCategory,
-				permissionOverwrites: [
-					{
-						id: message.guild.roles.everyone.id,
-						deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
-					},
-					{
-						id: dataObject.botAdminRoleId,
-						allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+		const setupChannel = await  message.guild.channels.create({
+			name: 'setup', type: ChannelType.GuildText, permissionOverwrites: [
+				{
+					id: message.guild.roles.everyone.id,
+					deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+				},
+				{
+					id: dataObject.botAdminRoleId,
+					allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
 
-					},
-					{
-						id: dataObject.botDevRoleId,
-						allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
-					},
-				],
-			});
-		await category.setPosition(0);
-
-		const setupChannel = await category.children.create({ name: 'setup', type: ChannelType.GuildText });
+				},
+			],
+		});
 		dataObject.setupChannelId = setupChannel.id;
-
-		const logChannel = await category.children.create({ name: 'logs', type: ChannelType.GuildText });
-		dataObject.logChannelId = logChannel.id;
-
-		const chatChannel = await category.children.create({ name: 'admin-chat', type: ChannelType.GuildText });
-		dataObject.chatChannelId = chatChannel.id;
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 
 }
@@ -137,37 +114,25 @@ async function initiateSetupConversation(message, dataObject) {
 
 		await setupChannel.send(await getSetupMessage(message, dataObject, 5));
 		const filter2 = m => checkValidChannel(message, m.content);
-		const joinNotifChannel = await setupChannel.awaitMessages({
+		const notificationChannel = await setupChannel.awaitMessages({
 			filter: filter2,
 			max: 1,
 			time: 60 * 60 * 1000,
 		});
 
-		const idFromContent = await joinNotifChannel.first().content.match(ChannelsPattern);
-		dataObject.joinNotifChannelId = idFromContent[1];
+		const idFromContent = await notificationChannel.first().content.match(ChannelsPattern);
+		dataObject.notificationChannelId = idFromContent[1];
 
 
 		await setupChannel.send(await getSetupMessage(message, dataObject, 6));
-		const leaveNotifChannel = await setupChannel.awaitMessages({
-			filter: filter2,
-			max: 1,
-			time: 60 * 60 * 1000,
-		});
-		const idFromContent2 = await leaveNotifChannel.first().content.match(ChannelsPattern);
-		dataObject.leaveNotifChannelId = idFromContent2[1];
+		await sleep(1500);
 
 		await setupChannel.send(await getSetupMessage(message, dataObject, 7));
-		await sleep(1500);
-		await setupChannel.send(await getSetupMessage(message, dataObject, 8));
-		await sleep(9000);
-
-
-		await setupChannel.send(await getSetupMessage(message, dataObject, 9));
 		await sleep(30000);
 		await setupChannel.delete();
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 
 }
@@ -179,15 +144,12 @@ async function saveGuildData(message, object) {
 			id: message.guild.id,
 			setup_status: true,
 			admin_role: object.botAdminRoleId,
-			dev_role: object.botDevRoleId,
-			log_channel: object.logChannelId,
-			join_channel: object.joinNotifChannelId,
-			leave_channel: object.leaveNotifChannelId,
+			notificationChannel: object.notificationChannelId,
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		});
 	}
 	catch (error) {
-		handleError(null, error);
+		handleError(error);
 	}
 }

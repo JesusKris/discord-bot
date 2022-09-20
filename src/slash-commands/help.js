@@ -22,7 +22,7 @@ exports.run = async (client, interaction, permissions) => {
 
 	}
 	catch (error) {
-		handleError(client, error);
+		handleError(error);
 	}
 
 };

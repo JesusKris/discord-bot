@@ -23,6 +23,6 @@ async function sendIntroductionsToOwner(client, guild) {
 
 	}
 	catch (error) {
-		handleError(client, error);
+		handleError(error);
 	}
 }

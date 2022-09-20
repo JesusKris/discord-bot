@@ -6,7 +6,7 @@ const config = require('../appconfig.js');
 const { getErrorEmbed } = require('../bot-responses/embeds/error.js');
 // error.name -> to send it to discord log channel
 
-exports.handleError = async (client, error) => {
+exports.handleError = async (error) => {
 	const errorId = uuid.v4();
 	logger.error(`Unexpected error: ${error.stack} \n    id ${errorId}`);
 

@@ -21,7 +21,7 @@ exports.run = async (client, interaction, permissions) => {
 
 	}
 	catch (error) {
-		handleError(client, error)
+		handleError(error)
 	}
 };
 
@@ -44,7 +44,7 @@ async function sendConfirmationMessage(client, interaction) {
 		});
 	}
 	catch (error) {
-		handleError(client, error);
+		handleError(error);
 	}
 }
 
@@ -66,7 +66,7 @@ async function askForConfirmation(client, interaction) {
 
 	}
 	catch (error) {
-		handleError(client, error);
+		handleError(error);
 	}
 }
 
@@ -90,6 +90,6 @@ async function sendResult(client, interaction, answer) {
 		}
 	}
 	catch (error) {
-		handleError(client, error);
+		handleError(error);
 	}
 }
