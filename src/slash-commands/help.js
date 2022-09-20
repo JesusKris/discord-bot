@@ -1,7 +1,7 @@
 const config = require('../appconfig.js');
 const { handleError } = require('../modules/errorHandling.js');
 const { noPermissionsInteraction } = require('../modules/utils.js');
-const { Formatters } = require('discord.js');
+const {bold, codeBlock} = require('discord.js');
 const { getStandardEmbed } = require('../bot-responses/embeds/standard');
 const { defaultPermission } = require('../modules/permissions.js');
 
@@ -46,9 +46,9 @@ async function sendHelpEmbed(client, interaction, permission) {
 		if (value.config.requiredPermission == permission && value.config.enabled) {
 			const oneCommand = {};
 			oneCommand.name = `${config.client.prefix}${value.config.name} ${value.config.args}`;
-			oneCommand.value = Formatters.codeBlock(value.config.description);
+			oneCommand.value = codeBlock(value.config.description);
 			arrayOfCommands.push(oneCommand);
 		}
 	});
-	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${Formatters.bold(permission)}:`, arrayOfCommands)] });
+	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, arrayOfCommands)] });
 }

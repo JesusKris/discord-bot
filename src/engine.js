@@ -24,7 +24,7 @@ client.container = {
 	slashCommands,
 };
 
-const initApp = async () => {
+exports.initApp = async () => {
 
 	// slash command schema builders
 	const slashBuilders = [];
@@ -65,11 +65,15 @@ const initApp = async () => {
 	const rest = new REST({ version: '10' }).setToken(config.client.token);
 	try {
 		logger.ready('Started refreshing application (/) commands.');
-
 		await rest.put(
-			Routes.applicationCommands(config.client.Id, config.client.test_guild),
-			{ body: slashBuilders },
+			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
+			{ body: slashBuilders},
 		);
+
+	/* 	await rest.put(
+			Routes.applicationCommands(config.client.Id),
+			{ body: []},
+		); */
 
 		logger.ready('Successfully reloaded application (/) commands.');
 	}
@@ -77,9 +81,9 @@ const initApp = async () => {
 		console.error(error);
 	}
 
+	client.login(config.client.token);
 	utils.pingDB();
 
 };
 
-initApp();
-client.login(config.client.token);
+this.initApp();

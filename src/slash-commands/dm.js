@@ -1,4 +1,4 @@
-const { Formatters } = require('discord.js');
+const { bold, roleMention, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const config = require('../appconfig.js');
 const { getStandardEmbed } = require('../bot-responses/embeds/standard.js');
 const { getWarningEmbed } = require('../bot-responses/embeds/warning.js');
@@ -14,13 +14,7 @@ exports.run = async (client, interaction, permissions) => {
 		await sendExampleMessage(client, interaction, message, roleId);
 
 
-		const answer = await askForConfirmation(client, interaction);
-
-
-		if (answer) {
-			await sendResult(client, interaction, answer, message, roleId);
-		}
-
+		await askForConfirmation(client, interaction);
 
 	}
 	catch (error) {
@@ -42,11 +36,29 @@ exports.config = {
 
 async function sendExampleMessage(client, interaction, message, roleId) {
 	try {
+
+		const row = new ActionRowBuilder()
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId('primary')
+					.setLabel('Click me!')
+					.setStyle(ButtonStyle.Primary),
+			);
+
 		await interaction.deferReply({ ephemeral: true, content: 'Thinking...' });
-		await interaction.editReply({
-			embeds: [await getLogEmbed(Formatters.bold(`Message from ${interaction.member.nickname}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
-			content: `Are you sure you want to send this message to every person that has ${Formatters.roleMention(roleId)} role? yes/no`,
-		});
+		if (interaction.member.nickname) {
+			await interaction.editReply({
+				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+				content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role? yes/no`,
+				components: [row]
+			});
+		} else {
+			await interaction.editReply({
+				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+				content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role? yes/no`,
+
+			});
+		}
 	}
 	catch (error) {
 		handleError(client, error);
@@ -56,7 +68,24 @@ async function sendExampleMessage(client, interaction, message, roleId) {
 async function askForConfirmation(client, interaction) {
 	try {
 
-		const filter = m => m.content === 'yes' || m.content === 'no';
+		const collector = interaction.channel.createMessageComponentCollector({
+			max: "1", // The number of times a user can click on the button
+			time: "10000", // The amount of time the collector is valid for in milliseconds,	
+		});
+
+		collector.on("collect", (interaction) => {
+			if (interaction.customId === "primary") {
+				interaction.update("Clicked!"); // Run a piece of code when the user clicks on the button
+			}
+		});
+
+		collector.on("end", async (collected) => {
+			if (collected.size == 0) {
+				await interaction.editReply({ embeds: [await getWarningEmbed(null, 'Canceled the operation')], content: '', components: [] }); // Run a piece of code when the collector ends
+			}
+		});
+
+		/* const filter = m => m.content === 'yes' || m.content === 'no';
 		const answer = await interaction.channel.awaitMessages({
 			filter: filter,
 			max: 1,
@@ -68,7 +97,7 @@ async function askForConfirmation(client, interaction) {
 		});
 
 		return answer;
-
+ */
 	}
 	catch (error) {
 		handleError(client, error);
@@ -82,15 +111,22 @@ async function sendResult(client, interaction, answer, message, roleId) {
 			case 'yes':
 				const members = await interaction.guild.members.fetch();
 
-				const content = {
-					embeds: [await getLogEmbed(Formatters.bold(`Message from ${interaction.member.nickname}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
-				};
+				let content;
+				if (interaction.member.nickname) {
+					content = {
+						embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+					};
+				} else {
+					content = {
+						embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+					};
+				}
 
 				let count = 0;
 
 
 				members.forEach((member) => {
-					if (member.roles.cache.has(roleId || !member.user.bot)) {
+					if (member.roles.cache.has(roleId) && !member.user.bot) {
 						member.send(content);
 						count++;
 					}

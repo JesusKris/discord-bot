@@ -5,7 +5,7 @@ module.exports = {
 
 	data: new SlashCommandBuilder()
 		.setName('dm')
-		.setDescription('Get a list of commands')
+		.setDescription('Direct message people')
 		.addRoleOption(option =>
 			option
 				.setName('role')
