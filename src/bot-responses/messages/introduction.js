@@ -1,5 +1,5 @@
 const { handleError } = require('../../modules/errorHandling');
-const { bold} = require('discord.js');
+const { bold } = require('discord.js');
 const config = require('../../appconfig.js');
 
 exports.getIntroductionMessage = async (client) => {

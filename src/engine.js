@@ -67,10 +67,10 @@ exports.initApp = async () => {
 		logger.ready('Started refreshing application (/) commands.');
 		await rest.put(
 			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
-			{ body: slashBuilders},
+			{ body: slashBuilders },
 		);
 
-	/* 	await rest.put(
+		/* 	await rest.put(
 			Routes.applicationCommands(config.client.Id),
 			{ body: []},
 		); */

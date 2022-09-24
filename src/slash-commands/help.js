@@ -1,7 +1,7 @@
 const config = require('../appconfig.js');
 const { handleError } = require('../modules/errorHandling.js');
 const { noPermissionsInteraction } = require('../modules/utils.js');
-const {bold, codeBlock} = require('discord.js');
+const { bold, codeBlock } = require('discord.js');
 const { getStandardEmbed } = require('../bot-responses/embeds/standard');
 const { defaultPermission } = require('../modules/permissions.js');
 

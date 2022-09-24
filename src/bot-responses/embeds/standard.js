@@ -1,4 +1,4 @@
-exports.getStandardEmbed = async (title = null, description = null, fields = [], footer = {}) => {
+exports.getStandardEmbed = async (title = null, description = null, fields = [], footer = {}, thumbnail = null, image = null) => {
 	const standardEmbed = {
 		color: 0xDCF900,
 		timestamp: new Date(),
@@ -13,6 +13,14 @@ exports.getStandardEmbed = async (title = null, description = null, fields = [],
 
 	if (fields.length != 0) {
 		standardEmbed.fields = fields;
+	}
+
+	if (thumbnail != null) {
+		standardEmbed.thumbnail = thumbnail
+	}
+
+	if (image != null) {
+		standardEmbed.image = image
 	}
 
 	if (footer.length != 0) {

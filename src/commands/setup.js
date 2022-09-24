@@ -62,7 +62,7 @@ async function createBotAdminRoles(message, dataObject) {
 async function createBotAdminChannels(message, dataObject) {
 
 	try {
-		const setupChannel = await  message.guild.channels.create({
+		const setupChannel = await message.guild.channels.create({
 			name: 'setup', type: ChannelType.GuildText, permissionOverwrites: [
 				{
 					id: message.guild.roles.everyone.id,

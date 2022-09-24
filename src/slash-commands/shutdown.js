@@ -5,19 +5,18 @@ const { getStandardEmbed } = require('../bot-responses/embeds/standard');
 
 exports.run = async (client, interaction, permissions) => {
 	try {
-		await sendConfirmationMessage(client, interaction)
-		
-		const answer = await askForConfirmation(client, interaction)
+		await sendConfirmationMessage(client, interaction);
+
+		const answer = await askForConfirmation(client, interaction);
 
 		if (answer) {
-			await sendResult(client, interaction, answer)
+			await sendResult(client, interaction, answer);
 		}
-
 
 
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 };
 
@@ -25,7 +24,7 @@ exports.config = {
 	enabled: true,
 	name: 'shutdown',
 	setupRequired: true,
-	requiredPermission: config.client.commands.permissions.developer,
+	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
 	description: 'This will shutdown the bot.\n\nE: !help admin',
 	args: [''],
@@ -36,7 +35,7 @@ async function sendConfirmationMessage(client, interaction) {
 	try {
 		await interaction.deferReply({ ephemeral: true, content: 'Thinking...' });
 		await interaction.editReply({
-			content: `Are you sure you want to shut down the bot? yes/no`,
+			content: 'Are you sure you want to shut down the bot? yes/no',
 		});
 	}
 	catch (error) {
@@ -70,16 +69,16 @@ async function sendResult(client, interaction, answer) {
 	try {
 
 		switch (answer.first().content) {
-			case 'yes':
-				answer.first().delete();
-				await interaction.editReply({ embeds: [await getStandardEmbed(null, `Shutting the bot down...`)], content: '' }).then(() => {
-					client.destroy()
-				})
-				process.exit(0)
+		case 'yes':
+			answer.first().delete();
+			await interaction.editReply({ embeds: [await getStandardEmbed(null, 'Shutting the bot down...')], content: '' }).then(() => {
+				client.destroy();
+			});
+			process.exit(0);
 
-			case 'no':
-				answer.first().delete();
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, 'Canceled the operation')], content: '' });
+		case 'no':
+			answer.first().delete();
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, 'Canceled the operation')], content: '' });
 		}
 	}
 	catch (error) {
