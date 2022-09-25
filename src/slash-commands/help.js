@@ -50,5 +50,5 @@ async function sendHelpEmbed(client, interaction, permission) {
 			arrayOfCommands.push(oneCommand);
 		}
 	});
-	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, arrayOfCommands)] });
+	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)] });
 }

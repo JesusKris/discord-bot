@@ -6,25 +6,25 @@ if (Number(process.version.slice(1).split(".")[0]) < 17) logger.error("Node 17.x
 const config = require("./appconfig.js");
 const { Client, Collection, IntentsBitField, Routes } = require("discord.js");
 const { readdirSync } = require("fs");
-const utils = require("./modules/utils.js");
+const { pingDB } = require("./modules/database.js");
 const { REST } = require("@discordjs/rest");
 
-
-// Utilizing discord client and providing intents -> what it will use/can use
-const client = new Client({
-	intents: new IntentsBitField(config.client.intents),
-	partials: config.client.partials,
-});
-
-const commands = new Collection();
-const slashCommands = new Collection();
-
-client.container = {
-	commands,
-	slashCommands,
-};
-
 exports.initApp = async () => {
+
+	// Utilizing discord client and providing intents -> what it will use/can use
+	const client = new Client({
+		intents: new IntentsBitField(config.client.intents),
+		partials: config.client.partials,
+	});
+
+
+	const commands = new Collection();
+	const slashCommands = new Collection();
+
+	client.container = {
+		commands,
+		slashCommands,
+	};
 
 	// slash command schema builders
 	const slashBuilders = [];
@@ -35,15 +35,16 @@ exports.initApp = async () => {
 	}
 
 	// slash commands
-	const slashCommands = readdirSync("./slash-commands").filter(file => file.endsWith(".js"));
-	for (const file of slashCommands) {
+	const slashCommandsDir = readdirSync("./slash-commands").filter(file => file.endsWith(".js"));
+	for (const file of slashCommandsDir) {
 		const props = require(`./slash-commands/${file}`);
 		logger.log(`Loading Slash Command: ${props.config.name}`);
 		client.container.slashCommands.set(props.config.name, props);
 	}
+
 	// chat commands
-	const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
-	for (const file of commands) {
+	const commandsDir = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+	for (const file of commandsDir) {
 		const props = require(`./commands/${file}`);
 		logger.log(`Loading Command: ${props.config.name}`);
 		client.container.commands.set(props.config.name, props);
@@ -61,7 +62,7 @@ exports.initApp = async () => {
 	}
 
 
-	// uploading slash command schema builders
+	// uploading slash commands schema builders
 	const rest = new REST({ version: "10" }).setToken(config.client.token);
 	try {
 		logger.ready("Started refreshing application (/) commands.");
@@ -82,7 +83,7 @@ exports.initApp = async () => {
 	}
 
 	client.login(config.client.token);
-	utils.pingDB();
+	pingDB();
 
 };
 

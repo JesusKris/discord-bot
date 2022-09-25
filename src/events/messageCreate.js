@@ -1,15 +1,14 @@
 const config = require("../appconfig.js");
-const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
-const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getUserPermissions } = require("../modules/permissions.js");
-const { shuffleArray, getGuildSettings, noPermissionReply, warningReply } = require("../modules/utils.js");
+const { shuffleArray } = require("../modules/utils.js");
+const { getGuildSettings } = require("../modules/guildSettings.js");
+const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 module.exports = async (client, message) => { // eslint-disable-line
 	const { container } = client;
 
 	// if bot
 	if (message.author.bot) return;
-
 
 	// if someone @'s the bot
 	const clientPing = new RegExp(`^<@!?${client.user.id}> ?$`);
@@ -68,7 +67,12 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	// if setup is required but guild has not done setup
 	if (cmd.config.setupRequired && guildSettings == null) {
-		return warningReply(message, "The server owner has not completed setup process yet!");
+		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet!")] });
+
+		await sleep(2500);
+		await warning.delete();
+		await messageObject.delete();
+		return;
 	}
 
 
@@ -82,7 +86,11 @@ module.exports = async (client, message) => { // eslint-disable-line
 		}
 	}
 	else {
-		return await noPermissionReply(message);
+		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You don't have permission to use this command!")] });
+		await this.sleep(2500);
+		await warning.delete();
+		await message.delete();
+		return;
 	}
 
 };

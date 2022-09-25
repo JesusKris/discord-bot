@@ -87,7 +87,7 @@ async function sendResult(client, interaction, answer) {
 			await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [] }).then(() => {
 				client.destroy();
 			});
-			process.exit(0);
+			return process.exit(0);
 
 		case "no":
 			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });

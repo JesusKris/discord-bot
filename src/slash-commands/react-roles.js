@@ -3,17 +3,17 @@ const config = require("../appconfig.js");
 exports.run = async (client, interaction, permissions) => {
 
 	if (interaction.options.getSubcommand() == "create") {
-		console.log("create")
+		console.log("create");
 	}
 
 
 	if (interaction.options.getSubcommand() == "edit") {
-		console.log("edit")
+		console.log("edit");
 	}
 
 
 	if (interaction.options.getSubcommand() == "delete") {
-		console.log("delete")
+		console.log("delete");
 	}
 };
 

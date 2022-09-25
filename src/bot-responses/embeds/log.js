@@ -1,8 +1,9 @@
-exports.getLogEmbed = async (title = null, description = null, fields = [], footer = {}) => {
+exports.getLogEmbed = async (title = null, description = null, thumbnail = null, fields = null, image = null, footer = null) => {
 	const logEmbed = {
 		color: 0x45CFFF,
 		timestamp: new Date(),
 	};
+
 	if (title != null) {
 		logEmbed.title = title;
 	}
@@ -11,12 +12,21 @@ exports.getLogEmbed = async (title = null, description = null, fields = [], foot
 		logEmbed.description = description;
 	}
 
-	if (fields.length != 0) {
+	if (thumbnail != null) {
+		logEmbed.thumbnail = thumbnail;
+	}
+
+	if (fields != null) {
 		logEmbed.fields = fields;
 	}
 
-	if (footer.length != 0) {
+	if (image != null) {
+		logEmbed.image = image;
+	}
+
+	if (footer != null) {
 		logEmbed.footer = footer;
 	}
+
 	return logEmbed;
 };

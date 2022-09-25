@@ -1,4 +1,4 @@
-const { bold, roleMention, italic, channelMention, userMention } = require("discord.js");
+const { bold, roleMention, italic, userMention } = require("discord.js");
 const { handleError } = require("../../modules/errorHandling");
 const config = require("../../appconfig.js");
 

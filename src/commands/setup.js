@@ -1,8 +1,7 @@
 const { handleError } = require("../modules/errorHandling.js");
-const { ChannelType, PermissionsBitField } = require("discord.js");
+const { ChannelType, PermissionsBitField, MessageMentions: { ChannelsPattern } } = require("discord.js");
 const { getSetupMessage } = require("../bot-responses/messages/setup.js");
-const { sleep, checkValidChannel } = require("../modules/utils.js");
-const { MessageMentions: { ChannelsPattern } } = require("discord.js");
+const { sleep } = require("../modules/utils.js");
 const db = require("../data/models/index.js");
 const config = require("../appconfig.js");
 
@@ -152,4 +151,28 @@ async function saveGuildData(message, object) {
 	catch (error) {
 		handleError(error);
 	}
+}
+
+async function checkValidChannel(message, content) {
+
+	try {
+
+		const match = await content.match(ChannelsPattern);
+		if (!match) {
+			return false;
+		}
+
+		const id = match[1];
+
+		if (!await message.guild.channels.cache.get(id)) {
+			return false;
+		}
+
+		return true;
+
+	}
+	catch (error) {
+		handleError(error);
+	}
+
 }

@@ -2,7 +2,7 @@ const { InteractionType } = require("discord.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning");
 const { handleError } = require("../modules/errorHandling");
 const { getUserPermissions } = require("../modules/permissions.js");
-const { getGuildSettings, noPermissionsInteraction } = require("../modules/utils");
+const { getGuildSettings } = require("../modules/guildSettings.js");
 
 module.exports = async (client, interaction) => { // eslint-disable-line 
 
@@ -10,21 +10,20 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 
 	const { container } = client;
 
-	// Grab the command data from the client.container.slashcmds Collection
+	// Grab the cmd data from the client.container.slashCommands Collection
 	const cmd = await container.slashCommands.get(interaction.commandName);
 
-	// If that command doesn't exist, silently exit and do nothing
+	// If cmd doesn't exist
 	if (!cmd) return;
 
+	// if cmd is called outside of guild chat
 	if (cmd && !interaction.inGuild() && cmd.config.guildOnly) {
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is only available in a server.")], ephemeral: true });
-
 	}
 
-	// check if enabled
+	// if enabled
 	if (!cmd.config.enabled) {
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is currently disabled.")], ephemeral: true });
-
 	}
 
 	const guildSettings = await getGuildSettings(interaction.member);
@@ -43,7 +42,7 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 		}
 	}
 	else {
-		noPermissionsInteraction(interaction);
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "You don't have permission to use this command!")], ephemeral: true });
 	}
 
 };

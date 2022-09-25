@@ -1,10 +1,10 @@
 const config = require("./../appconfig.js");
 const logger = require("../modules/logger.js");
-const { pingDB } = require("../modules/utils.js");
+const { pingDB } = require("../modules/database.js");
 const { ActivityType } = require("discord.js");
 const { handleError } = require("../modules/errorHandling.js");
 
-module.exports = async client => {
+module.exports = async (client) => {
 
 	logger.ready(`Succesfully started the application and logged in as ${client.user.tag}`);
 

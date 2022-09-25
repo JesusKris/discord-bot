@@ -54,14 +54,14 @@ async function sendExampleMessage(client, interaction, message, roleId) {
 
 		if (interaction.member.nickname) {
 			await interaction.editReply({
-				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
 				content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role?`,
 				components: [buttons],
 			});
 		}
 		else {
 			await interaction.editReply({
-				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
 				content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role?`,
 				components: [buttons],
 
@@ -118,12 +118,12 @@ async function sendResult(client, interaction, answer, message, roleId) {
 			let content;
 			if (interaction.member.nickname) {
 				content = {
-					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
 				};
 			}
 			else {
 				content = {
-					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, [], { text: `From server ${interaction.member.guild.name}` })],
+					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
 				};
 			}
 

@@ -1,4 +1,4 @@
-exports.getWarningEmbed = async (title = null, description = null, fields = [], footer = {}, thumbnail = null, image = {}) => {
+exports.getWarningEmbed = async (title = null, description = null, thumbnail = null, fields = null, image = null, footer = null) => {
 	const warningEmbed = {
 		color: 0xFF9D5A,
 		timestamp: new Date(),
@@ -11,19 +11,19 @@ exports.getWarningEmbed = async (title = null, description = null, fields = [], 
 		warningEmbed.description = description;
 	}
 
-	if (fields.length != 0) {
-		warningEmbed.fields = fields;
-	}
-
 	if (thumbnail != null) {
 		warningEmbed.thumbnail = thumbnail;
 	}
 
-	if (image.length != 0) {
+	if (fields != null) {
+		warningEmbed.fields = fields;
+	}
+
+	if (image != null) {
 		warningEmbed.image = image;
 	}
 
-	if (footer.length != 0) {
+	if (footer != null) {
 		warningEmbed.footer = footer;
 	}
 

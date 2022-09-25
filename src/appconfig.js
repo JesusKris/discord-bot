@@ -25,6 +25,7 @@ module.exports = {
 			],
 			timer: 15000,
 		},
+
 		// ./events/messageCreate.js
 		pingResponses: {
 			choices: [

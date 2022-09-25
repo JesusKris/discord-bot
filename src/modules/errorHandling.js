@@ -3,8 +3,7 @@ const uuid = require("uuid");
 const db = require("../data/models/index.js");
 const { Op } = require("sequelize");
 const config = require("../appconfig.js");
-const { getErrorEmbed } = require("../bot-responses/embeds/error.js");
-// error.name -> to send it to discord log channel
+
 
 exports.handleError = async (error) => {
 	const errorId = uuid.v4();
@@ -13,13 +12,7 @@ exports.handleError = async (error) => {
 	try {
 
 		await clearExpiredErrorLogs();
-		await db.sequelize.models.Errors.create(
-			{
-				id: errorId,
-				name: error.name,
-				trace: error.stack,
-				createdAt: new Date(),
-			});
+		await createNewErrorLog(error, errorId);
 
 	}
 	catch (error1) {
@@ -42,5 +35,20 @@ async function clearExpiredErrorLogs() {
 	}
 	catch (error) {
 		logger.error(`Failed to clear expired errors from database: ${error.stack}`);
+	}
+}
+
+async function createNewErrorLog(error, errorId) {
+	try {
+		await db.sequelize.models.Errors.create(
+			{
+				id: errorId,
+				name: error.name,
+				trace: error.stack,
+				createdAt: new Date(),
+			});
+	}
+	catch (error1) {
+		logger.error(`Failed to create a new error log:  ${error1.stack}`);
 	}
 }
