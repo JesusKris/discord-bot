@@ -8,7 +8,10 @@
     },
     "author": "JesusKris",
     "scripts": {
-        "lint": "eslint --debug src/"
+        "lint": "eslint --debug src/",
+        "lint-fix": "eslint --debug src/ --fix",
+        "start": "node engine.js src/"
+
     },
     "homepage": "https://github.com/JesusKris/kood-bot#readme",
     "dependencies": {
