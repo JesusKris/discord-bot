@@ -1,8 +1,8 @@
-const { handleError } = require('../modules/errorHandling');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
-const config = require('../appconfig.js');
-const { getWarningEmbed } = require('../bot-responses/embeds/warning');
-const { getStandardEmbed } = require('../bot-responses/embeds/standard');
+const { handleError } = require("../modules/errorHandling");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require("discord.js");
+const config = require("../appconfig.js");
+const { getWarningEmbed } = require("../bot-responses/embeds/warning");
+const { getStandardEmbed } = require("../bot-responses/embeds/standard");
 
 exports.run = async (client, interaction, permissions) => {
 	try {
@@ -15,12 +15,12 @@ exports.run = async (client, interaction, permissions) => {
 
 exports.config = {
 	enabled: true,
-	name: 'shutdown',
+	name: "shutdown",
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: 'This will shutdown the bot.\n\nE: !help admin',
-	args: [''],
+	description: "This will shutdown the bot.\n\nE: !help admin",
+	args: [""],
 	maxArgs: 0,
 };
 
@@ -29,47 +29,47 @@ async function askForConfirmation(client, interaction) {
 		const buttons = new ActionRowBuilder()
 			.addComponents(
 				new ButtonBuilder()
-					.setCustomId('no')
-					.setLabel('Cancel!')
-					.setEmoji('❌')
+					.setCustomId("no")
+					.setLabel("Cancel!")
+					.setEmoji("❌")
 					.setStyle(ButtonStyle.Secondary),
 				new ButtonBuilder()
-					.setCustomId('yes')
-					.setLabel('Yes!')
-					.setEmoji('✅')
+					.setCustomId("yes")
+					.setLabel("Yes!")
+					.setEmoji("✅")
 					.setStyle(ButtonStyle.Secondary),
 			);
 
-		await interaction.deferReply({ ephemeral: true, content: 'Thinking...' });
+		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 
 		await interaction.editReply({
-			embeds: [await getStandardEmbed(null, 'Are you sure you want to shut down the bot?')],
+			embeds: [await getStandardEmbed(null, "Are you sure you want to shut down the bot?")],
 			components: [buttons],
 		});
 
 		const collector = await interaction.channel.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			max: '1',
+			max: "1",
 			time: config.client.commands.defaultAwaitTimer,
 		});
 
-		collector.on('collect', async (interaction) => {
-			if (interaction.customId === 'yes') {
+		collector.on("collect", async (interaction) => {
+			if (interaction.customId === "yes") {
 				await interaction.deferUpdate();
-				await sendResult(client, interaction, 'yes');
+				await sendResult(client, interaction, "yes");
 			}
 
-			if (interaction.customId === 'no') {
+			if (interaction.customId === "no") {
 				await interaction.deferUpdate();
-				await sendResult(client, interaction, 'no');
+				await sendResult(client, interaction, "no");
 			}
 
 		});
 
-		collector.on('end', async (collected) => {
+		collector.on("end", async (collected) => {
 			if (collected.size == 0) {
-				await interaction.editReply({ embeds: [await getWarningEmbed(null, 'Canceled the operation')], content: '', components: [] }); // Run a piece of code when the collector ends
+				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] }); // Run a piece of code when the collector ends
 			}
 		});
 
@@ -83,14 +83,14 @@ async function sendResult(client, interaction, answer) {
 	try {
 
 		switch (answer) {
-			case 'yes':
-				await interaction.editReply({ embeds: [await getStandardEmbed(null, 'Shutting the bot down...')], content: '', components: [] }).then(() => {
-					client.destroy();
-				});
-				process.exit(0);
+		case "yes":
+			await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [] }).then(() => {
+				client.destroy();
+			});
+			process.exit(0);
 
-			case 'no':
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, 'Canceled the operation')], content: '', components: [] });
+		case "no":
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
 		}
 	}
 	catch (error) {

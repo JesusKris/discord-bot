@@ -16,11 +16,11 @@ exports.getStandardEmbed = async (title = null, description = null, fields = [],
 	}
 
 	if (thumbnail != null) {
-		standardEmbed.thumbnail = thumbnail
+		standardEmbed.thumbnail = thumbnail;
 	}
 
 	if (image != null) {
-		standardEmbed.image = image
+		standardEmbed.image = image;
 	}
 
 	if (footer.length != 0) {

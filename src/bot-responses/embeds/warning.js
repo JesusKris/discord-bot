@@ -16,11 +16,11 @@ exports.getWarningEmbed = async (title = null, description = null, fields = [], 
 	}
 
 	if (thumbnail != null) {
-		warningEmbed.thumbnail = thumbnail
+		warningEmbed.thumbnail = thumbnail;
 	}
 
 	if (image.length != 0) {
-		warningEmbed.image = image
+		warningEmbed.image = image;
 	}
 
 	if (footer.length != 0) {

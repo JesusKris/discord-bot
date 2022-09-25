@@ -1,16 +1,16 @@
-const db = require('../data/models/index.js');
-const { handleError } = require('../modules/errorHandling.js');
-const logger = require('./logger.js');
-const { MessageMentions: { ChannelsPattern } } = require('discord.js');
-const { getStandardEmbed } = require('../bot-responses/embeds/standard.js');
-const { getWarningEmbed } = require('../bot-responses/embeds/warning.js');
-const config = require('../appconfig.js');
+const db = require("../data/models/index.js");
+const { handleError } = require("../modules/errorHandling.js");
+const logger = require("./logger.js");
+const { MessageMentions: { ChannelsPattern } } = require("discord.js");
+const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
+const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
+const config = require("../appconfig.js");
 
 exports.pingDB = async () => {
-	logger.log('Pinging database for connection pool..');
+	logger.log("Pinging database for connection pool..");
 	try {
 		await db.sequelize.authenticate();
-		logger.ready('Succesfully received back a connection pool..');
+		logger.ready("Succesfully received back a connection pool..");
 	}
 	catch (error) {
 		handleError(error);
@@ -70,7 +70,7 @@ exports.getGuildSettings = async (reference) => {
 };
 
 exports.noPermissionReply = async (message) => {
-	const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, 'You don\'t have permission to use this command!')] });
+	const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You don't have permission to use this command!")] });
 
 	await this.sleep(2500);
 	await warning.delete();
@@ -86,5 +86,5 @@ exports.warningReply = async (messageObject, message) => {
 };
 
 exports.noPermissionsInteraction = async (interaction) => {
-	return await interaction.reply({ embeds: [await getWarningEmbed(null, 'You don\'t have permission to use this command!')], ephemeral: true });
+	return await interaction.reply({ embeds: [await getWarningEmbed(null, "You don't have permission to use this command!")], ephemeral: true });
 };

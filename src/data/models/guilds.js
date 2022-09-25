@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 const {
 	Model, // eslint-disable-line
-} = require('sequelize');
+} = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
 	class Guilds extends Model {
 		/**
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
 		createdAt: true,
 		updatedAt: true,
 		sequelize,
-		modelName: 'Guilds',
+		modelName: "Guilds",
 	});
 	return Guilds;
 };

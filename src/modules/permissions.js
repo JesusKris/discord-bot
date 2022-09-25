@@ -1,4 +1,4 @@
-const config = require('../appconfig.js');
+const config = require("../appconfig.js");
 
 exports.getUserPermissions = async (guildSettings, reference) => {
 	const userLevels = [await this.defaultPermission()];

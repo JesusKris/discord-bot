@@ -1,10 +1,10 @@
-const { handleError } = require('../modules/errorHandling.js');
-const { ChannelType, PermissionsBitField } = require('discord.js');
-const { getSetupMessage } = require('../bot-responses/messages/setup.js');
-const { sleep, checkValidChannel } = require('../modules/utils.js');
-const { MessageMentions: { ChannelsPattern } } = require('discord.js');
-const db = require('../data/models/index.js');
-const config = require('../appconfig.js');
+const { handleError } = require("../modules/errorHandling.js");
+const { ChannelType, PermissionsBitField } = require("discord.js");
+const { getSetupMessage } = require("../bot-responses/messages/setup.js");
+const { sleep, checkValidChannel } = require("../modules/utils.js");
+const { MessageMentions: { ChannelsPattern } } = require("discord.js");
+const db = require("../data/models/index.js");
+const config = require("../appconfig.js");
 
 exports.run = async (client, message, args, permissions) => {
 	const savedData = {};
@@ -33,12 +33,12 @@ exports.run = async (client, message, args, permissions) => {
 
 exports.config = {
 	enabled: true,
-	name: 'setup',
+	name: "setup",
 	setupRequired: false,
 	requiredPermission: config.client.commands.permissions.guildOwner,
 	guildOnly: true,
-	description: 'This will set the bot up in the server',
-	args: '',
+	description: "This will set the bot up in the server",
+	args: "",
 	maxArgs: 0,
 };
 
@@ -47,7 +47,7 @@ async function createBotAdminRoles(message, dataObject) {
 
 	try {
 		const botAdminRole = await message.guild.roles.create({
-			name: 'Bot Admin',
+			name: "Bot Admin",
 			color: [220, 249, 0],
 		});
 
@@ -63,7 +63,7 @@ async function createBotAdminChannels(message, dataObject) {
 
 	try {
 		const setupChannel = await message.guild.channels.create({
-			name: 'setup', type: ChannelType.GuildText, permissionOverwrites: [
+			name: "setup", type: ChannelType.GuildText, permissionOverwrites: [
 				{
 					id: message.guild.roles.everyone.id,
 					deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
@@ -100,7 +100,7 @@ async function initiateSetupConversation(message, dataObject) {
 
 
 		await setupChannel.send(await getSetupMessage(message, dataObject, 3));
-		const filter1 = m => m.content === 'yes';
+		const filter1 = m => m.content === "yes";
 		await setupChannel.awaitMessages({
 			filter: filter1,
 			max: 1,

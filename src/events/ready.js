@@ -1,8 +1,8 @@
-const config = require('./../appconfig.js');
-const logger = require('../modules/logger.js');
-const { pingDB } = require('../modules/utils.js');
-const { ActivityType } = require('discord.js');
-const { handleError } = require('../modules/errorHandling.js');
+const config = require("./../appconfig.js");
+const logger = require("../modules/logger.js");
+const { pingDB } = require("../modules/utils.js");
+const { ActivityType } = require("discord.js");
+const { handleError } = require("../modules/errorHandling.js");
 
 module.exports = async client => {
 

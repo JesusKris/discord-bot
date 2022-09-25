@@ -1,6 +1,6 @@
-const db = require('../data/models/index.js');
-const { handleError } = require('../modules/errorHandling.js');
-const logger = require('../modules/logger.js');
+const db = require("../data/models/index.js");
+const { handleError } = require("../modules/errorHandling.js");
+const logger = require("../modules/logger.js");
 
 module.exports = async (client, guild) => {
 	// If there is an outage, return.

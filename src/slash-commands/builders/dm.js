@@ -1,21 +1,21 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require("discord.js");
 
 
 module.exports = {
 
 	data: new SlashCommandBuilder()
-		.setName('dm')
-		.setDescription('Direct message people')
+		.setName("dm")
+		.setDescription("Direct message people")
 		.addRoleOption(option =>
 			option
-				.setName('role')
-				.setDescription('The role user has to have in order to receive the message')
+				.setName("role")
+				.setDescription("The role user has to have in order to receive the message")
 				.setRequired(true),
 		)
 		.addStringOption(option =>
 			option
-				.setName('message')
-				.setDescription('The message you wish to send.')
+				.setName("message")
+				.setDescription("The message you wish to send.")
 				.setRequired(true),
 		),
 

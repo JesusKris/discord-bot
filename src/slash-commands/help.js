@@ -1,14 +1,14 @@
-const config = require('../appconfig.js');
-const { handleError } = require('../modules/errorHandling.js');
-const { noPermissionsInteraction } = require('../modules/utils.js');
-const { bold, codeBlock } = require('discord.js');
-const { getStandardEmbed } = require('../bot-responses/embeds/standard');
-const { defaultPermission } = require('../modules/permissions.js');
+const config = require("../appconfig.js");
+const { handleError } = require("../modules/errorHandling.js");
+const { noPermissionsInteraction } = require("../modules/utils.js");
+const { bold, codeBlock } = require("discord.js");
+const { getStandardEmbed } = require("../bot-responses/embeds/standard");
+const { defaultPermission } = require("../modules/permissions.js");
 
 exports.run = async (client, interaction, permissions) => {
 
 	try {
-		const option = await interaction.options.getString('category');
+		const option = await interaction.options.getString("category");
 
 		if (!option) {
 			return sendHelpEmbed(client, interaction, await defaultPermission());
@@ -29,12 +29,12 @@ exports.run = async (client, interaction, permissions) => {
 
 exports.config = {
 	enabled: true,
-	name: 'help',
+	name: "help",
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.user,
 	guildOnly: true,
-	description: 'This will give you all the available commands.\n\nE: !help admin',
-	args: ['[admin, developer]'],
+	description: "This will give you all the available commands.\n\nE: !help admin",
+	args: ["[admin, developer]"],
 	maxArgs: 1,
 };
 

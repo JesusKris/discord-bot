@@ -1,9 +1,9 @@
-const logger = require('./logger.js');
-const uuid = require('uuid');
-const db = require('../data/models/index.js');
-const { Op } = require('sequelize');
-const config = require('../appconfig.js');
-const { getErrorEmbed } = require('../bot-responses/embeds/error.js');
+const logger = require("./logger.js");
+const uuid = require("uuid");
+const db = require("../data/models/index.js");
+const { Op } = require("sequelize");
+const config = require("../appconfig.js");
+const { getErrorEmbed } = require("../bot-responses/embeds/error.js");
 // error.name -> to send it to discord log channel
 
 exports.handleError = async (error) => {

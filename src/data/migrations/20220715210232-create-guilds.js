@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('Guilds', {
+		await queryInterface.createTable("Guilds", {
 			id: {
 				allowNull: false,
 				autoIncrement: false,
@@ -31,6 +31,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) { // eslint-disable-line
-		await queryInterface.dropTable('Guilds');
+		await queryInterface.dropTable("Guilds");
 	},
 };

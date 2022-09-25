@@ -1,13 +1,13 @@
-const logger = require('./modules/logger.js');
+const logger = require("./modules/logger.js");
 
 // This will check if the node version you are running is the required Node version, if it isn't it will throw the following error to inform you.
-if (Number(process.version.slice(1).split('.')[0]) < 17) logger.error('Node 17.x or higher is required. Update Node on your system.');
+if (Number(process.version.slice(1).split(".")[0]) < 17) logger.error("Node 17.x or higher is required. Update Node on your system.");
 
-const config = require('./appconfig.js');
-const { Client, Collection, IntentsBitField, Routes } = require('discord.js');
-const { readdirSync } = require('fs');
-const utils = require('./modules/utils.js');
-const { REST } = require('@discordjs/rest');
+const config = require("./appconfig.js");
+const { Client, Collection, IntentsBitField, Routes } = require("discord.js");
+const { readdirSync } = require("fs");
+const utils = require("./modules/utils.js");
+const { REST } = require("@discordjs/rest");
 
 
 // Utilizing discord client and providing intents -> what it will use/can use
@@ -28,21 +28,21 @@ exports.initApp = async () => {
 
 	// slash command schema builders
 	const slashBuilders = [];
-	const fsFiles = readdirSync('./slash-commands/builders').filter(file => file.endsWith('.js'));
+	const fsFiles = readdirSync("./slash-commands/builders").filter(file => file.endsWith(".js"));
 	for (const file of fsFiles) {
 		const command = require(`./slash-commands/builders/${file}`);
 		slashBuilders.push(command.data.toJSON());
 	}
 
 	// slash commands
-	const slashCommands = readdirSync('./slash-commands').filter(file => file.endsWith('.js'));
+	const slashCommands = readdirSync("./slash-commands").filter(file => file.endsWith(".js"));
 	for (const file of slashCommands) {
 		const props = require(`./slash-commands/${file}`);
 		logger.log(`Loading Slash Command: ${props.config.name}`);
 		client.container.slashCommands.set(props.config.name, props);
 	}
 	// chat commands
-	const commands = readdirSync('./commands/').filter(file => file.endsWith('.js'));
+	const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
 	for (const file of commands) {
 		const props = require(`./commands/${file}`);
 		logger.log(`Loading Command: ${props.config.name}`);
@@ -50,9 +50,9 @@ exports.initApp = async () => {
 	}
 
 	// events
-	const eventFiles = readdirSync('./events/').filter(file => file.endsWith('.js'));
+	const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
 	for (const file of eventFiles) {
-		const eventName = file.split('.')[0];
+		const eventName = file.split(".")[0];
 		logger.log(`Loading Event: ${eventName}`);
 		const event = require(`./events/${file}`);
 
@@ -62,9 +62,9 @@ exports.initApp = async () => {
 
 
 	// uploading slash command schema builders
-	const rest = new REST({ version: '10' }).setToken(config.client.token);
+	const rest = new REST({ version: "10" }).setToken(config.client.token);
 	try {
-		logger.ready('Started refreshing application (/) commands.');
+		logger.ready("Started refreshing application (/) commands.");
 		await rest.put(
 			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
 			{ body: slashBuilders },
@@ -75,7 +75,7 @@ exports.initApp = async () => {
 			{ body: []},
 		); */
 
-		logger.ready('Successfully reloaded application (/) commands.');
+		logger.ready("Successfully reloaded application (/) commands.");
 	}
 	catch (error) {
 		console.error(error);

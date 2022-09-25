@@ -1,8 +1,8 @@
-const { InteractionType } = require('discord.js');
-const { getWarningEmbed } = require('../bot-responses/embeds/warning');
-const { handleError } = require('../modules/errorHandling');
-const { getUserPermissions } = require('../modules/permissions.js');
-const { getGuildSettings, noPermissionsInteraction } = require('../modules/utils');
+const { InteractionType } = require("discord.js");
+const { getWarningEmbed } = require("../bot-responses/embeds/warning");
+const { handleError } = require("../modules/errorHandling");
+const { getUserPermissions } = require("../modules/permissions.js");
+const { getGuildSettings, noPermissionsInteraction } = require("../modules/utils");
 
 module.exports = async (client, interaction) => { // eslint-disable-line 
 
@@ -17,13 +17,13 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 	if (!cmd) return;
 
 	if (cmd && !interaction.inGuild() && cmd.config.guildOnly) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, 'This command is only available in a server.')], ephemeral: true });
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is only available in a server.")], ephemeral: true });
 
 	}
 
 	// check if enabled
 	if (!cmd.config.enabled) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, 'This command is currently disabled.')], ephemeral: true });
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is currently disabled.")], ephemeral: true });
 
 	}
 
@@ -31,7 +31,7 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 	const userPermissions = await getUserPermissions(guildSettings, interaction);
 
 	if (cmd.config.setupRequired && guildSettings == null) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, 'The server owner has not completed setup process yet!')], ephemeral: true });
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet!")], ephemeral: true });
 	}
 
 	if (userPermissions.includes(cmd.config.requiredPermission)) {

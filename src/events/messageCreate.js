@@ -1,9 +1,9 @@
-const config = require('../appconfig.js');
-const { getStandardEmbed } = require('../bot-responses/embeds/standard.js');
-const { getWarningEmbed } = require('../bot-responses/embeds/warning.js');
-const { handleError } = require('../modules/errorHandling.js');
-const { getUserPermissions } = require('../modules/permissions.js');
-const { shuffleArray, getGuildSettings, noPermissionReply, warningReply } = require('../modules/utils.js');
+const config = require("../appconfig.js");
+const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
+const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
+const { handleError } = require("../modules/errorHandling.js");
+const { getUserPermissions } = require("../modules/permissions.js");
+const { shuffleArray, getGuildSettings, noPermissionReply, warningReply } = require("../modules/utils.js");
 module.exports = async (client, message) => { // eslint-disable-line
 	const { container } = client;
 
@@ -50,7 +50,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 
 	// special case for setup
-	if (cmd.config.name == 'setup' && guildSettings == null) {
+	if (cmd.config.name == "setup" && guildSettings == null) {
 		if (message.author.id === message.guild.ownerId) {
 			try {
 				return await cmd.run(client, message, args);
@@ -60,15 +60,15 @@ module.exports = async (client, message) => { // eslint-disable-line
 			}
 		}
 	}
-	else if (cmd.config.name == 'setup' && message.author.id === message.guild.ownerId) {
+	else if (cmd.config.name == "setup" && message.author.id === message.guild.ownerId) {
 		await message.delete();
-		return message.author.send({ embeds: [await getWarningEmbed(null, 'You have already completed setup in that server!')] });
+		return message.author.send({ embeds: [await getWarningEmbed(null, "You have already completed setup in that server!")] });
 	}
 
 
 	// if setup is required but guild has not done setup
 	if (cmd.config.setupRequired && guildSettings == null) {
-		return warningReply(message, 'The server owner has not completed setup process yet!');
+		return warningReply(message, "The server owner has not completed setup process yet!");
 	}
 
 
@@ -101,7 +101,7 @@ async function getCorrectArgs(command, args) {
 	const realArgs = [];
 	while (args.length) {
 		if (realArgs.length === (command.config.maxArgs - 1) && args.length > 1) {
-			realArgs.push(args.join(' '));
+			realArgs.push(args.join(" "));
 			args = [];
 		}
 		else {

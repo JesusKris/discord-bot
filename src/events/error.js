@@ -1,4 +1,4 @@
-const { handleError } = require('../modules/errorHandling.js');
+const { handleError } = require("../modules/errorHandling.js");
 
 module.exports = async (client, error) => {
 

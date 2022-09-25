@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('Errors', {
+		await queryInterface.createTable("Errors", {
 			id: {
 				allowNull: false,
 				autoIncrement: false,
@@ -23,6 +23,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) { // eslint-disable-line
-		await queryInterface.dropTable('Errors');
+		await queryInterface.dropTable("Errors");
 	},
 };
