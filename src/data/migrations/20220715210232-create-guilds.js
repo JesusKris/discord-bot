@@ -4,20 +4,40 @@ module.exports = {
 		await queryInterface.createTable("Guilds", {
 			id: {
 				allowNull: false,
-				autoIncrement: false,
+				autoIncrement: true,
 				primaryKey: true,
+				type: Sequelize.INTEGER,
+			},
+			guild_id: {
+				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			setup_status: {
+			is_main_server: {
 				allowNull: false,
-				type: Sequelize.BOOLEAN,
+				type: Sequelize.BOOLEAN
+			},
+			notification_channel: {
+				allowNull: true,
+				type: Sequelize.STRING,
+			},
+			greetings_channel: {
+				allowNull: true,
+				type: Sequelize.STRING,
 			},
 			admin_role: {
-				allowNull: false,
+				allowNull:false,
 				type: Sequelize.STRING,
 			},
-			notificationChannel: {
-				allowNull: false,
+			guest_role: {
+				allowNull: true,
+				type: Sequelize.STRING,
+			},
+			student_role: {
+				allowNull: true,
+				type: Sequelize.STRING,
+			},
+			batch_role: {
+				allowNull: true,
 				type: Sequelize.STRING,
 			},
 			createdAt: {

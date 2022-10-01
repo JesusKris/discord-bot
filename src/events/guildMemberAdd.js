@@ -11,9 +11,9 @@ module.exports = async (client, member) => { // eslint-disable-line
 		const settings = await getGuildSettings(member);
 
 		// setup not done || notifications disabled
-		if (settings == null || settings.notificationChannel == null) return;
+		if (settings == null || settings.notification_channel == null) return;
 
-		const channel = await member.guild.channels.cache.get(settings.notificationChannel);
+		const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
 		channel.send(
 

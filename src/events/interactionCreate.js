@@ -1,7 +1,7 @@
 const { InteractionType } = require("discord.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning");
 const { handleError } = require("../modules/errorHandling");
-const { getUserPermissions } = require("../modules/permissions.js");
+const { getUserPermissions, hasPermission } = require("../modules/permissions.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 
 module.exports = async (client, interaction) => { // eslint-disable-line 
@@ -26,14 +26,35 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is currently disabled.")], ephemeral: true });
 	}
 
-	const guildSettings = await getGuildSettings(interaction.member);
+	const guildSettings = await getGuildSettings(interaction);
 	const userPermissions = await getUserPermissions(guildSettings, interaction);
 
-	if (cmd.config.setupRequired && guildSettings == null) {
+	//special case for setup
+	if (cmd.config.name == "setup" && guildSettings == null && await hasPermission(userPermissions, cmd)) {
+		try {
+			return await cmd.run(client, interaction, userPermissions);
+		}
+		catch (error) {
+			handleError(error);
+		}
+	}
+
+
+	if (cmd.config.name == "setup" && guildSettings != null && await hasPermission(userPermissions, cmd)) {
+		try {
+			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have already completed setup in this server!")], ephemeral: true });
+		}
+		catch (error) {
+			handleError(error);
+		}
+	}
+
+
+	if (cmd.config.setupRequired && guildSettings == null && await hasPermission(userPermissions, cmd)) {
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet!")], ephemeral: true });
 	}
 
-	if (userPermissions.includes(cmd.config.requiredPermission)) {
+	if (await hasPermission(userPermissions, cmd)) {
 		try {
 			await cmd.run(client, interaction, userPermissions);
 		}

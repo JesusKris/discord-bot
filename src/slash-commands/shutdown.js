@@ -19,7 +19,7 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: "This will shutdown the bot.\n\nE: !help admin",
+	description: "This will shutdown the bot.",
 	args: [""],
 	maxArgs: 0,
 };

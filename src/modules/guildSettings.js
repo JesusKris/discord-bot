@@ -6,7 +6,7 @@ exports.getGuildSettings = async (reference) => {
 	try {
 		const settings = db.sequelize.models.Guilds.findOne({
 			where: {
-				id: reference.guild.id,
+				guild_id: reference.guild.id,
 			},
 			raw: true,
 			required: false,

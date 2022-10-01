@@ -16,20 +16,40 @@ module.exports = (sequelize, DataTypes) => {
 	Guilds.init({
 		id: {
 			allowNull: false,
-			autoIncrement: false,
+			autoIncrement: true,
 			primaryKey: true,
+			type: DataTypes.INTEGER,
+		},
+		guild_id: {
+			allowNull: false,
 			type: DataTypes.STRING,
 		},
-		setup_status: {
+		is_main_server: {
 			allowNull: false,
-			type: DataTypes.BOOLEAN,
+			type: DataTypes.BOOLEAN
+		},
+		notification_channel: {
+			allowNull: true,
+			type: DataTypes.STRING,
+		},
+		greetings_channel: {
+			allowNull: true,
+			type: DataTypes.STRING,
 		},
 		admin_role: {
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
-		notificationChannel: {
-			allowNull: false,
+		guest_role: {
+			allowNull: true,
+			type: DataTypes.STRING,
+		},
+		student_role: {
+			allowNull: true,
+			type: DataTypes.STRING,
+		},
+		batch_role: {
+			allowNull: true,
 			type: DataTypes.STRING,
 		},
 	}, {

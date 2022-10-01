@@ -11,7 +11,6 @@ module.exports = {
 				.setDescription("The commands category")
 				.addChoices(
 					{ name: "admin", value: "admin" },
-					{ name: "developer", value: "developer" },
 				)),
 
 };

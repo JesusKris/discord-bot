@@ -1,9 +1,9 @@
-const { handleError } = require("../modules/errorHandling.js");
+const { handleError } = require("../src/modules/errorHandling.js");
 const { ChannelType, PermissionsBitField, MessageMentions: { ChannelsPattern } } = require("discord.js");
-const { getSetupMessage } = require("../bot-responses/messages/setup.js");
-const { sleep } = require("../modules/utils.js");
-const db = require("../data/models/index.js");
-const config = require("../appconfig.js");
+const { getSetupMessage } = require("../src/bot-responses/messages/setup.js");
+const { sleep } = require("../src/modules/utils.js");
+const db = require("../src/data/models/index.js");
+const config = require("../src/appconfig.js");
 
 exports.run = async (client, message, args, permissions) => {
 	const savedData = {};

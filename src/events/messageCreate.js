@@ -1,6 +1,6 @@
 const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
-const { getUserPermissions } = require("../modules/permissions.js");
+const { getUserPermissions, hasPermission } = require("../modules/permissions.js");
 const { shuffleArray } = require("../modules/utils.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
@@ -49,17 +49,16 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 
 	// special case for setup
-	if (cmd.config.name == "setup" && guildSettings == null) {
-		if (message.author.id === message.guild.ownerId) {
-			try {
-				return await cmd.run(client, message, args);
-			}
-			catch (error) {
-				handleError(error);
-			}
+	if (cmd.config.name == "setup" && guildSettings == null && await hasPermission(userPermissions, cmd)) {
+		try {
+			return await cmd.run(client, message, args);
+		}
+		catch (error) {
+			handleError(error);
 		}
 	}
-	else if (cmd.config.name == "setup" && message.author.id === message.guild.ownerId) {
+
+	if (cmd.config.name == "setup" && guildSettings != null && await hasPermission(userPermissions, cmd)) {
 		await message.delete();
 		return message.author.send({ embeds: [await getWarningEmbed(null, "You have already completed setup in that server!")] });
 	}
@@ -77,7 +76,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 
 	// if user has required permission level to run the command
-	if (userPermissions.includes(cmd.config.requiredPermission)) {
+	if (await hasPermission(userPermissions, cmd)) {
 		try {
 			await cmd.run(client, message, args, userPermissions);
 		}
