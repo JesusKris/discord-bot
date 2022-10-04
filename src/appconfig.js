@@ -2,7 +2,7 @@ require("dotenv").config({ path: "../.env" });
 module.exports = {
 	client: {
 		// ./engine.js
-		name: "kood/",
+		name: process.env.BOT_NAME,
 		token: process.env.BOT_TOKEN,
 		prefix: process.env.PREFIX,
 		intents: JSON.parse(process.env.BOT_INTENTS),
