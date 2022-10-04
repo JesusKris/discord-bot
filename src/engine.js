@@ -1,13 +1,14 @@
 const logger = require('./modules/logger.js');
 
 // This will check if the node version you are running is the required Node version, if it isn't it will throw the following error to inform you.
-if (Number(process.version.slice(1).split('.')[0]) < 17) logger.error('Node 17.x or higher is required. Update Node on your system.');
+// if (Number(process.version.slice(1).split('.')[0]) < 17) logger.error('Node 17.x or higher is required. Update Node on your system.');
 
 const config = require('./appconfig.js');
-const { Client, Collection, IntentsBitField, Routes } = require('discord.js');
+const { Client, Collection, IntentsBitField, Routes, Partials } = require('discord.js');
 const { readdirSync } = require('fs');
 const utils = require('./modules/utils.js');
 const { REST } = require('@discordjs/rest');
+
 
 
 // Utilizing discord client and providing intents -> what it will use/can use
