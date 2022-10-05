@@ -6,7 +6,8 @@ const logger = require("./modules/logger.js");
 const config = require('./appconfig.js');
 const { Client, Collection, IntentsBitField, Routes, Partials } = require('discord.js');
 const { readdirSync } = require('fs');
-const utils = require('./modules/utils.js');
+const { pingDB } = require('./modules/database.js');
+const {sleep} = require("./modules/utils.js")
 const { REST } = require('@discordjs/rest');
 
 
@@ -59,12 +60,12 @@ exports.initApp = async () => {
 	}
 
 	// chat commands
-	const commandsDir = readdirSync("./commands/").filter(file => file.endsWith(".js"));
-	for (const file of commandsDir) {
-		const props = require(`./commands/${file}`);
-		logger.log(`Loading Command: ${props.config.name}`);
-		client.container.commands.set(props.config.name, props);
-	}
+	// const commandsDir = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+	// for (const file of commandsDir) {
+	// 	const props = require(`./commands/${file}`);
+	// 	logger.log(`Loading Command: ${props.config.name}`);
+	// 	client.container.commands.set(props.config.name, props);
+	// }
 
 	// events
 	const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
@@ -99,6 +100,8 @@ exports.initApp = async () => {
 	}
 
 	client.login(config.client.token);
+
+	// await sleep(20000)
 	pingDB();
 
 };

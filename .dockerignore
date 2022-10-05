@@ -1,0 +1,12 @@
+holder/
+node_modules/
+.env
+.env-example
+.eslintignore
+.eslintrc.json
+.gitignore
+docker-compose.yml
+docker-start.sh
+docker-stop.sh
+package-lock.json
+README.md

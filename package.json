@@ -11,7 +11,6 @@
         "lint": "eslint --debug src/",
         "lint-fix": "eslint --debug src/ --fix",
         "start": "node engine.js src/"
-
     },
     "homepage": "https://github.com/JesusKris/kood-bot#readme",
     "dependencies": {
@@ -23,6 +22,7 @@
         "mariadb": "^3.0.0",
         "mysql2": "^2.3.3",
         "sequelize": "^6.21.2",
+        "sequelize-cli": "^6.5.1",
         "uuid": "^8.3.2"
     },
     "devDependencies": {
@@ -31,7 +31,6 @@
         "@babel/preset-env": "^7.18.6",
         "eslint": "^8.19.0",
         "eslint-config-airbnb": "^19.0.4",
-        "eslint-plugin-import": "^2.26.0",
-        "sequelize-cli": "^6.4.1"
+        "eslint-plugin-import": "^2.26.0"
     }
 }
