@@ -10,16 +10,20 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+    restart: unless-stopped
+
   mariadb:
     container_name: database
-    image: bitnami/mariadb:latest
+    image: bitnami/mariadb:10.8
     env_file:
       - .env
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping"]
-      timeout: 5s
+      test: ["CMD-SHELL", 'mysqladmin -p$MARIADB_PASSWORD ping']
+      interval: 10s
+      timeout: 2s
       retries: 10
+    restart: unless-stopped
 
 
