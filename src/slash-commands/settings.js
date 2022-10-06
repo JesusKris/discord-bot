@@ -7,6 +7,18 @@ const { bold } = require("discord.js");
 exports.run = async (client, interaction, permissions) => {
 	try {
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
+        
+
+        if (interaction.options.getSubcommand() === 'list') {
+
+
+        }
+
+        if (interaction.options.getSubcommand() === 'change') {
+
+            
+
+        }
 
 	}
 	catch (error) {

@@ -2,23 +2,11 @@ const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { bold, codeBlock } = require("discord.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard");
-const { defaultPermission } = require("../modules/permissions.js");
-const { getWarningEmbed } = require("../bot-responses/embeds/warning")
 
 exports.run = async (client, interaction, permissions) => {
-
 	try {
-		const option = await interaction.options.getString("category");
 
-		if (!option) {
-			return sendHelpEmbed(client, interaction, await defaultPermission());
-		}
-
-		if (!permissions.includes(option)) { // you'd have to properly format the thing to match here
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You don't have permission to use this command!")], ephemeral: true });
-		}
-
-		return sendHelpEmbed(client, interaction, option);
+		return sendHelpEmbed(client, interaction, "admin");
 
 	}
 	catch (error) {

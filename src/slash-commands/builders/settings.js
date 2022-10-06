@@ -8,16 +8,16 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
                 .setName("list")
-                .setDescription("See the settingg in the server")
+                .setDescription("See the server settings")
         )
         .addSubcommand(subcommand =>
             subcommand
                 .setName("change")
-                .setDescription("Change a setting in the server")
+                .setDescription("Change a server setting")
                 .addStringOption(option =>
                     option
                         .setName("setting")
-                        .setDescription("Select the setting you wish to change")
+                        .setDescription("Select the server setting you wish to change")
                         .setRequired(true),
                 )
                 .addStringOption(option =>
