@@ -32,7 +32,8 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: "This will setup the bot in the server",
-	args: [""],
-	maxArgs: 0,
+	description: "List the server settings. Change a specific server setting",
+	args: "<list> <change>",
+	//Needed for legacy commands
+	// maxArgs: 0,
 };

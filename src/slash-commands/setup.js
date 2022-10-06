@@ -26,9 +26,10 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.guildOwner,
 	guildOnly: true,
-	description: "This will setup the bot in the server",
-	args: [""],
-	maxArgs: 2,
+	description: "Set the bot up in the server",
+	args: "<main> <sprint>",
+	//Needed for legacy commands
+	// maxArgs: 0,
 };
 
 async function prepareGuildData(interaction) {

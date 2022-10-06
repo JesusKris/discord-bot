@@ -27,9 +27,10 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: "Tell bot to direct message people who have a role",
-	args: ["<role> <message>"],
-	maxArgs: 2,
+	description: "Direct message people who have specific role",
+	args: "<role> <message>",
+	//Needed for legacy commands
+	// maxArgs: 0,
 };
 
 

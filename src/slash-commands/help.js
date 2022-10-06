@@ -21,9 +21,10 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: "This will give you all the available commands.",
-	args: [""],
-	maxArgs: 0,
+	description: "List all the available commands",
+	args: "",
+	//Needed for legacy commands
+	// maxArgs: 0,
 };
 
 
@@ -31,7 +32,7 @@ async function sendHelpEmbed(client, interaction, permission) {
 	const { container } = client;
 	const arrayOfCommands = [];
 	container.slashCommands.forEach((value, index) => {
-		if (value.config.requiredPermission == permission && value.config.enabled) {
+		if (value.config.enabled) {
 			const oneCommand = {};
 			oneCommand.name = `${config.client.prefix}${value.config.name} ${value.config.args}`;
 			oneCommand.value = codeBlock(value.config.description);

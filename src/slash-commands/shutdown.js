@@ -19,9 +19,10 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: "This will shutdown the bot.",
-	args: [""],
-	maxArgs: 0,
+	description: "Shut the bot permanently down",
+	args: "",
+	//Needed for legacy commands
+	// maxArgs: 0,
 };
 
 async function askForConfirmation(client, interaction) {
@@ -83,14 +84,14 @@ async function sendResult(client, interaction, answer) {
 	try {
 
 		switch (answer) {
-		case "yes":
-			await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [] }).then(() => {
-				client.destroy();
-			});
-			return process.exit(0);
+			case "yes":
+				await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [] }).then(() => {
+					client.destroy();
+				});
+				return process.exit(0);
 
-		case "no":
-			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
+			case "no":
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
 		}
 	}
 	catch (error) {
