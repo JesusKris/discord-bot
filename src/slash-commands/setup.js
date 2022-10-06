@@ -1,11 +1,12 @@
 const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const db = require("../data/models/index.js");
+const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 
 exports.run = async (client, interaction, permissions) => {
 
 	try {
-		/* await interaction.deferReply({ ephemeral: true, content: "Thinking..." }); */
+		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 		const data = await prepareGuildData(interaction);
 
@@ -103,7 +104,7 @@ async function saveGuildData(data) {
 
 async function sendResponse(interaction) {
 	try {
-
+		await interaction.editReply({ embeds: [await getStandardEmbed(null, "Successfully completed setup")] });
 	}
 	catch (error) {
 		handleError(error)
