@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		trace: {
 			type: DataTypes.TEXT,
-			allowNull: false,
+			allowNull: true,
 		},
 
 	}, {

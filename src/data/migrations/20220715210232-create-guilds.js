@@ -3,12 +3,7 @@ module.exports = {
 	async up(queryInterface, Sequelize) {
 		await queryInterface.createTable("Guilds", {
 			id: {
-				allowNull: false,
-				autoIncrement: true,
 				primaryKey: true,
-				type: Sequelize.INTEGER,
-			},
-			guild_id: {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},
@@ -25,7 +20,7 @@ module.exports = {
 				type: Sequelize.STRING,
 			},
 			admin_role: {
-				allowNull:false,
+				allowNull: false,
 				type: Sequelize.STRING,
 			},
 			guest_role: {
@@ -39,6 +34,18 @@ module.exports = {
 			batch_role: {
 				allowNull: true,
 				type: Sequelize.STRING,
+			},
+			master_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			student_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			guest_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
 			},
 			createdAt: {
 				allowNull: false,

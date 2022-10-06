@@ -4,12 +4,12 @@ const { handleError } = require("../modules/errorHandling.js");
 
 exports.getGuildSettings = async (reference) => {
 	try {
-		const settings = db.sequelize.models.Guilds.findOne({
+		const settings = await db.sequelize.models.Guilds.findOne({
 			where: {
-				guild_id: reference.guild.id,
+				id: reference.guild.id,
 			},
 			raw: true,
-			required: false,
+			required: true,
 		});
 		if (settings === null) {
 			return null;

@@ -1,4 +1,5 @@
 "use strict";
+/** @type {import('sequelize-cli').Migration} */
 const {
 	Model, // eslint-disable-line
 } = require("sequelize");
@@ -15,12 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	Guilds.init({
 		id: {
-			allowNull: false,
-			autoIncrement: true,
 			primaryKey: true,
-			type: DataTypes.INTEGER,
-		},
-		guild_id: {
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
@@ -51,6 +47,18 @@ module.exports = (sequelize, DataTypes) => {
 		batch_role: {
 			allowNull: true,
 			type: DataTypes.STRING,
+		},
+		master_password: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		student_password: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		guest_password: {
+			type: DataTypes.STRING,
+			allowNull: true,
 		},
 	}, {
 		timestamps: true,

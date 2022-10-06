@@ -2,6 +2,7 @@ const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const db = require("../data/models/index.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
+const { bold } = require("discord.js");
 
 exports.run = async (client, interaction, permissions) => {
 
@@ -9,7 +10,7 @@ exports.run = async (client, interaction, permissions) => {
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 		const data = await prepareGuildData(interaction);
-
+		
 		await saveGuildData(data);
 
 		await sendResponse(interaction);
@@ -39,7 +40,7 @@ async function prepareGuildData(interaction) {
 			updatedAt: new Date(),
 		};
 
-		if (interaction.options.getString("type") == "main") {
+		if (interaction.options.getSubcommand() === 'main') {
 			data.is_main_server = true
 		} else {
 			data.is_main_server = false
@@ -74,6 +75,19 @@ async function prepareGuildData(interaction) {
 		} else {
 			data.greetings_channel = null
 		}
+
+		if (interaction.options.get("master-password")) {
+			data.master_password = interaction.options.get("master-password").value
+		}
+
+		if (interaction.options.get("student-password")) {
+			data.student_password = interaction.options.get("student-password").value
+		}
+
+		if (interaction.options.get("guest-password")) {
+			data.guest_password = interaction.options.get("guest-password").value
+		}
+
 		return data
 	}
 	catch (error) {
@@ -84,7 +98,7 @@ async function prepareGuildData(interaction) {
 async function saveGuildData(data) {
 	try {
 		await db.sequelize.models.Guilds.create({
-			guild_id: data.guild_id,
+			id: data.guild_id,
 			is_main_server: data.is_main_server,
 			notification_channel: data.notification_channel,
 			greetings_channel: data.greetings_channel,
@@ -92,9 +106,13 @@ async function saveGuildData(data) {
 			guest_role: data.guest_role,
 			student_role: data.student_role,
 			batch_role: data.batch_role,
+			master_password: data.master_password,
+			student_password: data.student_password,
+			guest_password: data.guest_password,
 			createdAt: data.createdAt,
 			updatedAt: data.updatedAt
 		})
+
 	}
 	catch (error) {
 		handleError(error)
@@ -104,7 +122,7 @@ async function saveGuildData(data) {
 
 async function sendResponse(interaction) {
 	try {
-		await interaction.editReply({ embeds: [await getStandardEmbed(null, "Successfully completed setup")] });
+		await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}`)] });
 	}
 	catch (error) {
 		handleError(error)

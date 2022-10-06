@@ -25,7 +25,7 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 	if (!cmd.config.enabled) {
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is currently disabled.")], ephemeral: true });
 	}
-
+	
 	const guildSettings = await getGuildSettings(interaction);
 	const userPermissions = await getUserPermissions(guildSettings, interaction);
 
