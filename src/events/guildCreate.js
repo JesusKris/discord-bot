@@ -63,7 +63,7 @@ async function getIntroductionFields() {
 			},
 			{
 				name: "greetings-channel",
-				value: "This channel is needed to send a greeting notification when a new student completes the verification step.",
+				value: "This channel is needed to send a greeting notification when a new student completes the verification step. Also works in a sprint server without the verification process.",
 			},
 		];
 
