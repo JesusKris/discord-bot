@@ -23,7 +23,6 @@ exports.handleError = async (error) => {
 
 async function clearExpiredErrorLogs() {
 	try {
-
 		await db.sequelize.models.Errors.destroy({
 			where: {
 				createdAt: {

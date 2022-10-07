@@ -22,6 +22,4 @@ module.exports = async (client) => {
 	catch (error) {
 		handleError(error);
 	}
-
-	// TO DO: WEB SERVER PINGER, EVERY X AMOUNT OF TIME SETINTERVAL
 };

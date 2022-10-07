@@ -13,20 +13,20 @@ module.exports = async (client, member) => { // eslint-disable-line
 		// setup not done || notifications disabled
 		if (settings == null || settings.notification_channel == null) return;
 
-
 		const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
 
+		
 		const fetchedKickLogs = await member.guild.fetchAuditLogs({
 			limit: 1,
 			type: AuditLogEvent.MemberKick,
 		});
 
-
 		const fetchedBanLogs = await member.guild.fetchAuditLogs({
 			limit: 1,
 			type: AuditLogEvent.MemberBanAdd,
 		});
+
 
 
 		const kickLog = fetchedKickLogs.entries.first();

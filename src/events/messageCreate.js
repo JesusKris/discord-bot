@@ -10,6 +10,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 	// if bot
 	if (message.author.bot) return;
 
+
 	// if someone @'s the bot
 	const clientPing = new RegExp(`^<@!?${client.user.id}> ?$`);
 	if (message.content.match(clientPing)) {
@@ -18,6 +19,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 		return message.channel.send(shuffledArray[randomNr]);
 	}
 
+
 	// If the member on a guild is invisible or not cached, fetch them.
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author);
 
@@ -25,9 +27,8 @@ module.exports = async (client, message) => { // eslint-disable-line
 	if (!prefix) return;
 
 
+
 	const commandAndInitialArgs = await getCommandAndInitialArgs(message.content, prefix);
-
-
 	const cmd = await container.commands.get(commandAndInitialArgs.command);
 
 
@@ -35,11 +36,11 @@ module.exports = async (client, message) => { // eslint-disable-line
 	if (!cmd) return;
 
 
-	// Some commands may not be useable in DMs. This check prevents those commands from running
+	// guild only
 	if (cmd && !message.guild && cmd.config.guildOnly) return;
 
 
-	// check if enabled
+	// if enabled
 	if (!cmd.config.enabled) return;
 
 
@@ -57,7 +58,9 @@ module.exports = async (client, message) => { // eslint-disable-line
 			handleError(error);
 		}
 	}
+	
 
+	// special case for setup
 	if (cmd.config.name == "setup" && guildSettings != null && await hasPermission(userPermissions, cmd)) {
 		await message.delete();
 		return message.author.send({ embeds: [await getWarningEmbed(null, "You have already completed setup in that server!")] });

@@ -1,5 +1,16 @@
 require("dotenv").config({ path: "../.env" });
 module.exports = {
+
+	sequelize: {
+		username: process.env.DB_USERNAME,
+		password: process.env.DB_PASSWORD,
+		database: process.env.DB_DATABASE,
+		host: process.env.DB_HOST,
+		dialect: process.env.DB_DIALECT,
+		logging: false,
+
+
+	},
 	client: {
 		// ./engine.js
 		name: process.env.BOT_NAME,
@@ -95,12 +106,13 @@ module.exports = {
 		},
 
 		commands: {
+			// ./modules/permissions.js
 			permissions: {
 				user: "user",
 				admin: "admin",
 				guildOwner: "owner",
 			},
-
+			//time after interaction consideres inactivity
 			defaultAwaitTimer: 3 * 60 * 1000,
 		},
 	},
@@ -117,8 +129,5 @@ module.exports = {
 		// ./events/ready.js
 		// hours * minutes * seconds * milliseconds
 		databaseTimer: 3 * 60 * 60 * 1000,
-		webserverTimer: 3 * 60 * 60 * 1000,
 	},
-
-
 };

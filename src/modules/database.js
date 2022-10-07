@@ -4,7 +4,9 @@ const logger = require("./logger.js");
 
 
 exports.pingDB = async () => {
+	
 	logger.log("Pinging database for connection pool..");
+
 	try {
 		await db.sequelize.authenticate();
 		logger.ready("Succesfully received back a connection pool..");

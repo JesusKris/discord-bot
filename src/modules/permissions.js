@@ -16,7 +16,6 @@ exports.getUserPermissions = async (guildSettings, reference) => {
 	catch {
 		handleError(error);
 	}
-
 };
 
 

@@ -1,6 +1,6 @@
 const logger = require("./modules/logger.js");
 
-// This will check if the node version you are running is the required Node version, if it isn't it will throw the following error to inform you.
+// check required Node version
 if (Number(process.version.slice(1).split(".")[0]) < 17) logger.error("Node 17.x or higher is required. Update Node on your system.");
 
 const config = require("./appconfig.js");
@@ -43,7 +43,7 @@ exports.initApp = async () => {
 		client.container.slashCommands.set(props.config.name, props);
 	}
 
-	// chat commands
+	// chat legacy commands
 	const commandsDir = readdirSync("./commands/").filter(file => file.endsWith(".js"));
 	for (const file of commandsDir) {
 		const props = require(`./commands/${file}`);
@@ -67,11 +67,14 @@ exports.initApp = async () => {
 	const rest = new REST({ version: "10" }).setToken(config.client.token);
 	try {
 		logger.ready("Started refreshing application (/) commands.");
+		
+		//For development, enable test guild commands
 		await rest.put(
 			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
 			{ body: slashBuilders },
 		);
 
+		// For production, enable global commands
 		/* 	await rest.put(
 			Routes.applicationCommands(config.client.Id),
 			{ body: []},
