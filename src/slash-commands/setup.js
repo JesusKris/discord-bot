@@ -129,7 +129,7 @@ async function saveGuildData(data) {
 
 async function sendResponse(interaction) {
 	try {
-		await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}`)] });
+		await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}`)], ephemeral: true, });
 	}
 	catch (error) {
 		handleError(error);

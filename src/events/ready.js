@@ -16,7 +16,9 @@ module.exports = async (client) => {
 	}
 
 	try {
+		//activity status
 		setInterval(setActivityStatus, config.client.activityStatus.timer);
+		//database auth
 		setInterval(pingDB, config.statusChecks.databaseTimer);
 	}
 	catch (error) {

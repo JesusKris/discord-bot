@@ -47,6 +47,7 @@ async function askForConfirmation(client, interaction) {
 		await interaction.editReply({
 			embeds: [await getStandardEmbed(null, "Are you sure you want to shut down the bot?")],
 			components: [buttons],
+			ephemeral: true,
 		});
 
 		const collector = await interaction.channel.createMessageComponentCollector({
@@ -55,6 +56,7 @@ async function askForConfirmation(client, interaction) {
 			time: config.client.commands.defaultAwaitTimer,
 		});
 
+		//button interaction
 		collector.on("collect", async (interaction) => {
 			if (interaction.customId === "yes") {
 				await interaction.deferUpdate();
@@ -69,8 +71,9 @@ async function askForConfirmation(client, interaction) {
 		});
 
 		collector.on("end", async (collected) => {
+			//no input
 			if (collected.size == 0) {
-				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] }); // Run a piece of code when the collector ends
+				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true, });
 			}
 		});
 
@@ -84,14 +87,14 @@ async function sendResult(client, interaction, answer) {
 	try {
 
 		switch (answer) {
-		case "yes":
-			await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [] }).then(() => {
-				client.destroy();
-			});
-			return process.exit(0);
+			case "yes":
+				await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [], ephemeral: true, }).then(() => {
+					client.destroy();
+				});
+				return process.exit(0);
 
-		case "no":
-			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
+			case "no":
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true, });
 		}
 	}
 	catch (error) {

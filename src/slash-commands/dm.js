@@ -53,21 +53,12 @@ async function sendExampleMessage(client, interaction, message, roleId) {
 
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
-		if (interaction.member.nickname) {
-			await interaction.editReply({
-				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-				content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role?`,
-				components: [buttons],
-			});
-		}
-		else {
-			await interaction.editReply({
-				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-				content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role?`,
-				components: [buttons],
-
-			});
-		}
+		await interaction.editReply({
+			embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
+			content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role?`,
+			components: [buttons],
+			ephemeral: true,
+		});
 	}
 	catch (error) {
 		handleError(error);
@@ -84,6 +75,7 @@ async function askForConfirmation(client, interaction, message, roleId) {
 			time: config.client.commands.defaultAwaitTimer,
 		});
 
+		//buttons interaction
 		collector.on("collect", async (interaction) => {
 			if (interaction.customId === "yes") {
 				await interaction.deferUpdate();
@@ -98,8 +90,9 @@ async function askForConfirmation(client, interaction, message, roleId) {
 		});
 
 		collector.on("end", async (collected) => {
+			//no input
 			if (collected.size == 0) {
-				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] }); // Run a piece of code when the collector ends
+				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
 			}
 		});
 
@@ -113,36 +106,26 @@ async function sendResult(client, interaction, answer, message, roleId) {
 	try {
 
 		switch (answer) {
-		case "yes":
-			const members = await interaction.guild.members.fetch();
+			case "yes":
+				const members = await interaction.guild.members.fetch();
 
-			let content;
-			if (interaction.member.nickname) {
-				content = {
-					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
+				let content = {
+					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
 				};
-			}
-			else {
-				content = {
-					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-				};
-			}
 
-			let count = 0;
-
-
-			members.forEach((member) => {
-				if (member.roles.cache.has(roleId) && !member.user.bot) {
-					member.send(content);
-					count++;
-				}
-			});
+				let count = 0;
+				members.forEach((member) => {
+					if (member.roles.cache.has(roleId) && !member.user.bot) {
+						member.send(content);
+						count++;
+					}
+				});
 
 
-			return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [] });
+				return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
 
-		case "no":
-			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
+			case "no":
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
 		}
 	}
 	catch (error) {

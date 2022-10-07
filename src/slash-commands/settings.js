@@ -59,12 +59,15 @@ async function sendSettings(interaction, settings) {
 			if (value != null) {
 				oneSetting.name = key;
 
+				//channel
 				if (key === "notification_channel" || key === "greetings_channel") {
 					oneSetting.value = channelMention(value);
 				}
+				//role
 				else if (key === "admin_role" || key === "guest_role" || key === "student_role" || key === "batch_role") {
 					oneSetting.value = roleMention(value);
 				}
+				//text
 				else {
 					oneSetting.value = value;
 				}
@@ -144,7 +147,6 @@ async function changeSetting(interaction, setting, input) {
 	}
 	catch (error) {
 		handleError(error);
-		/* return await interaction.reply({ embeds: [await getWarningEmbed(null, "This setting can't be a 'null' value!")] }); */
 	}
 
 }

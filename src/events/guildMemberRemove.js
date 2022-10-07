@@ -16,7 +16,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 		const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
 
-		
+
 		const fetchedKickLogs = await member.guild.fetchAuditLogs({
 			limit: 1,
 			type: AuditLogEvent.MemberKick,
@@ -34,7 +34,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 
 
 		// kicklog exists && kicked person == incoming member && kicklog is not older than 2 seconds
-		if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 2000)) {
+		if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 3500)) {
 			channel.send(
 				{
 					embeds: [await getWarningEmbed("A member has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
@@ -47,7 +47,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 
 		}
 		// banlog exists && banned person == incoming member && banlog is not older than 2 seconds
-		else if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 2000)) {
+		else if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 3500)) {
 			channel.send(
 				{
 					embeds: [await getWarningEmbed("A member has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{

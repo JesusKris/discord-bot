@@ -120,12 +120,12 @@ async function formatUsername(interaction, member, type) {
 		const name = await interaction.options.getString("full-name");
 
 		switch (type) {
-		case "student":
-			const gitea = await interaction.options.getString("gitea-name");
+			case "student":
+				const gitea = await interaction.options.getString("gitea-name");
 
-			return await member.setNickname(`${name} / ${gitea}`);
-		case "guest":
-			return await member.setNickname(name);
+				return await member.setNickname(`${name} / ${gitea}`);
+			case "guest":
+				return await member.setNickname(name);
 		}
 
 	}
@@ -139,12 +139,12 @@ async function grantRoles(settings, member, type) {
 	try {
 
 		switch (type) {
-		case "student":
-			await member.roles.add(settings.student_role);
-			await member.roles.add(settings.batch_role);
-			return;
-		case "guest":
-			return await member.roles.add(settings.guest_role);
+			case "student":
+				await member.roles.add(settings.student_role);
+				await member.roles.add(settings.batch_role);
+				return;
+			case "guest":
+				return await member.roles.add(settings.guest_role);
 
 		}
 	}
