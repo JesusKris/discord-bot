@@ -5,6 +5,6 @@ module.exports = {
 
 	data: new SlashCommandBuilder()
 		.setName("help")
-		.setDescription("Get a list of commands")
+		.setDescription("Get a list of commands"),
 
 };

@@ -10,13 +10,13 @@ exports.run = async (client, interaction, permissions) => {
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 		const data = await prepareGuildData(interaction);
-		
+
 		await saveGuildData(data);
 
 		await sendResponse(interaction);
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 };
 
@@ -28,7 +28,7 @@ exports.config = {
 	guildOnly: true,
 	description: "Set the bot up in the server",
 	args: "<main> <sprint>",
-	//Needed for legacy commands
+	// Needed for legacy commands
 	// maxArgs: 0,
 };
 
@@ -41,58 +41,64 @@ async function prepareGuildData(interaction) {
 			updatedAt: new Date(),
 		};
 
-		if (interaction.options.getSubcommand() === 'main') {
-			data.is_main_server = true
-		} else {
-			data.is_main_server = false
+		if (interaction.options.getSubcommand() === "main") {
+			data.is_main_server = true;
+		}
+		else {
+			data.is_main_server = false;
 		}
 
 		if (interaction.options.get("guest-role")) {
-			data.guest_role = interaction.options.get("guest-role").value
-		} else {
-			data.guest_role = null
+			data.guest_role = interaction.options.get("guest-role").value;
+		}
+		else {
+			data.guest_role = null;
 		}
 
 		if (interaction.options.get("student-role")) {
-			data.student_role = interaction.options.get("student-role").value
-		} else {
-			data.student_role = null
+			data.student_role = interaction.options.get("student-role").value;
+		}
+		else {
+			data.student_role = null;
 		}
 
 		if (interaction.options.get("batch-role")) {
-			data.batch_role = interaction.options.get("batch-role").value
-		} else {
-			data.batch_role = null
+			data.batch_role = interaction.options.get("batch-role").value;
+		}
+		else {
+			data.batch_role = null;
 		}
 
 		if (interaction.options.get("notification-channel")) {
-			data.notification_channel = interaction.options.get("notification-channel").value
-		} else {
-			data.notification_channel = null
+			data.notification_channel = interaction.options.get("notification-channel").value;
+		}
+		else {
+			data.notification_channel = null;
 		}
 
 		if (interaction.options.get("greetings-channel")) {
-			data.greetings_channel = interaction.options.get("greetings-channel").value
-		} else {
-			data.greetings_channel = null
+			data.greetings_channel = interaction.options.get("greetings-channel").value;
+		}
+		else {
+			data.greetings_channel = null;
 		}
 
 		if (interaction.options.get("master-password")) {
-			data.master_password = interaction.options.get("master-password").value
+			data.master_password = interaction.options.get("master-password").value;
 		}
 
 		if (interaction.options.get("student-password")) {
-			data.student_password = interaction.options.get("student-password").value
+			data.student_password = interaction.options.get("student-password").value;
 		}
 
 		if (interaction.options.get("guest-password")) {
-			data.guest_password = interaction.options.get("guest-password").value
+			data.guest_password = interaction.options.get("guest-password").value;
 		}
 
-		return data
+		return data;
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }
 
@@ -111,12 +117,12 @@ async function saveGuildData(data) {
 			student_password: data.student_password,
 			guest_password: data.guest_password,
 			createdAt: data.createdAt,
-			updatedAt: data.updatedAt
-		})
+			updatedAt: data.updatedAt,
+		});
 
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 
 }
@@ -126,6 +132,6 @@ async function sendResponse(interaction) {
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}`)] });
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }

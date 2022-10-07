@@ -23,7 +23,7 @@ exports.config = {
 	guildOnly: true,
 	description: "List all the available commands",
 	args: "",
-	//Needed for legacy commands
+	// Needed for legacy commands
 	// maxArgs: 0,
 };
 
@@ -39,5 +39,5 @@ async function sendHelpEmbed(client, interaction, permission) {
 			arrayOfCommands.push(oneCommand);
 		}
 	});
-	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true  });
+	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true });
 }

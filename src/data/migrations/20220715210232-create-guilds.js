@@ -9,7 +9,7 @@ module.exports = {
 			},
 			is_main_server: {
 				allowNull: false,
-				type: Sequelize.BOOLEAN
+				type: Sequelize.BOOLEAN,
 			},
 			notification_channel: {
 				allowNull: true,

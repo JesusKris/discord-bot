@@ -21,7 +21,7 @@ exports.config = {
 	guildOnly: true,
 	description: "Shut the bot permanently down",
 	args: "",
-	//Needed for legacy commands
+	// Needed for legacy commands
 	// maxArgs: 0,
 };
 
@@ -84,14 +84,14 @@ async function sendResult(client, interaction, answer) {
 	try {
 
 		switch (answer) {
-			case "yes":
-				await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [] }).then(() => {
-					client.destroy();
-				});
-				return process.exit(0);
+		case "yes":
+			await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [] }).then(() => {
+				client.destroy();
+			});
+			return process.exit(0);
 
-			case "no":
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
+		case "no":
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
 		}
 	}
 	catch (error) {

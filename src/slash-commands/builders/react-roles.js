@@ -22,10 +22,10 @@ module.exports = {
 						.setRequired(true),
 				)
 				.addChannelOption(option =>
-					option.setName('channel')
-						.setDescription('Set the channel where the message will be posted')
-						.setRequired(true)
-				)
+					option.setName("channel")
+						.setDescription("Set the channel where the message will be posted")
+						.setRequired(true),
+				),
 		)
 		.addSubcommand(subcommand =>
 			subcommand
@@ -38,16 +38,16 @@ module.exports = {
 						.setRequired(true),
 				)
 				.addRoleOption(option =>
-					option.setName('role')
-						.setDescription('Set the role a person receives when reacting to a role')
-						.setRequired(true)
+					option.setName("role")
+						.setDescription("Set the role a person receives when reacting to a role")
+						.setRequired(true),
 				)
 				.addStringOption(option =>
 					option
 						.setName("emoji")
 						.setDescription("Set the emoji a person can react to")
 						.setRequired(true),
-				)
+				),
 
 		)
 		.addSubcommand(subcommand =>
@@ -65,6 +65,6 @@ module.exports = {
 						.setName("emoji")
 						.setDescription("Select a react-role that will be deleted based on emoji")
 						.setRequired(true),
-				)
-		)
+				),
+		),
 };

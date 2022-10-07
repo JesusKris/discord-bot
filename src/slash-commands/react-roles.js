@@ -25,6 +25,6 @@ exports.config = {
 	guildOnly: true,
 	description: "Create a react-roles message. Add a react-role to a message. Delete a react-role from a message",
 	args: "<create> <add> <delete>",
-	//Needed for legacy commands
+	// Needed for legacy commands
 	// maxArgs: 0,
 };

@@ -9,7 +9,7 @@ exports.getUserPermissions = async (guildSettings, reference) => {
 			}
 		}
 		if (reference.user.id === reference.member.guild.ownerId) {
-			userLevels.push(config.client.commands.permissions.guildOwner)
+			userLevels.push(config.client.commands.permissions.guildOwner);
 		}
 		return userLevels;
 	}
@@ -27,7 +27,7 @@ exports.defaultPermission = async () => {
 
 exports.hasPermission = async (userPermissions, cmd) => {
 	if (userPermissions.includes(cmd.config.requiredPermission)) {
-		return true
+		return true;
 	}
-	return false
-}
+	return false;
+};

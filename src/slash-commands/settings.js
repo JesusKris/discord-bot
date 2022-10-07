@@ -9,25 +9,25 @@ const { getRawId } = require("../modules/utils.js");
 
 exports.run = async (client, interaction, permissions) => {
 	try {
-		const settings = await getGuildSettings(interaction)
+		const settings = await getGuildSettings(interaction);
 
-		await deleteUnWantedEntries(settings)
+		await deleteUnWantedEntries(settings);
 
-		if (interaction.options.getSubcommand() === 'list') {
-			await sendSettings(interaction, settings)
+		if (interaction.options.getSubcommand() === "list") {
+			await sendSettings(interaction, settings);
 		}
 
-		if (interaction.options.getSubcommand() === 'change') {
-			const setting = interaction.options.getString("setting")
-			const input = interaction.options.getString("value")
+		if (interaction.options.getSubcommand() === "change") {
+			const setting = interaction.options.getString("setting");
+			const input = interaction.options.getString("value");
 
-			await validateInput(interaction, setting, input)
+			await validateInput(interaction, setting, input);
 
 		}
 
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 };
 
@@ -39,46 +39,49 @@ exports.config = {
 	guildOnly: true,
 	description: "List the server settings. Change a specific server setting",
 	args: "<list> <change>",
-	//Needed for legacy commands
+	// Needed for legacy commands
 	// maxArgs: 0,
 };
 
 async function deleteUnWantedEntries(setting) {
-	delete setting.id
-	delete setting.is_main_server
-	delete setting.createdAt
-	delete setting.updatedAt
+	delete setting.id;
+	delete setting.is_main_server;
+	delete setting.createdAt;
+	delete setting.updatedAt;
 }
 
 async function sendSettings(interaction, settings) {
 	try {
 		const arrayOfCommands = [];
-		for (let [key, value] of Object.entries(settings)) {
+		for (const [key, value] of Object.entries(settings)) {
 
 			const oneSetting = {};
 			if (value != null) {
-				oneSetting.name = key
+				oneSetting.name = key;
 
 				if (key === "notification_channel" || key === "greetings_channel") {
-					oneSetting.value = channelMention(value)
-				} else if (key === "admin_role" || key === "guest_role" || key === "student_role" || key === "batch_role") {
-					oneSetting.value = roleMention(value)
-				} else {
-					oneSetting.value = value
+					oneSetting.value = channelMention(value);
+				}
+				else if (key === "admin_role" || key === "guest_role" || key === "student_role" || key === "batch_role") {
+					oneSetting.value = roleMention(value);
+				}
+				else {
+					oneSetting.value = value;
 				}
 
-			} else {
-				oneSetting.name = key
-				oneSetting.value = "-"
+			}
+			else {
+				oneSetting.name = key;
+				oneSetting.value = "-";
 			}
 
-			arrayOfCommands.push(oneSetting)
+			arrayOfCommands.push(oneSetting);
 		}
 
 		await interaction.reply({ embeds: [await getStandardEmbed(`Settings in ${bold(interaction.guild.name)}`, null, null, arrayOfCommands)], ephemeral: true });
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }
 
@@ -87,12 +90,13 @@ async function validateInput(interaction, setting, input) {
 	if (setting == "notification_channel" || setting == "greetings_channel") {
 
 		if (input.match(ChannelsPattern) || input == "null") {
-			const channelId = await getRawId(input)
+			const channelId = await getRawId(input);
 
-			changeSetting(interaction, setting, channelId)
-			sendResponse(interaction, true)
-		} else {
-			sendResponse(interaction, false)
+			changeSetting(interaction, setting, channelId);
+			sendResponse(interaction, true);
+		}
+		else {
+			sendResponse(interaction, false);
 		}
 
 
@@ -101,12 +105,13 @@ async function validateInput(interaction, setting, input) {
 	if (setting == "admin_role" || setting == "guest_role" || setting == "student_role" || setting == "batch_role") {
 
 		if (input.match(RolesPattern)) {
-			const roleId = await getRawId(input)
+			const roleId = await getRawId(input);
 
-			changeSetting(interaction, setting, roleId)
-			sendResponse(interaction, true)
-		} else {
-			sendResponse(interaction, false)
+			changeSetting(interaction, setting, roleId);
+			sendResponse(interaction, true);
+		}
+		else {
+			sendResponse(interaction, false);
 		}
 	}
 
@@ -114,10 +119,11 @@ async function validateInput(interaction, setting, input) {
 	if (setting == "master_password" || setting == "student_password" || setting == "guest_password") {
 
 		if (!input.match(ChannelsPattern) && !input.match(RolesPattern) && !input.match(UsersPattern) && !input.match(EveryonePattern)) {
-			changeSetting(interaction, setting, input)
-			sendResponse(interaction, true)
-		} else {
-			sendResponse(interaction, false)
+			changeSetting(interaction, setting, input);
+			sendResponse(interaction, true);
+		}
+		else {
+			sendResponse(interaction, false);
 		}
 
 	}
@@ -126,18 +132,18 @@ async function validateInput(interaction, setting, input) {
 async function changeSetting(interaction, setting, input) {
 
 	if (input == "null") {
-		input = null
+		input = null;
 	}
 
 	try {
 		await db.sequelize.models.Guilds.update({ [`${setting}`]: input }, {
 			where: {
-				id: interaction.guild.id
-			}
+				id: interaction.guild.id,
+			},
 		});
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 		/* return await interaction.reply({ embeds: [await getWarningEmbed(null, "This setting can't be a 'null' value!")] }); */
 	}
 
@@ -145,8 +151,9 @@ async function changeSetting(interaction, setting, input) {
 
 async function sendResponse(interaction, isCorrect) {
 	if (isCorrect) {
-		await interaction.reply({ embeds: [await getStandardEmbed(null, "Setting changed successfully")], ephemeral: true  })
-	} else {
-		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")}/${bold("role")} or ${bold("text")}!`)], ephemeral: true  });
+		await interaction.reply({ embeds: [await getStandardEmbed(null, "Setting changed successfully")], ephemeral: true });
+	}
+	else {
+		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")}/${bold("role")} or ${bold("text")}!`)], ephemeral: true });
 	}
 }

@@ -29,7 +29,7 @@ exports.config = {
 	guildOnly: true,
 	description: "Direct message people who have specific role",
 	args: "<role> <message>",
-	//Needed for legacy commands
+	// Needed for legacy commands
 	// maxArgs: 0,
 };
 
@@ -113,36 +113,36 @@ async function sendResult(client, interaction, answer, message, roleId) {
 	try {
 
 		switch (answer) {
-			case "yes":
-				const members = await interaction.guild.members.fetch();
+		case "yes":
+			const members = await interaction.guild.members.fetch();
 
-				let content;
-				if (interaction.member.nickname) {
-					content = {
-						embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-					};
+			let content;
+			if (interaction.member.nickname) {
+				content = {
+					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
+				};
+			}
+			else {
+				content = {
+					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
+				};
+			}
+
+			let count = 0;
+
+
+			members.forEach((member) => {
+				if (member.roles.cache.has(roleId) && !member.user.bot) {
+					member.send(content);
+					count++;
 				}
-				else {
-					content = {
-						embeds: [await getLogEmbed(bold(`Message from ${interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-					};
-				}
-
-				let count = 0;
+			});
 
 
-				members.forEach((member) => {
-					if (member.roles.cache.has(roleId) && !member.user.bot) {
-						member.send(content);
-						count++;
-					}
-				});
+			return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [] });
 
-
-				return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [] });
-
-			case "no":
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
+		case "no":
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [] });
 		}
 	}
 	catch (error) {

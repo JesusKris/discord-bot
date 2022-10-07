@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		is_main_server: {
 			allowNull: false,
-			type: DataTypes.BOOLEAN
+			type: DataTypes.BOOLEAN,
 		},
 		notification_channel: {
 			allowNull: true,
