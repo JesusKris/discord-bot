@@ -16,7 +16,6 @@ module.exports = async (client, member) => { // eslint-disable-line
 		const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
 		channel.send(
-
 			{
 				embeds: [await getStandardEmbed("A member has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })],
 			},

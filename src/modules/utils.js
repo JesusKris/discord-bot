@@ -5,3 +5,7 @@ exports.sleep = ms => {
 exports.shuffleArray = async (array) => {
 	return array.sort(() => Math.random() - 0.5);
 };
+
+exports.getRawId = async (input) => {
+	return input.replace(/\D/g,'')
+}
