@@ -25,7 +25,16 @@ module.exports = {
 					option.setName("channel")
 						.setDescription("Set the channel where the message will be posted")
 						.setRequired(true),
-				),
+				)
+				.addStringOption(option =>
+					option.setName("type")
+						.setDescription("Set the type of the reaction role message")
+						.setRequired(true)
+						.addChoices(
+							{ name: "single", value: "single" },
+							{ name: "multiple", value: "multiple" },
+						)
+				)
 		)
 		.addSubcommand(subcommand =>
 			subcommand
@@ -52,18 +61,18 @@ module.exports = {
 		)
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName("delete")
-				.setDescription("Delete a react-role from a message")
+				.setName("remove")
+				.setDescription("Remove a react-role from a message")
 				.addStringOption(option =>
 					option
 						.setName("message-link")
-						.setDescription("The link to the message that you want to delete a react-role from")
+						.setDescription("The link to the message that you want to remove a react-role from")
 						.setRequired(true),
 				)
 				.addStringOption(option =>
 					option
 						.setName("emoji")
-						.setDescription("Select a react-role that will be deleted based on emoji")
+						.setDescription("Select a react-role that will be removed based on emoji")
 						.setRequired(true),
 				),
 		),

@@ -1,0 +1,45 @@
+'use strict';
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('R_Role_Messages', {
+      guild_id: {
+        type: Sequelize.STRING,
+        onDelete: 'CASCADE',
+        references: {
+          model: "Guilds",
+          key: "id",
+          as: "guild_id"
+        }
+      },
+      id: {
+        primaryKey: true,
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('R_Role_Messages');
+  }
+};

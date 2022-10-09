@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
 	 */
 		static associate(models) {
 			// define association here
+
+			Guilds.hasMany(models.R_Role_Messages, {
+				foreignKey: "guild_id"
+			})
 		}
 	}
 	Guilds.init({
