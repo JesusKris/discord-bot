@@ -3,11 +3,27 @@ const { handleError } = require("../modules/errorHandling.js");
 const db = require("../data/models/index.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { bold } = require("discord.js");
+const { verifyChannel } = require("../modules/inputVerification.js");
+const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 
 exports.run = async (client, interaction, permissions) => {
 
 	try {
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
+
+		if (interaction.options.get("notification-channel")) {
+			if (!await verifyChannel(interaction, interaction.options.get("notification-channel").channel)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected notification-channel is not valid.`)], ephemeral: true, })
+			}
+		}
+
+
+		if (interaction.options.get("greetings-channel")) {
+			if (!await verifyChannel(interaction, interaction.options.get("greetings-channel").channel)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected greetings-channel is not valid.`)], ephemeral: true, })
+			}
+		}
+
 
 		const data = await prepareGuildData(interaction);
 

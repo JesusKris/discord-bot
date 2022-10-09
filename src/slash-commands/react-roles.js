@@ -1,11 +1,15 @@
-const { channelMention, roleMention, formatEmoji, parseEmoji } = require("discord.js");
+const { channelMention, roleMention } = require("discord.js");
 const config = require("../appconfig.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const db = require("../data/models/index.js");
 const { handleError } = require("../modules/errorHandling.js");
+const { getGuildSettings } = require("../modules/guildSettings.js");
+const { verifyEmoji, verifyMessageLink, verifyChannel } = require("../modules/inputVerification")
 
 exports.run = async (client, interaction, permissions) => {
+
+	await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 	if (interaction.options.getSubcommand() == "create") {
 
@@ -13,6 +17,11 @@ exports.run = async (client, interaction, permissions) => {
 			const title = interaction.options.getString("title")
 			const description = interaction.options.getString("description")
 			const channel = await interaction.options.getChannel('channel')
+
+
+			if (!await verifyChannel(interaction, channel)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected channel is not valid.`)], ephemeral: true, });
+			}
 
 			const message_id = await sendReactMessageAndGetId(interaction, title, description, channel)
 
@@ -26,6 +35,7 @@ exports.run = async (client, interaction, permissions) => {
 		}
 	}
 
+
 	if (interaction.options.getSubcommand() == "add") {
 		try {
 			const message_link = await interaction.options.getString("message-link");
@@ -36,26 +46,39 @@ exports.run = async (client, interaction, permissions) => {
 			//perform input verifications
 			const { isVerifiedEmoji, emoji } = await verifyEmoji(interaction, input_emoji)
 			if (!isVerifiedEmoji) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The emoji you provided could not be validated or is not from this server. Please choose an emoji from this server or one default emoji.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The emoji you provided could not be validated or is not from this server. Please choose an emoji from this server or one default emoji.`)], ephemeral: true, });
 			}
 
 			const { isVerifiedMessage, message } = await verifyMessageLink(interaction, message_link)
 			if (!isVerifiedMessage) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.`)], ephemeral: true, });
 			}
 
 			if (!await isReactRoleMessage(message)) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.`)], ephemeral: true, });
+			}
+
+			
+			// exluding admin_role|batch_role|student_role|guest_role -> main|sprint
+			const guildSettings = await getGuildSettings(interaction)
+			if (!await checkForVerificationRole(role, guildSettings)) {
+				if (guildSettings.is_main_server) {
+					return await interaction.editReply({ embeds: [await getWarningEmbed(null, `You can't use admin|batch|student|guest role as a reaction role.`)], ephemeral: true, });
+				}
+
+				if (!guildSettings.is_main_server) {
+					return await interaction.editReply({ embeds: [await getWarningEmbed(null, `You can't use admin role as a reaction role.`)], ephemeral: true, });
+				}
 			}
 
 
 			//perform  availabity checks
 			if (!await isAvailableRole(role)) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The selected role is already being used in a react-role message in this server.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected role is already being used in a react-role message in this server.`)], ephemeral: true, });
 			}
 
 			if (!await isAvailableEmoji(emoji, message)) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The selected emoji is already being used in that message.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected emoji is already being used in that message.`)], ephemeral: true, });
 			}
 
 			await saveReaction(message, emoji, role)
@@ -76,103 +99,41 @@ exports.run = async (client, interaction, permissions) => {
 
 	if (interaction.options.getSubcommand() == "remove") {
 		try {
-
-			console.log("👀" == "🥜")
 			const message_link = await interaction.options.getString("message-link");
 			const input_emoji = await interaction.options.getString("emoji");
 
+
+			//perform input verifications
 			const { isVerifiedEmoji, emoji } = await verifyEmoji(interaction, input_emoji)
 			if (!isVerifiedEmoji) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The emoji you provided could not be validated or is not from this server. Please choose an emoji from this server or one default emoji.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The emoji you provided could not be validated or is not from this server. Please choose an emoji from this server or one default emoji.`)], ephemeral: true, });
 			}
 
 			const { isVerifiedMessage, message } = await verifyMessageLink(interaction, message_link)
 			if (!isVerifiedMessage) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.`)], ephemeral: true, });
 			}
 
 			if (!await isReactRoleMessage(message)) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.`)], ephemeral: true, });
 			}
 
+
+			//perform  availabity checks
 			if (await isAvailableEmoji(emoji, message)) {
-				return await interaction.reply({ embeds: [await getWarningEmbed(null, `The selected emoji is not being used in that message.`)], ephemeral: true, });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected emoji is not being used in that message.`)], ephemeral: true, });
 			}
 
-
-			//remove roles from every user who has reacted with that specific emoji
 
 			await deleteRoleFromMembers(interaction, message, emoji)
 
-			async function deleteRoleFromMembers(interaction, message, emoji) {
-				try {
-
-					const reactionRole = await db.sequelize.models.R_Role_Reactions.findOne({
-						where: {
-							message_id: message.id,
-							emoji: emoji
-						},
-						raw: true,
-						attributes: ['role']
-					})
-
-					const role = await interaction.guild.roles.cache.get(reactionRole.role);
-
-					await interaction.guild.roles.create({
-						name: role.name,
-						color: role.color,
-						hoist: role.hoist,
-						position: role.position,
-						permissions: role.permissions,
-						mentionable: role.mentionable
-
-					})
-
-					role.delete()
-
-				}
-				catch (error) {
-					handleError(error)
-				}
-			}
-
-
 			await deleteReaction(message, emoji)
-
-			async function deleteReaction(message, emoji) {
-				try {
-					await db.sequelize.models.R_Role_Reactions.destroy({
-						where: {
-							message_id: message.id,
-							emoji: emoji,
-						}
-					})
-				}
-				catch (error) {
-					handleError(error)
-				}
-			}
 
 			await applyTextToReactMessage(message)
 
 			await removeReactionsFromMessage(message, emoji)
 
-			async function removeReactionsFromMessage(message, emoji) {
-				try {
-					message.reactions.cache.get(emoji).remove()
-				}
-				catch (error) {
-					handleError(error)
-				}
-
-			}
-
-
-
-
-
 			await sendResponse(interaction, null, "remove")
-
 
 		}
 		catch (error) {
@@ -236,81 +197,7 @@ async function sendResponse(interaction, channel, type) {
 				break
 		}
 
-		await interaction.reply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true, });
-	}
-	catch (error) {
-		handleError(error)
-	}
-}
-
-async function verifyEmoji(interaction, emoji) {
-	try {
-		const unicodeEmojiOrId = /([0-9]+|\u00a9+|\u00ae+|[\u2000-\u3300]+|\ud83c[\ud000-\udfff]+|\ud83d[\ud000-\udfff]+|\ud83e[\ud000-\udfff]+)/g
-
-		//if contains ID to costum emoji or unicode emoji
-		if (!emoji.match(unicodeEmojiOrId)) {
-			return { isVerifiedEmoji: false, emoji: null }
-		}
-
-		const firstMatch = emoji.match(unicodeEmojiOrId)[0]
-
-		//if costum, check availability 
-		if (firstMatch.match(/[0-9]+/g)) {
-			if (!await interaction.guild.emojis.resolve(firstMatch)) {
-				return { isVerifiedEmoji: false, emoji: null }
-			}
-		}
-
-		return { isVerifiedEmoji: true, emoji: firstMatch }
-
-	}
-	catch (error) {
-		handleError(error)
-	}
-}
-
-async function verifyMessageLink(interaction, message_link) {
-	try {
-		//example link
-		//https://discordapp.com/channels/1023167499365366746/1026826999911626185/1028283654394368000
-
-		const matchedIds = message_link.match(/[0-9]+/g)
-
-		//if no matches
-		if (!matchedIds) {
-			return { isVerifiedMessage: false, message: null }
-		}
-
-		//!3 ids -> guild|channel|message
-		if (matchedIds.length < 3) {
-			return { isVerifiedMessage: false, message: null }
-		}
-
-
-		const channelId = matchedIds[1]
-		const messageId = matchedIds[2]
-
-
-		let channel
-		let message
-		//trying to fetch a channel with id, catching if not valid
-		//trying to fetch a message with id, catching if not valid
-		try {
-			channel = await interaction.guild.channels.fetch(channelId)
-			message = await channel.messages.fetch(messageId)
-		}
-		catch { }
-
-		if (!channel) {
-			return { isVerifiedMessage: false, message: null }
-		}
-
-		if (!message) {
-			return { isVerifiedMessage: false, message: null }
-		}
-
-		return { isVerifiedMessage: true, message }
-
+		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true, });
 	}
 	catch (error) {
 		handleError(error)
@@ -404,14 +291,7 @@ async function applyTextToReactMessage(message) {
 
 		})
 
-		const reactionRoles = await db.sequelize.models.R_Role_Reactions.findAll({
-			where: {
-				message_id: message.id
-			},
-			raw: true,
-			order: [['createdAt', 'ASC']],
-			attributes: ['role', 'emoji']
-		})
+		const reactionRoles = await getReactionRoles(message.id)
 
 		let finalDescription = reactMessageData.description + "\n\n"
 
@@ -433,19 +313,116 @@ async function applyTextToReactMessage(message) {
 
 async function applyReactionsToMessage(message) {
 	try {
+		const reactionRoles = await getReactionRoles(message.id)
+
+		reactionRoles.forEach((reactionRole) => {
+			message.react(reactionRole.emoji)
+		});
+
+	}
+	catch (error) {
+		handleError(error)
+	}
+}
+
+async function getReactionRoles(messageId) {
+	try {
 		const reactionRoles = await db.sequelize.models.R_Role_Reactions.findAll({
 			where: {
-				message_id: message.id
+				message_id: messageId
 			},
 			raw: true,
 			order: [['createdAt', 'ASC']],
 			attributes: ['role', 'emoji']
 		})
 
+		return reactionRoles
+	}
+	catch (error) {
+		handleError(error)
+	}
+}
 
-		reactionRoles.forEach((reactionRole) => {
-			message.react(reactionRole.emoji)
-		});
+
+async function deleteRoleFromMembers(interaction, message, emoji) {
+	try {
+
+		const reactionRole = await db.sequelize.models.R_Role_Reactions.findOne({
+			where: {
+				message_id: message.id,
+				emoji: emoji
+			},
+			raw: true,
+			attributes: ['role']
+		})
+
+
+		//Deleting the role from members by first creating an exact copy
+		//of the role and then deleting the original role from the server
+		//this makes the whole process a lot less harmful towards the 
+		//discord API
+
+		const role = await interaction.guild.roles.cache.get(reactionRole.role);
+
+		await interaction.guild.roles.create({
+			name: role.name,
+			color: role.color,
+			hoist: role.hoist,
+			position: role.position,
+			permissions: role.permissions,
+			mentionable: role.mentionable
+
+		})
+
+		role.delete()
+
+	}
+	catch (error) {
+		handleError(error)
+	}
+}
+
+
+async function deleteReaction(message, emoji) {
+	try {
+		await db.sequelize.models.R_Role_Reactions.destroy({
+			where: {
+				message_id: message.id,
+				emoji: emoji,
+			}
+		})
+	}
+	catch (error) {
+		handleError(error)
+	}
+}
+
+async function removeReactionsFromMessage(message, emoji) {
+	try {
+		await message.reactions.cache.get(emoji).remove()
+	}
+	catch (error) {
+		handleError(error)
+	}
+
+}
+
+
+async function checkForVerificationRole(role, settings) {
+	try {
+		if (settings.is_main_server) {
+			if (settings.admin_role == role.id || settings.batch_role == role.id || settings.guest_role == role.id || settings.student_role == role.id) {
+				return false
+			}
+			return true
+		}
+
+		if (!settings.is_main_server) {
+			if (settings.admin_role == role.id) {
+				return false
+			}
+			return true
+		}
 
 	}
 	catch (error) {

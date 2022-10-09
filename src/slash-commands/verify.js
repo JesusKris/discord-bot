@@ -87,7 +87,7 @@ async function checkPassword(interaction, settings) {
 		if (password == settings.master_password || password == settings.guest_password || password == settings.student_password) {
 			return true;
 		}
-		console.log(interaction.guild);
+		
 		return false;
 	}
 	catch (error) {

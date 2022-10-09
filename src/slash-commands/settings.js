@@ -106,9 +106,11 @@ async function validateInput(interaction, setting, input) {
 	}
 
 	if (setting == "admin_role" || setting == "guest_role" || setting == "student_role" || setting == "batch_role") {
-
 		if (input.match(RolesPattern)) {
-			const roleId = await getRawId(input);
+			const roleId = await getRawId(input)
+
+
+
 
 			changeSetting(interaction, setting, roleId);
 			sendResponse(interaction, true);
