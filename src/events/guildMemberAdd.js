@@ -40,7 +40,7 @@ async function getGreetingMessage(member) {
 	];
 
 	const randomNr = Math.floor(Math.random() * greetings.length);
-	const shuffledArray = await shuffleArray(greetings)
+	const shuffledArray = await shuffleArray(greetings);
 
 	return shuffledArray[randomNr];
 }

@@ -1,6 +1,6 @@
-const env = require('dotenv');
-env.config({ path: '../../.env' });
-const config = require("../../appconfig.js")
+const env = require("dotenv");
+env.config({ path: "../../.env" });
+const config = require("../../appconfig.js");
 
 module.exports = {
 	username: config.sequelize.username,

@@ -33,8 +33,8 @@ module.exports = {
 						.addChoices(
 							{ name: "single", value: "single" },
 							{ name: "multiple", value: "multiple" },
-						)
-				)
+						),
+				),
 		)
 		.addSubcommand(subcommand =>
 			subcommand

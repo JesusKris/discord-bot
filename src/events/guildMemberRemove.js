@@ -16,7 +16,6 @@ module.exports = async (client, member) => { // eslint-disable-line
 		const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
 
-
 		const fetchedKickLogs = await member.guild.fetchAuditLogs({
 			limit: 1,
 			type: AuditLogEvent.MemberKick,
@@ -26,7 +25,6 @@ module.exports = async (client, member) => { // eslint-disable-line
 			limit: 1,
 			type: AuditLogEvent.MemberBanAdd,
 		});
-
 
 
 		const kickLog = fetchedKickLogs.entries.first();

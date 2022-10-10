@@ -56,7 +56,7 @@ async function askForConfirmation(client, interaction) {
 			time: config.client.commands.defaultAwaitTimer,
 		});
 
-		//button interaction
+		// button interaction
 		collector.on("collect", async (interaction) => {
 			if (interaction.customId === "yes") {
 				await interaction.deferUpdate();
@@ -71,9 +71,9 @@ async function askForConfirmation(client, interaction) {
 		});
 
 		collector.on("end", async (collected) => {
-			//no input
+			// no input
 			if (collected.size == 0) {
-				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true, });
+				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
 			}
 		});
 
@@ -87,14 +87,14 @@ async function sendResult(client, interaction, answer) {
 	try {
 
 		switch (answer) {
-			case "yes":
-				await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [], ephemeral: true, }).then(() => {
-					client.destroy();
-				});
-				return process.exit(0);
+		case "yes":
+			await interaction.editReply({ embeds: [await getStandardEmbed(null, "Shutting the bot down...")], content: "", components: [], ephemeral: true }).then(() => {
+				client.destroy();
+			});
+			return process.exit(0);
 
-			case "no":
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true, });
+		case "no":
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
 		}
 	}
 	catch (error) {

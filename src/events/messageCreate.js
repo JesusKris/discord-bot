@@ -27,7 +27,6 @@ module.exports = async (client, message) => { // eslint-disable-line
 	if (!prefix) return;
 
 
-
 	const commandAndInitialArgs = await getCommandAndInitialArgs(message.content, prefix);
 	const cmd = await container.commands.get(commandAndInitialArgs.command);
 
@@ -58,7 +57,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 			handleError(error);
 		}
 	}
-	
+
 
 	// special case for setup
 	if (cmd.config.name == "setup" && guildSettings != null && await hasPermission(userPermissions, cmd)) {

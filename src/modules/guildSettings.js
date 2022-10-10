@@ -9,7 +9,6 @@ exports.getGuildSettings = async (reference) => {
 				id: reference.guild.id,
 			},
 			raw: true,
-			required: true,
 		});
 
 		return settings;

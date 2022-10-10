@@ -67,8 +67,8 @@ exports.initApp = async () => {
 	const rest = new REST({ version: "10" }).setToken(config.client.token);
 	try {
 		logger.ready("Started refreshing application (/) commands.");
-		
-		//For development, enable test guild commands
+
+		// For development, enable test guild commands
 		await rest.put(
 			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
 			{ body: slashBuilders },

@@ -14,11 +14,11 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 
 			Guilds.hasMany(models.R_Role_Messages, {
-				foreignKey: "guild_id"
-			})
+				foreignKey: "guild_id",
+			});
 			Guilds.hasMany(models.R_Role_Reactions, {
-				foreignKey: "guild_id"
-			})
+				foreignKey: "guild_id",
+			});
 		}
 	}
 	Guilds.init({

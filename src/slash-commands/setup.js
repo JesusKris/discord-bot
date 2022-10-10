@@ -13,14 +13,14 @@ exports.run = async (client, interaction, permissions) => {
 
 		if (interaction.options.get("notification-channel")) {
 			if (!await verifyChannel(interaction, interaction.options.get("notification-channel").channel)) {
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected notification-channel is not valid.`)], ephemeral: true, })
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected notification-channel is not valid.")], ephemeral: true });
 			}
 		}
 
 
 		if (interaction.options.get("greetings-channel")) {
 			if (!await verifyChannel(interaction, interaction.options.get("greetings-channel").channel)) {
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, `The selected greetings-channel is not valid.`)], ephemeral: true, })
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected greetings-channel is not valid.")], ephemeral: true });
 			}
 		}
 
@@ -145,7 +145,7 @@ async function saveGuildData(data) {
 
 async function sendResponse(interaction) {
 	try {
-		await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}`)], ephemeral: true, });
+		await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}`)], ephemeral: true });
 	}
 	catch (error) {
 		handleError(error);

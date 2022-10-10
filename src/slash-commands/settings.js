@@ -18,7 +18,7 @@ exports.run = async (client, interaction, permissions) => {
 			const setting = interaction.options.getString("setting");
 			const input = interaction.options.getString("value");
 
-			const isAvailable = await checkAvailableSetting(interaction, setting)
+			const isAvailable = await checkAvailableSetting(interaction, setting);
 
 			if (!isAvailable) {
 				return await interaction.reply({ embeds: [await getWarningEmbed(null, "This setting is not available in a sprint server.")], ephemeral: true });
@@ -49,42 +49,41 @@ exports.config = {
 async function getGuildData(interaction) {
 	try {
 		const data = await db.sequelize.models.Guilds.findOne({
-			attributes: ['is_main_server'],
+			attributes: ["is_main_server"],
 			where: {
-				id: interaction.guild.id
+				id: interaction.guild.id,
 			},
-			raw: true
-		})
+			raw: true,
+		});
 
 		let settings;
 		if (data.is_main_server) {
 			settings = await db.sequelize.models.Guilds.findOne({
-				attributes: { exclude: ['id', "createdAt", "updatedAt", 'is_main_server'] },
+				attributes: { exclude: ["id", "createdAt", "updatedAt", "is_main_server"] },
 				where: {
-					id: interaction.guild.id
+					id: interaction.guild.id,
 				},
-				raw: true
-			})
+				raw: true,
+			});
 		}
 
 		if (!data.is_main_server) {
 			settings = await db.sequelize.models.Guilds.findOne({
 				attributes: ["notification_channel", "greetings_channel", "admin_role"],
 				where: {
-					id: interaction.guild.id
+					id: interaction.guild.id,
 				},
-				raw: true
-			})
+				raw: true,
+			});
 		}
 
-		return settings
+		return settings;
 
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }
-
 
 
 async function sendSettings(interaction, settings) {
@@ -96,15 +95,15 @@ async function sendSettings(interaction, settings) {
 			if (value) {
 				oneSetting.name = key;
 
-				//channel
+				// channel
 				if (key === "notification_channel" || key === "greetings_channel") {
 					oneSetting.value = channelMention(value);
 				}
-				//role
+				// role
 				else if (key === "admin_role" || key === "guest_role" || key === "student_role" || key === "batch_role") {
 					oneSetting.value = roleMention(value);
 				}
-				//text
+				// text
 				else {
 					oneSetting.value = value;
 				}
@@ -133,8 +132,9 @@ async function validateInput(interaction, setting, input) {
 
 			let channel;
 			if (input == "null") {
-				channel = "null"
-			} else {
+				channel = "null";
+			}
+			else {
 				channel = await getRawId(input);
 			}
 
@@ -147,14 +147,14 @@ async function validateInput(interaction, setting, input) {
 
 	if (setting == "admin_role" || setting == "guest_role" || setting == "student_role" || setting == "batch_role") {
 		if (input.match(RolesPattern)) {
-			const roleId = await getRawId(input)
+			const roleId = await getRawId(input);
 
-			//checking if the selected role is not being used as react role
-			const notReactRole = await checkForReactRole(interaction, roleId)
+			// checking if the selected role is not being used as react role
+			const notReactRole = await checkForReactRole(interaction, roleId);
 
 			if (!notReactRole) {
 				return await interaction.reply({
-					embeds: [await getWarningEmbed(null, "The selected role is being used as a react-role. Please remove it to select it.")], ephemeral: true
+					embeds: [await getWarningEmbed(null, "The selected role is being used as a react-role. Please remove it to select it.")], ephemeral: true,
 				});
 			}
 
@@ -164,22 +164,21 @@ async function validateInput(interaction, setting, input) {
 					const result = await db.sequelize.models.R_Role_Reactions.findOne({
 						where: {
 							guild_id: interaction.guild.id,
-							role: roleId
+							role: roleId,
 						},
-						raw: true
-					})
+						raw: true,
+					});
 
 					if (result) {
-						return false
+						return false;
 					}
 
-					return true
+					return true;
 				}
 				catch (error) {
-					handleError(error)
+					handleError(error);
 				}
 			}
-
 
 
 			changeSetting(interaction, setting, roleId);
@@ -230,18 +229,18 @@ async function sendResponse(interaction, isCorrect) {
 
 async function checkAvailableSetting(interaction, setting) {
 	try {
-		const settings = await getGuildSettings(interaction)
+		const settings = await getGuildSettings(interaction);
 
 		if (!settings.is_main_server) {
 			if (setting == "admin_role" || setting == "notification_channel" || setting == "greetings_channel") {
-				return true
+				return true;
 			}
-			return false
+			return false;
 		}
 
-		return true
+		return true;
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }

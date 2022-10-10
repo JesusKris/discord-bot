@@ -112,7 +112,7 @@ module.exports = {
 				admin: "admin",
 				guildOwner: "owner",
 			},
-			//time after interaction consideres inactivity
+			// time after interaction consideres inactivity
 			defaultAwaitTimer: 3 * 60 * 1000,
 		},
 	},

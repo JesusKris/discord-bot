@@ -75,7 +75,7 @@ async function askForConfirmation(client, interaction, message, roleId) {
 			time: config.client.commands.defaultAwaitTimer,
 		});
 
-		//buttons interaction
+		// buttons interaction
 		collector.on("collect", async (interaction) => {
 			if (interaction.customId === "yes") {
 				await interaction.deferUpdate();
@@ -90,7 +90,7 @@ async function askForConfirmation(client, interaction, message, roleId) {
 		});
 
 		collector.on("end", async (collected) => {
-			//no input
+			// no input
 			if (collected.size == 0) {
 				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
 			}
@@ -106,26 +106,26 @@ async function sendResult(client, interaction, answer, message, roleId) {
 	try {
 
 		switch (answer) {
-			case "yes":
-				const members = await interaction.guild.members.fetch();
+		case "yes":
+			const members = await interaction.guild.members.fetch();
 
-				let content = {
-					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-				};
+			const content = {
+				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
+			};
 
-				let count = 0;
-				members.forEach((member) => {
-					if (member.roles.cache.has(roleId) && !member.user.bot) {
-						member.send(content);
-						count++;
-					}
-				});
+			let count = 0;
+			members.forEach((member) => {
+				if (member.roles.cache.has(roleId) && !member.user.bot) {
+					member.send(content);
+					count++;
+				}
+			});
 
 
-				return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
 
-			case "no":
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
+		case "no":
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
 		}
 	}
 	catch (error) {
