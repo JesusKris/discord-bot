@@ -84,12 +84,9 @@ exports.verifyChannel = async (reference, channel) => {
 		try {
 			result = await reference.guild.channels.fetch(channel.id);
 		}
-		catch {}
-		if (!result) {
-			return false;
-		}
+		catch { }
 
-		return true;
+		return result
 
 	}
 	catch (error) {

@@ -12,18 +12,18 @@ module.exports = async (client, member) => { // eslint-disable-line
 		const settings = await getGuildSettings(member);
 
 		// setup done || notifications !disabled
-		if (settings != null && settings.notification_channel != null) {
+		if (settings && settings.notification_channel != null) {
 			const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
 			channel.send(
 				{
-					embeds: [await getStandardEmbed("A member has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })],
+					embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })],
 				},
 			);
 		}
 
 		// setup done || greetings !disabled
-		if (settings != null && settings.greetings_channel != null && !settings.is_main_server) {
+		if (settings && settings.greetings_channel != null && !settings.is_main_server) {
 			const channel = await member.guild.channels.cache.get(settings.greetings_channel);
 			channel.send(await getGreetingMessage(member));
 		}

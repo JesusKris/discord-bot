@@ -11,7 +11,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 		const settings = await getGuildSettings(member);
 
 		// setup not done || notifications disabled
-		if (settings == null || settings.notification_channel == null) return;
+		if (!settings|| settings.notification_channel == null) return;
 
 		const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
@@ -35,7 +35,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 		if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 3500)) {
 			channel.send(
 				{
-					embeds: [await getWarningEmbed("A member has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
+					embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
 						name: "Reason",
 						value: `Kicked by ${userMention(kickLog.executor.id)}`,
 						inline: false,
@@ -48,7 +48,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 		else if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 3500)) {
 			channel.send(
 				{
-					embeds: [await getWarningEmbed("A member has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
+					embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
 						name: "Reason",
 						value: `Banned by ${userMention(banLog.executor.id)}`,
 						inline: false,
@@ -60,7 +60,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 		else {
 			channel.send(
 				{
-					embeds: [await getWarningEmbed("A member has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
+					embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
 						name: "Reason",
 						value: "Left",
 						inline: false,

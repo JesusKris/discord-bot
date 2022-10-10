@@ -92,7 +92,7 @@ async function askForConfirmation(client, interaction, message, roleId) {
 		collector.on("end", async (collected) => {
 			// no input
 			if (collected.size == 0) {
-				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
+				await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
 			}
 		});
 
@@ -125,7 +125,7 @@ async function sendResult(client, interaction, answer, message, roleId) {
 			return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
 
 		case "no":
-			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation")], content: "", components: [], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
 		}
 	}
 	catch (error) {

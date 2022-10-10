@@ -11,20 +11,20 @@ exports.run = async (client, interaction, permissions) => {
 	try {
 		const settings = await getGuildSettings(interaction);
 		if (!settings.is_main_server) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Verification is disabled in a sprint server!")], ephemeral: true });
+			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Verification is disabled in a sprint server.")], ephemeral: true });
 		}
 
 		const member = await interaction.guild.members.fetch(interaction.user.id);
 
 		const isVerified = await checkVerification(interaction, settings, member);
 		if (isVerified) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You are already verified!")], ephemeral: true });
+			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You are already verified.")], ephemeral: true });
 		}
 
 
 		const isCorrectPassword = await checkPassword(interaction, settings);
 		if (!isCorrectPassword) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Incorrect code provided. Please try again!")], ephemeral: true });
+			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Incorrect code provided. Please try again.")], ephemeral: true });
 		}
 
 
@@ -44,7 +44,7 @@ exports.run = async (client, interaction, permissions) => {
 			await grantRoles(settings, member, "guest");
 		}
 
-		return await interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified!")], ephemeral: true });
+		return await interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
 
 	}
 	catch (error) {
@@ -101,7 +101,7 @@ async function sendDmConfirmation(interaction, member) {
 
 	try {
 
-		member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}!`)] });
+		member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
 
 	}
 	catch (error) {

@@ -47,15 +47,15 @@ async function getIntroductionFields() {
 			},
 			{
 				name: "master-, student- && guest-password",
-				value: "These passwords are needed to perform verifcation for students when they want to join a main server. Only available in /setup main.",
+				value: "These passwords are needed to perform verifcation for students when they want to gain permissions. Only available in /setup main.",
 			},
 			{
 				name: "student-role && batch-role",
-				value: "Both of these roles are needed to perform verification for students when they want to join a main server. Batch role will be an indicator of what batch they are in kood/Jõhvi. Only available in /setup main.",
+				value: "Both of these roles are needed to perform verification for students when they want to gain permissions. Batch role will be an indicator of what batch they are in kood/Jõhvi. Only available in /setup main.",
 			},
 			{
 				name: "quest-role",
-				value: "Guest role is needed to perform verfication for guests when they want to join a main server. Only available in /setup main.",
+				value: "Guest role is needed to perform verfication for guests when they want to want to gain permissions. Only available in /setup main.",
 			},
 			{
 				name: "notification-channel",

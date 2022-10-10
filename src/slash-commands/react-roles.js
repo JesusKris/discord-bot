@@ -187,13 +187,13 @@ async function sendResponse(interaction, channel, type) {
 		let message;
 		switch (type) {
 		case "create":
-			message = `Successfully created the react-role message in ${channelMention(channel.id)}`;
+			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
 			break;
 		case "add":
-			message = "Successfully added reaction role to a message.";
+			message = "Successfully added a reaction role to a message.";
 			break;
 		case "remove":
-			message = "Successfully removed reaction role from a message.";
+			message = "Successfully removed a reaction role from a message.";
 			break;
 		}
 

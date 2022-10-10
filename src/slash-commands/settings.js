@@ -220,10 +220,10 @@ async function changeSetting(interaction, setting, input) {
 
 async function sendResponse(interaction, isCorrect) {
 	if (isCorrect) {
-		await interaction.reply({ embeds: [await getStandardEmbed(null, "Setting changed successfully")], ephemeral: true });
+		await interaction.reply({ embeds: [await getStandardEmbed(null, "Setting changed successfully.")], ephemeral: true });
 	}
 	else {
-		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")},${bold("role")} or ${bold("text")}!`)], ephemeral: true });
+		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")},${bold("role")} or ${bold("text")}.`)], ephemeral: true });
 	}
 }
 
