@@ -30,9 +30,8 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 	const guildSettings = await getGuildSettings(interaction);
 	const userPermissions = await getUserPermissions(guildSettings, interaction);
 
-
 	// special case for setup
-	if (cmd.config.name == "setup" && guildSettings == null && await hasPermission(userPermissions, cmd)) {
+	if (cmd.config.name == "setup" && !guildSettings && await hasPermission(userPermissions, cmd)) {
 		try {
 			return await cmd.run(client, interaction, userPermissions);
 		}
@@ -42,7 +41,7 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 	}
 
 	// special case for setup
-	if (cmd.config.name == "setup" && guildSettings != null && await hasPermission(userPermissions, cmd)) {
+	if (cmd.config.name == "setup" && guildSettings && await hasPermission(userPermissions, cmd)) {
 		try {
 			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have already completed setup in this server!")], ephemeral: true });
 		}
@@ -52,7 +51,7 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 	}
 
 
-	if (cmd.config.setupRequired && guildSettings == null && await hasPermission(userPermissions, cmd)) {
+	if (cmd.config.setupRequired && !guildSettings) {
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet!")], ephemeral: true });
 	}
 

@@ -11,9 +11,7 @@ exports.getGuildSettings = async (reference) => {
 			raw: true,
 			required: true,
 		});
-		if (settings === null) {
-			return null;
-		}
+
 		return settings;
 
 	}
