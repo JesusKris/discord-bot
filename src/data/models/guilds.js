@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
-		is_main_server: {
+		is_main: {
 			allowNull: false,
 			type: DataTypes.BOOLEAN,
 		},
@@ -69,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	}, {
 		timestamps: true,
-		createdAt: true,
-		updatedAt: true,
+		createdAt: 'created_at',
+		updatedAt: 'updated_at',
 		sequelize,
 		modelName: "Guilds",
 	});

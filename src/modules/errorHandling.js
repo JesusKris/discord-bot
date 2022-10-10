@@ -25,7 +25,7 @@ async function clearExpiredErrorLogs() {
 	try {
 		await db.sequelize.models.Errors.destroy({
 			where: {
-				createdAt: {
+				created_at: {
 					[Op.lte]: config.errorLogs.expired,
 				},
 			},
@@ -44,7 +44,7 @@ async function createNewErrorLog(error, errorId) {
 				id: errorId,
 				name: error.name,
 				trace: error.stack,
-				createdAt: new Date(),
+				created_at: new Date(),
 			});
 	}
 	catch (error1) {

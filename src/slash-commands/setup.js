@@ -53,18 +53,18 @@ async function prepareGuildData(interaction) {
 		const data = {
 			guild_id: interaction.guild.id,
 			admin_role: interaction.options.get("admin-role").value,
-			is_main_server: false,
+			is_main: false,
 			guest_role: null,
 			batch_role: null,
 			student_role: null,
 			notification_channel: null,
 			greetings_channel: null,
-			createdAt: new Date(),
-			updatedAt: new Date(),
+			created_at: new Date(),
+			updated_at: new Date(),
 		};
 
 		if (interaction.options.getSubcommand() === "main") {
-			data.is_main_server = true;
+			data.is_main = true;
 		}
 		
 		if (interaction.options.get("guest-role")) {
@@ -115,7 +115,7 @@ async function saveGuildData(data) {
 	try {
 		await db.sequelize.models.Guilds.create({
 			id: data.guild_id,
-			is_main_server: data.is_main_server,
+			is_main: data.is_main,
 			notification_channel: data.notification_channel,
 			greetings_channel: data.greetings_channel,
 			admin_role: data.admin_role,
@@ -125,8 +125,8 @@ async function saveGuildData(data) {
 			master_password: data.master_password,
 			student_password: data.student_password,
 			guest_password: data.guest_password,
-			createdAt: data.createdAt,
-			updatedAt: data.updatedAt,
+			created_at: data.created_at,
+			updated_at: data.updated_at,
 		});
 
 	}

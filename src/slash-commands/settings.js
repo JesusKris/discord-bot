@@ -49,7 +49,7 @@ exports.config = {
 async function getGuildData(interaction) {
 	try {
 		const data = await db.sequelize.models.Guilds.findOne({
-			attributes: ["is_main_server"],
+			attributes: ["is_main"],
 			where: {
 				id: interaction.guild.id,
 			},
@@ -57,9 +57,9 @@ async function getGuildData(interaction) {
 		});
 
 		let settings;
-		if (data.is_main_server) {
+		if (data.is_main) {
 			settings = await db.sequelize.models.Guilds.findOne({
-				attributes: { exclude: ["id", "createdAt", "updatedAt", "is_main_server"] },
+				attributes: { exclude: ["id", "created_at", "updated_at", "is_main"] },
 				where: {
 					id: interaction.guild.id,
 				},
@@ -67,7 +67,7 @@ async function getGuildData(interaction) {
 			});
 		}
 
-		if (!data.is_main_server) {
+		if (!data.is_main) {
 			settings = await db.sequelize.models.Guilds.findOne({
 				attributes: ["notification_channel", "greetings_channel", "admin_role"],
 				where: {
@@ -231,7 +231,7 @@ async function checkAvailableSetting(interaction, setting) {
 	try {
 		const settings = await getGuildSettings(interaction);
 
-		if (!settings.is_main_server) {
+		if (!settings.is_main) {
 			if (setting == "admin_role" || setting == "notification_channel" || setting == "greetings_channel") {
 				return true;
 			}

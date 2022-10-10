@@ -10,7 +10,7 @@ const { shuffleArray } = require("../modules/utils");
 exports.run = async (client, interaction, permissions) => {
 	try {
 		const settings = await getGuildSettings(interaction);
-		if (!settings.is_main_server) {
+		if (!settings.is_main) {
 			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Verification is disabled in a sprint server.")], ephemeral: true });
 		}
 

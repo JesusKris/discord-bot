@@ -62,11 +62,11 @@ exports.run = async (client, interaction, permissions) => {
 			// exluding admin_role|batch_role|student_role|guest_role -> main|sprint
 			const guildSettings = await getGuildSettings(interaction);
 			if (!await checkForVerificationRole(role, guildSettings)) {
-				if (guildSettings.is_main_server) {
+				if (guildSettings.is_main) {
 					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin|batch|student|guest role as a reaction role.")], ephemeral: true });
 				}
 
-				if (!guildSettings.is_main_server) {
+				if (!guildSettings.is_main) {
 					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin role as a reaction role.")], ephemeral: true });
 				}
 			}
@@ -173,8 +173,8 @@ async function saveReactMessage(interaction, message_id, title, description) {
 			title: title,
 			description: description,
 			type: await interaction.options.getString("type"),
-			createdAt: new Date(),
-			updatedAt: new Date(),
+			created_at: new Date(),
+			updated_at: new Date(),
 		});
 	}
 	catch (error) {
@@ -271,7 +271,7 @@ async function saveReaction(message, emoji, role) {
 			message_id: message.id,
 			role: role.id,
 			emoji: emoji,
-			createdAt: new Date(),
+			created_at: new Date(),
 		});
 	}
 	catch (error) {
@@ -334,7 +334,7 @@ async function getReactionRoles(messageId) {
 				message_id: messageId,
 			},
 			raw: true,
-			order: [["createdAt", "ASC"]],
+			order: [["created_at", "ASC"]],
 			attributes: ["role", "emoji"],
 		});
 
@@ -412,14 +412,14 @@ async function removeReactionsFromMessage(message, emoji) {
 
 async function checkForVerificationRole(role, settings) {
 	try {
-		if (settings.is_main_server) {
+		if (settings.is_main) {
 			if (settings.admin_role == role.id || settings.batch_role == role.id || settings.guest_role == role.id || settings.student_role == role.id) {
 				return false;
 			}
 			return true;
 		}
 
-		if (!settings.is_main_server) {
+		if (!settings.is_main) {
 			if (settings.admin_role == role.id) {
 				return false;
 			}

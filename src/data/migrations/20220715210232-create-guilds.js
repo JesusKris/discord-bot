@@ -7,7 +7,7 @@ module.exports = {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			is_main_server: {
+			is_main: {
 				allowNull: false,
 				type: Sequelize.BOOLEAN,
 			},
@@ -47,11 +47,11 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			createdAt: {
+			created_at: {
 				allowNull: false,
 				type: Sequelize.DATE,
 			},
-			updatedAt: {
+			updated_at: {
 				allowNull: false,
 				type: Sequelize.DATE,
 			},

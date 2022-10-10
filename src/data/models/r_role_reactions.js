@@ -5,10 +5,10 @@ const {
 module.exports = (sequelize, DataTypes) => {
 	class R_Role_Reactions extends Model {
 		/**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+	 * Helper method for defining associations.
+	 * This method is not a part of Sequelize lifecycle.
+	 * The `models/index` file will call this method automatically.
+	 */
 		static associate(models) {
 			// define association here
 			R_Role_Reactions.belongsTo(models.R_Role_Messages, {
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	}, {
 		timestamps: true,
-		createdAt: true,
+		createdAt: 'created_at',
 		updatedAt: false,
 		sequelize,
 		modelName: "R_Role_Reactions",

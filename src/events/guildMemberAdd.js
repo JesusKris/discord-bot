@@ -23,7 +23,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 		}
 
 		// setup done || greetings !disabled
-		if (settings && settings.greetings_channel != null && !settings.is_main_server) {
+		if (settings && settings.greetings_channel != null && !settings.is_main) {
 			const channel = await member.guild.channels.cache.get(settings.greetings_channel);
 			channel.send(await getGreetingMessage(member));
 		}
