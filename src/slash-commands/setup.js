@@ -53,6 +53,12 @@ async function prepareGuildData(interaction) {
 		const data = {
 			guild_id: interaction.guild.id,
 			admin_role: interaction.options.get("admin-role").value,
+			is_main_server: false,
+			guest_role: null,
+			batch_role: null,
+			student_role: null,
+			notification_channel: null,
+			greetings_channel: null,
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
@@ -60,44 +66,31 @@ async function prepareGuildData(interaction) {
 		if (interaction.options.getSubcommand() === "main") {
 			data.is_main_server = true;
 		}
-		else {
-			data.is_main_server = false;
-		}
-
+		
 		if (interaction.options.get("guest-role")) {
 			data.guest_role = interaction.options.get("guest-role").value;
 		}
-		else {
-			data.guest_role = null;
-		}
+		
 
 		if (interaction.options.get("student-role")) {
 			data.student_role = interaction.options.get("student-role").value;
 		}
-		else {
-			data.student_role = null;
-		}
+		
 
 		if (interaction.options.get("batch-role")) {
 			data.batch_role = interaction.options.get("batch-role").value;
 		}
-		else {
-			data.batch_role = null;
-		}
+		
 
 		if (interaction.options.get("notification-channel")) {
 			data.notification_channel = interaction.options.get("notification-channel").value;
 		}
-		else {
-			data.notification_channel = null;
-		}
+		
 
 		if (interaction.options.get("greetings-channel")) {
 			data.greetings_channel = interaction.options.get("greetings-channel").value;
 		}
-		else {
-			data.greetings_channel = null;
-		}
+		
 
 		if (interaction.options.get("master-password")) {
 			data.master_password = interaction.options.get("master-password").value;
