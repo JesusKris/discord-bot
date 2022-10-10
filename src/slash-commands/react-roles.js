@@ -267,6 +267,7 @@ async function isAvailableEmoji(emoji, message) {
 async function saveReaction(message, emoji, role) {
 	try {
 		await db.sequelize.models.R_Role_Reactions.create({
+			guild_id: message.guildId,
 			message_id: message.id,
 			role: role.id,
 			emoji: emoji,

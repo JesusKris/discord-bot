@@ -11,20 +11,20 @@ exports.run = async (client, interaction, permissions) => {
 	try {
 		const settings = await getGuildSettings(interaction);
 		if (!settings.is_main_server) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Verification is disabled in a sprint server!")] });
+			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Verification is disabled in a sprint server!")], ephemeral: true });
 		}
 
 		const member = await interaction.guild.members.fetch(interaction.user.id);
 
 		const isVerified = await checkVerification(interaction, settings, member);
 		if (isVerified) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You are already verified!")] });
+			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You are already verified!")], ephemeral: true });
 		}
 
 
 		const isCorrectPassword = await checkPassword(interaction, settings);
 		if (!isCorrectPassword) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Incorrect code provided. Please try again!")] });
+			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Incorrect code provided. Please try again!")], ephemeral: true });
 		}
 
 
@@ -87,7 +87,7 @@ async function checkPassword(interaction, settings) {
 		if (password == settings.master_password || password == settings.guest_password || password == settings.student_password) {
 			return true;
 		}
-		
+
 		return false;
 	}
 	catch (error) {

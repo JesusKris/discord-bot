@@ -9,17 +9,20 @@ const { getRawId } = require("../modules/utils.js");
 
 exports.run = async (client, interaction, permissions) => {
 	try {
-		const settings = await getGuildSettings(interaction);
-
-		await deleteUnWantedEntries(settings);
-
 		if (interaction.options.getSubcommand() === "list") {
+			const settings = await getGuildData(interaction);
 			await sendSettings(interaction, settings);
 		}
 
 		if (interaction.options.getSubcommand() === "change") {
 			const setting = interaction.options.getString("setting");
 			const input = interaction.options.getString("value");
+
+			const isAvailable = await checkAvailableSetting(interaction, setting)
+
+			if (!isAvailable) {
+				return await interaction.reply({ embeds: [await getWarningEmbed(null, "This setting is not available in a sprint server.")], ephemeral: true });
+			}
 
 			await validateInput(interaction, setting, input);
 
@@ -43,20 +46,54 @@ exports.config = {
 	// maxArgs: 0,
 };
 
-async function deleteUnWantedEntries(setting) {
-	delete setting.id;
-	delete setting.is_main_server;
-	delete setting.createdAt;
-	delete setting.updatedAt;
+async function getGuildData(interaction) {
+	try {
+		const data = await db.sequelize.models.Guilds.findOne({
+			attributes: ['is_main_server'],
+			where: {
+				id: interaction.guild.id
+			},
+			raw: true
+		})
+
+		let settings;
+		if (data.is_main_server) {
+			settings = await db.sequelize.models.Guilds.findOne({
+				attributes: { exclude: ['id', "createdAt", "updatedAt", 'is_main_server'] },
+				where: {
+					id: interaction.guild.id
+				},
+				raw: true
+			})
+		}
+
+		if (!data.is_main_server) {
+			settings = await db.sequelize.models.Guilds.findOne({
+				attributes: ["notification_channel", "greetings_channel", "admin_role"],
+				where: {
+					id: interaction.guild.id
+				},
+				raw: true
+			})
+		}
+
+		return settings
+
+	}
+	catch (error) {
+		handleError(error)
+	}
 }
+
+
 
 async function sendSettings(interaction, settings) {
 	try {
-		const arrayOfCommands = [];
+		const arrayOfSettings = [];
 		for (const [key, value] of Object.entries(settings)) {
 
 			const oneSetting = {};
-			if (value != null) {
+			if (value) {
 				oneSetting.name = key;
 
 				//channel
@@ -78,10 +115,10 @@ async function sendSettings(interaction, settings) {
 				oneSetting.value = "-";
 			}
 
-			arrayOfCommands.push(oneSetting);
+			arrayOfSettings.push(oneSetting);
 		}
 
-		await interaction.reply({ embeds: [await getStandardEmbed(`Settings in ${bold(interaction.guild.name)}`, null, null, arrayOfCommands)], ephemeral: true });
+		await interaction.reply({ embeds: [await getStandardEmbed(`Settings in ${bold(interaction.guild.name)}`, null, null, arrayOfSettings)], ephemeral: true });
 	}
 	catch (error) {
 		handleError(error);
@@ -93,15 +130,18 @@ async function validateInput(interaction, setting, input) {
 	if (setting == "notification_channel" || setting == "greetings_channel") {
 
 		if (input.match(ChannelsPattern) || input == "null") {
-			const channelId = await getRawId(input);
 
-			changeSetting(interaction, setting, channelId);
-			sendResponse(interaction, true);
-		}
-		else {
-			sendResponse(interaction, false);
-		}
+			let channel;
+			if (input == "null") {
+				channel = "null"
+			} else {
+				channel = await getRawId(input);
+			}
 
+			changeSetting(interaction, setting, channel);
+			return sendResponse(interaction, true);
+		}
+		return sendResponse(interaction, false);
 
 	}
 
@@ -109,15 +149,44 @@ async function validateInput(interaction, setting, input) {
 		if (input.match(RolesPattern)) {
 			const roleId = await getRawId(input)
 
+			//checking if the selected role is not being used as react role
+			const notReactRole = await checkForReactRole(interaction, roleId)
+
+			if (!notReactRole) {
+				return await interaction.reply({
+					embeds: [await getWarningEmbed(null, "The selected role is being used as a react-role. Please remove it to select it.")], ephemeral: true
+				});
+			}
+
+
+			async function checkForReactRole(interaction, roleId) {
+				try {
+					const result = await db.sequelize.models.R_Role_Reactions.findOne({
+						where: {
+							guild_id: interaction.guild.id,
+							role: roleId
+						},
+						raw: true
+					})
+
+					if (result) {
+						return false
+					}
+
+					return true
+				}
+				catch (error) {
+					handleError(error)
+				}
+			}
 
 
 
 			changeSetting(interaction, setting, roleId);
-			sendResponse(interaction, true);
+			return sendResponse(interaction, true);
 		}
-		else {
-			sendResponse(interaction, false);
-		}
+		return sendResponse(interaction, false);
+
 	}
 
 
@@ -125,12 +194,10 @@ async function validateInput(interaction, setting, input) {
 
 		if (!input.match(ChannelsPattern) && !input.match(RolesPattern) && !input.match(UsersPattern) && !input.match(EveryonePattern)) {
 			changeSetting(interaction, setting, input);
-			sendResponse(interaction, true);
-		}
-		else {
-			sendResponse(interaction, false);
+			return sendResponse(interaction, true);
 		}
 
+		return sendResponse(interaction, false);
 	}
 }
 
@@ -150,7 +217,6 @@ async function changeSetting(interaction, setting, input) {
 	catch (error) {
 		handleError(error);
 	}
-
 }
 
 async function sendResponse(interaction, isCorrect) {
@@ -158,6 +224,24 @@ async function sendResponse(interaction, isCorrect) {
 		await interaction.reply({ embeds: [await getStandardEmbed(null, "Setting changed successfully")], ephemeral: true });
 	}
 	else {
-		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")}/${bold("role")} or ${bold("text")}!`)], ephemeral: true });
+		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")},${bold("role")} or ${bold("text")}!`)], ephemeral: true });
+	}
+}
+
+async function checkAvailableSetting(interaction, setting) {
+	try {
+		const settings = await getGuildSettings(interaction)
+
+		if (!settings.is_main_server) {
+			if (setting == "admin_role" || setting == "notification_channel" || setting == "greetings_channel") {
+				return true
+			}
+			return false
+		}
+
+		return true
+	}
+	catch (error) {
+		handleError(error)
 	}
 }

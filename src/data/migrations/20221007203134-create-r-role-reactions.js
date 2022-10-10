@@ -3,6 +3,15 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('R_Role_Reactions', {
+      guild_id: {
+        type: Sequelize.STRING,
+        onDelete: 'CASCADE',
+        references: {
+          model: "Guilds",
+          key: "id",
+          as: "guild_id"
+        }
+      },
       message_id: {
         type: Sequelize.STRING,
         onDelete: 'CASCADE',

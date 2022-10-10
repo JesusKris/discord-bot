@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
 			Guilds.hasMany(models.R_Role_Messages, {
 				foreignKey: "guild_id"
 			})
+			Guilds.hasMany(models.R_Role_Reactions, {
+				foreignKey: "guild_id"
+			})
 		}
 	}
 	Guilds.init({

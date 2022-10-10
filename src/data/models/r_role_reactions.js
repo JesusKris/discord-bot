@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "message_id",
         onDelete: 'CASCADE'
       })
+      R_Role_Reactions.belongsTo(models.Guilds, {
+        foreignKey: "guild_id",
+        onDelete: 'CASCADE'
+      })
     }
   }
   R_Role_Reactions.init({
