@@ -1,4 +1,4 @@
-const { channelMention, roleMention } = require("discord.js");
+const { channelMention, roleMention, MessageMentions: { EveryonePattern } } = require("discord.js");
 const config = require("../appconfig.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
@@ -73,6 +73,11 @@ exports.run = async (client, interaction, permissions) => {
 
 
 			// perform  availabity checks
+			if (await isEveryoneOrHereRole(role)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone and here roles can't be used in a react-role message.")], ephemeral: true });
+
+			}
+
 			if (await isAvailableRole(role)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected role is already being used in a react-role message in this server.")], ephemeral: true });
 			}
@@ -411,4 +416,11 @@ async function checkForVerificationRole(role, settings) {
 	catch (error) {
 		handleError(error);
 	}
+}
+
+async function isEveryoneOrHereRole(role) {
+	if (role.name.match(EveryonePattern)) {
+		return true
+	}
+	return false
 }
