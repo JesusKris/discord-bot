@@ -16,7 +16,7 @@ exports.run = async (client, interaction, permissions) => {
 
 		const member = await interaction.guild.members.fetch(interaction.user.id);
 
-		const isVerified = await checkVerification(interaction, settings, member);
+		const isVerified = await checkVerification(settings, member);
 		if (isVerified) {
 			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You are already verified.")], ephemeral: true });
 		}
@@ -44,7 +44,7 @@ exports.run = async (client, interaction, permissions) => {
 			await grantRoles(settings, member, "guest");
 		}
 
-		return await interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
+		return interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
 
 	}
 	catch (error) {
@@ -64,41 +64,25 @@ exports.config = {
 	// maxArgs: 0,
 };
 
-async function checkVerification(interaction, settings, member) {
+async function checkVerification(settings, member) {
 
-	try {
-
-		if (member.roles.cache.has(settings.admin_role) || member.roles.cache.has(settings.guest_role) || member.roles.cache.has(settings.student_role)) {
-			return true;
-		}
-		return false;
-
+	if (member.roles.cache.has(settings.admin_role) || member.roles.cache.has(settings.guest_role) || member.roles.cache.has(settings.student_role)) {
+		return true;
 	}
-	catch (error) {
-		handleError(error);
-	}
+	return false;
 
 }
 
 async function checkPassword(interaction, settings) {
-
-	try {
-		const password = await interaction.options.getString("code");
-		if (password == settings.master_password || password == settings.guest_password || password == settings.student_password) {
-			return true;
-		}
-
-		return false;
-	}
-	catch (error) {
-		handleError(error);
+	const password = await interaction.options.getString("code");
+	if (password == settings.master_password || password == settings.guest_password || password == settings.student_password) {
+		return true;
 	}
 
-
+	return false;
 }
 
 async function sendDmConfirmation(interaction, member) {
-
 	try {
 
 		member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
@@ -119,13 +103,17 @@ async function formatUsername(interaction, member, type) {
 
 		const name = await interaction.options.getString("full-name");
 
-		switch (type) {
-		case "student":
+		if (type == "student") {
 			const gitea = await interaction.options.getString("gitea-name");
-
 			return await member.setNickname(`${name} / ${gitea}`);
-		case "guest":
+		}
+
+
+		if (type == "guest") {
+
 			return await member.setNickname(name);
+
+
 		}
 
 	}
@@ -136,20 +124,15 @@ async function formatUsername(interaction, member, type) {
 }
 
 async function grantRoles(settings, member, type) {
-	try {
 
-		switch (type) {
-		case "student":
-			await member.roles.add(settings.student_role);
-			await member.roles.add(settings.batch_role);
-			return;
-		case "guest":
-			return await member.roles.add(settings.guest_role);
-
-		}
+	if (type == "stduent") {
+		await member.roles.add(settings.student_role);
+		return await member.roles.add(settings.batch_role);
 	}
-	catch (error) {
-		handleError(error);
+
+
+	if (type == "guest") {
+		return await member.roles.add(settings.guest_role);
 	}
 }
 
