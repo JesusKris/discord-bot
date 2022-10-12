@@ -86,7 +86,7 @@ exports.initApp = async () => {
 	}
 
 	client.login(config.client.token);
-	pingDB();
+	await pingDB();
 
 };
 
