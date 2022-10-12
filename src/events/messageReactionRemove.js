@@ -33,17 +33,16 @@ module.exports = async (client, reaction, user) => {
 
 async function isReactMessage(message) {
 	try {
-		const result = await db.sequelize.models.R_Role_Messages.findOne({
-			where: {
-				guild_id: message.guildId,
-				id: message.id,
-			},
-			raw: true,
+		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
+			attributes: ["id"],
+			include: [{
+				model: db.sequelize.models.R_Role_Reactions,
+				attributes: ["role", "emoji"],
+				separate: true,
+			}],
 		});
 
-		return result;
-
-
+		return result.toJSON();
 	}
 	catch (error) {
 		handleError(error);
@@ -52,21 +51,13 @@ async function isReactMessage(message) {
 }
 
 async function isReactRole(emojiObject, reactMessage) {
-	try {
-
-		const reactRole = await db.sequelize.models.R_Role_Reactions.findOne({
-			where: {
-				message_id: reactMessage.id,
-				emoji: await getRawEmoji(emojiObject),
-			},
-			raw: true,
-		});
-
-		return reactRole;
+	for (const reaction of reactMessage.R_Role_Reactions) {
+		if (reaction.emoji == await getRawEmoji(emojiObject)) {
+			return reaction
+		}
 	}
-	catch (error) {
-		handleError(error);
-	}
+	return false
+
 }
 
 async function getRawEmoji(emoji) {
@@ -86,12 +77,11 @@ async function getRawEmoji(emoji) {
 async function removeRoleFromMember(client, reactRole, reaction, user) {
 	try {
 
-		const guild = await client.guilds.fetch(reaction.message.guildId);
+		const guild = await client.guilds.cache.get(reaction.message.guildId);
 
-		const member = await guild.members.fetch(user);
+		const member = guild.members.cache.get(user.id)
 
 		await member.roles.remove(reactRole.role);
-
 
 	}
 	catch (error) {
