@@ -128,11 +128,11 @@ async function validateInput(interaction, setting, input) {
 
 	if (setting == "notification_channel" || setting == "greetings_channel") {
 
-		if (input.match(ChannelsPattern) || input == "null") {
+		if (input.match(ChannelsPattern) || input == "Disabled") {
 
 			let channel;
-			if (input == "null") {
-				channel = "null";
+			if (input == "Disabled") {
+				channel = null;
 			}
 			else {
 				channel = await getRawId(input);
@@ -201,11 +201,6 @@ async function validateInput(interaction, setting, input) {
 }
 
 async function changeSetting(interaction, setting, input) {
-
-	if (input == "null") {
-		input = null;
-	}
-
 	try {
 		await db.sequelize.models.Guilds.update({ [`${setting}`]: input }, {
 			where: {

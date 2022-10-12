@@ -34,7 +34,7 @@ module.exports = {
 				.addStringOption(option =>
 					option
 						.setName("value")
-						.setDescription("Set the new value for the setting specified. To enter an empty value, insert 'null'")
+						.setDescription("Set the new value for the setting specified. To disable notifications or greetings, enter \"Disabled\"")
 						.setRequired(true),
 				),
 		),

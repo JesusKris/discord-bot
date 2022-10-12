@@ -4,7 +4,7 @@ const logger = require("./modules/logger.js");
 if (Number(process.version.slice(1).split(".")[0]) < 17) logger.error("Node 17.x or higher is required. Update Node on your system.");
 
 const config = require("./appconfig.js");
-const { Client, Collection, IntentsBitField, Routes } = require("discord.js");
+const { Client, Collection, IntentsBitField, Routes, Partials } = require("discord.js");
 const { readdirSync } = require("fs");
 const { REST } = require("@discordjs/rest");
 const { pingDB } = require("./modules/database.js");
@@ -15,9 +15,8 @@ exports.initApp = async () => {
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({
 		intents: new IntentsBitField(config.client.intents),
-		partials: config.client.partials,
+		partials: [Partials.User, Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction],
 	});
-
 
 	const commands = new Collection();
 	const slashCommands = new Collection();

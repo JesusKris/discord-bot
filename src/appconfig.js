@@ -17,7 +17,6 @@ module.exports = {
 		token: process.env.BOT_TOKEN,
 		prefix: process.env.PREFIX,
 		intents: JSON.parse(process.env.BOT_INTENTS),
-		partials: JSON.parse(process.env.BOT_PARTIALS),
 		Id: process.env.ID,
 		test_guild: process.env.TEST_GUILD,
 
