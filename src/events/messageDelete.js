@@ -8,11 +8,11 @@ module.exports = async (client, message) => {
 		if (!message.author.bot) return;
 	}
 
-	const result = await isReactMessage(message);
+	const reactMessage = await isReactMessage(message);
+	
+	if (!reactMessage) return;
 
-	if (!result) return;
-
-	await deleteRolesFromUsers(message);
+	await deleteRolesFromUsers(message, reactMessage);
 
 	await deleteReactMessageData(message);
 
@@ -21,10 +21,18 @@ module.exports = async (client, message) => {
 
 async function isReactMessage(message) {
 	try {
-		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id);
+		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
+			attributes: ["id"],
+			include: [{
+				model: db.sequelize.models.R_Role_Reactions,
+				attributes: ["role"],
+				separate: true,
+			}],
+		});
 
-		return result;
-
+		if (result) {
+			return result.toJSON();
+		}
 	}
 	catch (error) {
 		handleError(error);
@@ -32,22 +40,11 @@ async function isReactMessage(message) {
 
 }
 
-
-async function deleteRolesFromUsers(message) {
+async function deleteRolesFromUsers(message, reactMessage) {
 	try {
-		const reactionRoles = await db.sequelize.models.R_Role_Reactions.findAll({
-			where: {
-				guild_id: message.guildId,
-				message_id: message.id,
-			},
-			raw: true,
-		});
 
-		if (reactionRoles.length == 0) return;
-
-
-		for (let i = 0; i < reactionRoles.length; i++) {
-			await deleteRole(message, reactionRoles[i].role);
+		for await (const reaction of reactMessage.R_Role_Reactions) {
+			await deleteRole(message, reaction.role);
 		}
 
 	}
