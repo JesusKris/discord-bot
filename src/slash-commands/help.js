@@ -31,13 +31,17 @@ exports.config = {
 async function sendHelpEmbed(client, interaction, permission) {
 	const { container } = client;
 	const arrayOfCommands = [];
-	container.slashCommands.forEach((value, index) => {
-		if (value.config.enabled) {
+
+	for (const cmd of container.slashCommands) {
+
+		if (cmd[1].config.enabled) {
 			const oneCommand = {};
-			oneCommand.name = `${config.client.prefix}${value.config.name} ${value.config.args}`;
-			oneCommand.value = codeBlock(value.config.description);
+			oneCommand.name = `${config.client.prefix}${cmd[1].config.name} ${cmd[1].config.args}`;
+			oneCommand.value = codeBlock(cmd[1].config.description);
 			arrayOfCommands.push(oneCommand);
 		}
-	});
-	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true });
+
+	}
+	
+	interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true });
 }
