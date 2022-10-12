@@ -48,31 +48,22 @@ exports.config = {
 
 async function getGuildData(interaction) {
 	try {
-		const data = await db.sequelize.models.Guilds.findOne({
+		const data = await db.sequelize.models.Guilds.findByPk(interaction.guild.id, {
 			attributes: ["is_main"],
-			where: {
-				id: interaction.guild.id,
-			},
 			raw: true,
 		});
 
 		let settings;
 		if (data.is_main) {
-			settings = await db.sequelize.models.Guilds.findOne({
+			settings = await db.sequelize.models.Guilds.findByPk(interaction.guild.id, {
 				attributes: { exclude: ["id", "created_at", "updated_at", "is_main"] },
-				where: {
-					id: interaction.guild.id,
-				},
 				raw: true,
 			});
 		}
 
 		if (!data.is_main) {
-			settings = await db.sequelize.models.Guilds.findOne({
+			settings = await db.sequelize.models.Guilds.findByPk(interaction.guild.id, {
 				attributes: ["notification_channel", "greetings_channel", "admin_role"],
-				where: {
-					id: interaction.guild.id,
-				},
 				raw: true,
 			});
 		}
