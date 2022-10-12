@@ -7,8 +7,8 @@ const { verifyChannel } = require("../modules/inputVerification.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 
 exports.run = async (client, interaction, permissions) => {
-
 	try {
+		
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 		if (interaction.options.get("notification-channel")) {
@@ -49,66 +49,62 @@ exports.config = {
 };
 
 async function prepareGuildData(interaction) {
-	try {
-		const data = {
-			guild_id: interaction.guild.id,
-			admin_role: interaction.options.get("admin-role").value,
-			is_main: false,
-			guest_role: null,
-			batch_role: null,
-			student_role: null,
-			notification_channel: null,
-			greetings_channel: null,
-			created_at: new Date(),
-			updated_at: new Date(),
-		};
+	const data = {
+		guild_id: interaction.guild.id,
+		admin_role: interaction.options.get("admin-role").value,
+		is_main: false,
+		guest_role: null,
+		batch_role: null,
+		student_role: null,
+		notification_channel: null,
+		greetings_channel: null,
+		created_at: new Date(),
+		updated_at: new Date(),
+	};
 
-		if (interaction.options.getSubcommand() === "main") {
-			data.is_main = true;
-		}
-		
-		if (interaction.options.get("guest-role")) {
-			data.guest_role = interaction.options.get("guest-role").value;
-		}
-		
-
-		if (interaction.options.get("student-role")) {
-			data.student_role = interaction.options.get("student-role").value;
-		}
-		
-
-		if (interaction.options.get("batch-role")) {
-			data.batch_role = interaction.options.get("batch-role").value;
-		}
-		
-
-		if (interaction.options.get("notification-channel")) {
-			data.notification_channel = interaction.options.get("notification-channel").value;
-		}
-		
-
-		if (interaction.options.get("greetings-channel")) {
-			data.greetings_channel = interaction.options.get("greetings-channel").value;
-		}
-		
-
-		if (interaction.options.get("master-password")) {
-			data.master_password = interaction.options.get("master-password").value;
-		}
-
-		if (interaction.options.get("student-password")) {
-			data.student_password = interaction.options.get("student-password").value;
-		}
-
-		if (interaction.options.get("guest-password")) {
-			data.guest_password = interaction.options.get("guest-password").value;
-		}
-
-		return data;
+	if (interaction.options.getSubcommand() === "main") {
+		data.is_main = true;
 	}
-	catch (error) {
-		handleError(error);
+
+	if (interaction.options.get("guest-role")) {
+		data.guest_role = interaction.options.get("guest-role").value;
 	}
+
+
+	if (interaction.options.get("student-role")) {
+		data.student_role = interaction.options.get("student-role").value;
+	}
+
+
+	if (interaction.options.get("batch-role")) {
+		data.batch_role = interaction.options.get("batch-role").value;
+	}
+
+
+	if (interaction.options.get("notification-channel")) {
+		data.notification_channel = interaction.options.get("notification-channel").value;
+	}
+
+
+	if (interaction.options.get("greetings-channel")) {
+		data.greetings_channel = interaction.options.get("greetings-channel").value;
+	}
+
+
+	if (interaction.options.get("master-password")) {
+		data.master_password = interaction.options.get("master-password").value;
+	}
+
+	if (interaction.options.get("student-password")) {
+		data.student_password = interaction.options.get("student-password").value;
+	}
+
+	if (interaction.options.get("guest-password")) {
+		data.guest_password = interaction.options.get("guest-password").value;
+	}
+
+	return data;
+
 }
 
 async function saveGuildData(data) {
@@ -137,10 +133,5 @@ async function saveGuildData(data) {
 }
 
 async function sendResponse(interaction) {
-	try {
-		await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}.`)], ephemeral: true });
-	}
-	catch (error) {
-		handleError(error);
-	}
+	interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}.`)], ephemeral: true });
 }
