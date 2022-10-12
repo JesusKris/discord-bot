@@ -17,31 +17,31 @@ module.exports = async (client, member) => { // eslint-disable-line
 		try {
 			const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
-			//channel has been deleted
+			// channel has been deleted
 			if (!channel) return;
 
-			return channel.send({ embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })], },);
+			return channel.send({ embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })] });
 		}
 		catch (error) {
-			handleError(error)
+			handleError(error);
 		}
 
 	}
 
-	
+
 	// greetings
 	if (settings && settings.greetings_channel && !settings.is_main) {
 
 		try {
 			const channel = await member.guild.channels.cache.get(settings.greetings_channel);
 
-			//channel has been deleted
+			// channel has been deleted
 			if (!channel) return;
 
 			return channel.send(await getGreetingMessage(member));
 		}
 		catch (error) {
-			handleError(error)
+			handleError(error);
 		}
 
 	}

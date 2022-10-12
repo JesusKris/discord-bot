@@ -7,7 +7,7 @@ const { getGuildSettings } = require("../modules/guildSettings.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const { getRawId } = require("../modules/utils.js");
 
-exports.run = async (client, interaction, permissions) => {
+exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
 		if (interaction.options.getSubcommand() === "list") {
 			const settings = await getGuildData(interaction);
@@ -149,29 +149,6 @@ async function validateInput(interaction, setting, input) {
 				});
 			}
 
-
-			async function checkForReactRole(interaction, roleId) {
-				try {
-					const result = await db.sequelize.models.R_Role_Reactions.findOne({
-						where: {
-							guild_id: interaction.guild.id,
-							role: roleId,
-						},
-						raw: true,
-					});
-
-					if (result) {
-						return false;
-					}
-
-					return true;
-				}
-				catch (error) {
-					handleError(error);
-				}
-			}
-
-
 			changeSetting(interaction, setting, roleId);
 			return sendResponse(interaction, true);
 		}
@@ -221,6 +198,28 @@ async function checkAvailableSetting(interaction, setting) {
 			if (setting == "admin_role" || setting == "notification_channel" || setting == "greetings_channel") {
 				return true;
 			}
+			return false;
+		}
+
+		return true;
+	}
+	catch (error) {
+		handleError(error);
+	}
+}
+
+
+async function checkForReactRole(interaction, roleId) {
+	try {
+		const result = await db.sequelize.models.R_Role_Reactions.findOne({
+			where: {
+				guild_id: interaction.guild.id,
+				role: roleId,
+			},
+			raw: true,
+		});
+
+		if (result) {
 			return false;
 		}
 

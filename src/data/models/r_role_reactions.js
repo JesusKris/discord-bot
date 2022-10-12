@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	}, {
 		timestamps: true,
-		createdAt: 'created_at',
+		createdAt: "created_at",
 		updatedAt: false,
 		sequelize,
 		modelName: "R_Role_Reactions",

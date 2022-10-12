@@ -3,7 +3,7 @@ const { handleError } = require("../modules/errorHandling.js");
 const { bold, codeBlock } = require("discord.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard");
 
-exports.run = async (client, interaction, permissions) => {
+exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
 
 		return sendHelpEmbed(client, interaction, "admin");
@@ -42,6 +42,6 @@ async function sendHelpEmbed(client, interaction, permission) {
 		}
 
 	}
-	
+
 	interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true });
 }

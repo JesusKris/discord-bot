@@ -14,7 +14,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 
 	const channel = await member.guild.channels.cache.get(settings.notification_channel);
 
-	//channel has been deleted
+	// channel has been deleted
 	if (!channel) return;
 
 
@@ -33,7 +33,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 	const banLog = fetchedBanLogs.entries.first();
 
 
-	//kick
+	// kick
 	if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 3500)) {
 
 		try {
@@ -48,13 +48,13 @@ module.exports = async (client, member) => { // eslint-disable-line
 			);
 		}
 		catch (error) {
-			handleError(error)
+			handleError(error);
 		}
-		
+
 	}
 
 
-	//ban
+	// ban
 	if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 3500)) {
 
 		try {
@@ -69,13 +69,13 @@ module.exports = async (client, member) => { // eslint-disable-line
 			);
 		}
 		catch (error) {
-			handleError(error)
+			handleError(error);
 		}
 
 	}
 
 
-	//leaving
+	// leaving
 	try {
 		channel.send(
 			{
@@ -88,7 +88,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 		);
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 
 

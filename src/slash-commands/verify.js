@@ -7,7 +7,7 @@ const { bold, userMention } = require("discord.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard");
 const { shuffleArray } = require("../modules/utils");
 
-exports.run = async (client, interaction, permissions) => {
+exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
 		const settings = await getGuildSettings(interaction);
 		if (!settings.is_main) {

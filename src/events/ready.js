@@ -17,7 +17,7 @@ module.exports = async (client) => {
 			await client.user.setActivity(`${config.client.activityStatus.choices[random]}`, { type: ActivityType.Playing });
 		}
 		catch (error) {
-			handleError(error)
+			handleError(error);
 		}
 	}
 

@@ -7,7 +7,7 @@ const { handleError } = require("../modules/errorHandling.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { verifyEmoji, verifyMessageLink, verifyChannel } = require("../modules/inputVerification");
 
-exports.run = async (client, interaction, permissions) => {
+exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 
 	await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
@@ -187,15 +187,15 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-			case "create":
-				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-				break;
-			case "add":
-				message = "Successfully added a reaction role to a message.";
-				break;
-			case "remove":
-				message = "Successfully removed a reaction role from a message.";
-				break;
+		case "create":
+			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+			break;
+		case "add":
+			message = "Successfully added a reaction role to a message.";
+			break;
+		case "remove":
+			message = "Successfully removed a reaction role from a message.";
+			break;
 		}
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
@@ -209,7 +209,7 @@ async function isReactRoleMessage(message) {
 	try {
 		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id);
 
-		return result
+		return result;
 
 	}
 	catch (error) {
@@ -225,7 +225,7 @@ async function isAvailableRole(role) {
 			},
 		});
 
-		return result
+		return result;
 	}
 	catch (error) {
 		handleError(error);
@@ -242,7 +242,7 @@ async function isAvailableEmoji(emoji, message) {
 			raw: true,
 		});
 
-		return result
+		return result;
 	}
 	catch (error) {
 		handleError(error);
@@ -420,7 +420,7 @@ async function checkForVerificationRole(role, settings) {
 
 async function isEveryoneOrHereRole(role) {
 	if (role.name.match(EveryonePattern)) {
-		return true
+		return true;
 	}
-	return false
+	return false;
 }

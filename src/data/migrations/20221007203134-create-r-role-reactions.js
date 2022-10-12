@@ -41,7 +41,7 @@ module.exports = {
 			},
 		});
 	},
-	async down(queryInterface, Sequelize) {
+	async down(queryInterface, Sequelize) { // eslint-disable-line
 		await queryInterface.dropTable("R_Role_Reactions");
 	},
 };

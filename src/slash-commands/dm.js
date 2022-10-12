@@ -5,7 +5,7 @@ const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getLogEmbed } = require("../bot-responses/embeds/log.js");
 
-exports.run = async (client, interaction, permissions) => {
+exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 
 	const roleId = await interaction.options.get("role").value;
 	const message = await interaction.options.getString("message");
@@ -69,15 +69,15 @@ async function askForConfirmation(interaction, message, roleId) {
 		});
 
 		// buttons interaction
-		collector.on("collect", async (interaction) => {
-			if (interaction.customId === "yes") {
-				await interaction.deferUpdate();
-				return sendResult(interaction, "yes", message, roleId);
+		collector.on("collect", async (int) => {
+			if (int.customId === "yes") {
+				await int.deferUpdate();
+				return sendResult(int, "yes", message, roleId);
 			}
 
-			if (interaction.customId === "no") {
-				await interaction.deferUpdate();
-				return sendResult(interaction, "no", message, roleId);
+			if (int.customId === "no") {
+				await int.deferUpdate();
+				return sendResult(int, "no", message, roleId);
 			}
 
 		});
@@ -98,26 +98,26 @@ async function askForConfirmation(interaction, message, roleId) {
 async function sendResult(interaction, answer, message, roleId) {
 	try {
 		switch (answer) {
-			case "yes":
-				const members = await interaction.guild.members.fetch();
+		case "yes":
+			const members = await interaction.guild.members.fetch();
 
-				const content = {
-					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-				};
+			const content = {
+				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
+			};
 
-				let count = 0;
-				members.forEach((member) => {
-					if (member.roles.cache.has(roleId) && !member.user.bot) {
-						member.send(content);
-						count++;
-					}
-				});
+			let count = 0;
+			members.forEach((member) => {
+				if (member.roles.cache.has(roleId) && !member.user.bot) {
+					member.send(content);
+					count++;
+				}
+			});
 
 
-				return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
 
-			case "no":
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
+		case "no":
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
 		}
 	}
 	catch (error) {

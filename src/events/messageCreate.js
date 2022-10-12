@@ -1,7 +1,7 @@
 const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getUserPermissions, hasPermission } = require("../modules/permissions.js");
-const { shuffleArray } = require("../modules/utils.js");
+const { shuffleArray, sleep } = require("../modules/utils.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 module.exports = async (client, message) => { // eslint-disable-line
@@ -22,7 +22,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 			await message.guild.members.fetch(message.author);
 		}
 		catch (error) {
-			handleError(error)
+			handleError(error);
 		}
 
 	}
@@ -49,8 +49,8 @@ module.exports = async (client, message) => { // eslint-disable-line
 	const userPermissions = await getUserPermissions(guildSettings, message);
 
 
-	//if server owner
-	if (cmd.config.setupRequired && !guildSettings && interaction.user.id === interaction.member.guild.ownerId) {
+	// if server owner
+	if (cmd.config.setupRequired && !guildSettings && message.user.id === message.member.guild.ownerId) {
 		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You have not completed server setup yet.")] });
 
 		await sleep(2500);
@@ -61,7 +61,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 	}
 
 
-	//user
+	// user
 	if (cmd.config.setupRequired && !guildSettings) {
 		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet.")] });
 
@@ -116,5 +116,5 @@ async function getCorrectArgs(command, args) {
 async function getPingReply() {
 	const randomNr = Math.floor(Math.random() * config.client.pingResponses.choices.length);
 	const shuffledArray = await shuffleArray(config.client.pingResponses.choices);
-	return shuffledArray[randomNr]
+	return shuffledArray[randomNr];
 }

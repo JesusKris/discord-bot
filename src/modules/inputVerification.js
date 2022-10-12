@@ -55,7 +55,7 @@ exports.verifyMessageLink = async (reference, message_link) => {
 		// trying to fetch with id, catching if not valid
 		channel = await reference.guild.channels.fetch(channelId);
 		message = await channel.messages.fetch(messageId);
-		
+
 	}
 	catch { }
 
@@ -83,6 +83,6 @@ exports.verifyChannel = async (reference, channel) => {
 	}
 	catch { }
 
-	return result
+	return result;
 
 };

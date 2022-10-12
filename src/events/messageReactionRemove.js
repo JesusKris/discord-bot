@@ -2,97 +2,99 @@ const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
 
 module.exports = async (client, reaction, user) => {
-    if (user.bot) return;
+	if (user.bot) return;
 
-    if (reaction.partial) {
-        // If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
-        try {
-            await reaction.fetch();
-        } catch { }
-    }
+	if (reaction.partial) {
+		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+		try {
+			await reaction.fetch();
+		}
+		catch { }
+	}
 
-    if (!reaction.message.author.bot) return;
+	if (!reaction.message.author.bot) return;
 
-    const reactMessage = await isReactMessage(reaction.message)
+	const reactMessage = await isReactMessage(reaction.message);
 
-    if (!reactMessage) return;
+	if (!reactMessage) return;
 
 
-    //perhaps checking if the author of the reaction was the bot?
-    //would be more optimized
-    const reactRole = await isReactRole(reaction.emoji, reactMessage)
+	// perhaps checking if the author of the reaction was the bot?
+	// would be more optimized
+	const reactRole = await isReactRole(reaction.emoji, reactMessage);
 
-    if (!reactRole) {
-        return reaction.users.remove(user)
-    }
+	if (!reactRole) {
+		return reaction.users.remove(user);
+	}
 
-    await removeRoleFromMember(client, reactRole, reaction, user)
+	await removeRoleFromMember(client, reactRole, reaction, user);
 
 };
 
 async function isReactMessage(message) {
-    try {
-        const result = await db.sequelize.models.R_Role_Messages.findOne({
-            where: {
-                guild_id: message.guildId,
-                id: message.id
-            },
-            raw: true
-        })
+	try {
+		const result = await db.sequelize.models.R_Role_Messages.findOne({
+			where: {
+				guild_id: message.guildId,
+				id: message.id,
+			},
+			raw: true,
+		});
 
-        return result
+		return result;
 
 
-    }
-    catch (error) {
-        handleError(error)
-    }
+	}
+	catch (error) {
+		handleError(error);
+	}
 
 }
 
 async function isReactRole(emojiObject, reactMessage) {
-    try {
+	try {
 
-        const reactRole = await db.sequelize.models.R_Role_Reactions.findOne({
-            where: {
-                message_id: reactMessage.id,
-                emoji: await getRawEmoji(emojiObject)
-            },
-            raw: true
-        })
+		const reactRole = await db.sequelize.models.R_Role_Reactions.findOne({
+			where: {
+				message_id: reactMessage.id,
+				emoji: await getRawEmoji(emojiObject),
+			},
+			raw: true,
+		});
 
-        return reactRole
-    }
-    catch (error) {
-        handleError(error)
-    }
+		return reactRole;
+	}
+	catch (error) {
+		handleError(error);
+	}
 }
 
 async function getRawEmoji(emoji) {
-    try {
-        if (!emoji.id) {
-            return emoji.name
-        } else {
-            return emoji.id
-        }
-    }
-    catch (error) {
-        handleError(error)
-    }
+	try {
+		if (!emoji.id) {
+			return emoji.name;
+		}
+		else {
+			return emoji.id;
+		}
+	}
+	catch (error) {
+		handleError(error);
+	}
 }
 
 async function removeRoleFromMember(client, reactRole, reaction, user) {
-    try {
+	try {
 
-        const guild = await client.guilds.fetch(reaction.message.guildId)
+		const guild = await client.guilds.fetch(reaction.message.guildId);
 
-        const member = await guild.members.fetch(user)
+		const member = await guild.members.fetch(user);
 
-        await member.roles.remove(reactRole.role)
+		await member.roles.remove(reactRole.role);
 
 
-    }
-    catch (error) {
-        handleError(error)
-    }
+	}
+	catch (error) {
+		handleError(error);
+	}
 }

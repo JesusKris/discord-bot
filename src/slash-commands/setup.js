@@ -6,9 +6,9 @@ const { bold } = require("discord.js");
 const { verifyChannel } = require("../modules/inputVerification.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 
-exports.run = async (client, interaction, permissions) => {
+exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
-		
+
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 		if (interaction.options.get("notification-channel")) {

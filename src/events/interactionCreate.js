@@ -1,6 +1,5 @@
 const { InteractionType } = require("discord.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning");
-const { handleError } = require("../modules/errorHandling");
 const { getUserPermissions, hasPermission } = require("../modules/permissions.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 
@@ -10,7 +9,7 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 
 	const { container } = client;
 
-	// get cmd data 
+	// get cmd data
 	const cmd = await container.slashCommands.get(interaction.commandName);
 
 	// If cmd doesn't exist
@@ -42,17 +41,17 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 	}
 
 
-	//if server owner
+	// if server owner
 	if (cmd.config.setupRequired && !guildSettings && interaction.user.id === interaction.member.guild.ownerId) {
 		return interaction.reply({ embeds: [await getWarningEmbed(null, "You have not completed server setup yet.")], ephemeral: true });
 	}
 
-	//user
+	// user
 	if (cmd.config.setupRequired && !guildSettings) {
 		return interaction.reply({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet.")], ephemeral: true });
 	}
 
-	// if has permission 
+	// if has permission
 	if (await hasPermission(userPermissions, cmd)) {
 		return cmd.run(client, interaction, userPermissions);
 	}
