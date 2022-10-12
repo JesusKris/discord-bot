@@ -6,20 +6,16 @@ const { handleError } = require("../modules/errorHandling.js");
 const { getLogEmbed } = require("../bot-responses/embeds/log.js");
 
 exports.run = async (client, interaction, permissions) => {
-	try {
 
-		const roleId = await interaction.options.get("role").value;
-		const message = await interaction.options.getString("message");
+	const roleId = await interaction.options.get("role").value;
+	const message = await interaction.options.getString("message");
 
-		
-		await sendExampleMessage(client, interaction, message, roleId);
-		
-		await askForConfirmation(client, interaction, message, roleId);
+	await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
-	}
-	catch (error) {
-		handleError(error);
-	}
+	await sendExampleMessage(interaction, message, roleId);
+
+	await askForConfirmation(interaction, message, roleId);
+
 };
 
 exports.config = {
@@ -35,25 +31,23 @@ exports.config = {
 };
 
 
-async function sendExampleMessage(client, interaction, message, roleId) {
+async function sendExampleMessage(interaction, message, roleId) {
+
+	const buttons = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId("no")
+				.setLabel("Cancel")
+				.setEmoji("❌")
+				.setStyle(ButtonStyle.Secondary),
+			new ButtonBuilder()
+				.setCustomId("yes")
+				.setLabel("Yes")
+				.setEmoji("✅")
+				.setStyle(ButtonStyle.Secondary),
+		);
+
 	try {
-
-		const buttons = new ActionRowBuilder()
-			.addComponents(
-				new ButtonBuilder()
-					.setCustomId("no")
-					.setLabel("Cancel!")
-					.setEmoji("❌")
-					.setStyle(ButtonStyle.Secondary),
-				new ButtonBuilder()
-					.setCustomId("yes")
-					.setLabel("Yes!")
-					.setEmoji("✅")
-					.setStyle(ButtonStyle.Secondary),
-			);
-
-		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
-
 		await interaction.editReply({
 			embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
 			content: `Are you sure you want to send this message to every person that has ${roleMention(roleId)} role?`,
@@ -66,10 +60,8 @@ async function sendExampleMessage(client, interaction, message, roleId) {
 	}
 }
 
-async function askForConfirmation(client, interaction, message, roleId) {
+async function askForConfirmation(interaction, message, roleId) {
 	try {
-
-
 		const collector = await interaction.channel.createMessageComponentCollector({
 			componentType: ComponentType.Button,
 			max: "1",
@@ -80,12 +72,12 @@ async function askForConfirmation(client, interaction, message, roleId) {
 		collector.on("collect", async (interaction) => {
 			if (interaction.customId === "yes") {
 				await interaction.deferUpdate();
-				await sendResult(client, interaction, "yes", message, roleId);
+				return sendResult(interaction, "yes", message, roleId);
 			}
 
 			if (interaction.customId === "no") {
 				await interaction.deferUpdate();
-				await sendResult(client, interaction, "no", message, roleId);
+				return sendResult(interaction, "no", message, roleId);
 			}
 
 		});
@@ -103,30 +95,29 @@ async function askForConfirmation(client, interaction, message, roleId) {
 	}
 }
 
-async function sendResult(client, interaction, answer, message, roleId) {
+async function sendResult(interaction, answer, message, roleId) {
 	try {
-
 		switch (answer) {
-		case "yes":
-			const members = await interaction.guild.members.fetch();
+			case "yes":
+				const members = await interaction.guild.members.fetch();
 
-			const content = {
-				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
-			};
+				const content = {
+					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, { text: `From server ${interaction.member.guild.name}` })],
+				};
 
-			let count = 0;
-			members.forEach((member) => {
-				if (member.roles.cache.has(roleId) && !member.user.bot) {
-					member.send(content);
-					count++;
-				}
-			});
+				let count = 0;
+				members.forEach((member) => {
+					if (member.roles.cache.has(roleId) && !member.user.bot) {
+						member.send(content);
+						count++;
+					}
+				});
 
 
-			return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
+				return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
 
-		case "no":
-			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
+			case "no":
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
 		}
 	}
 	catch (error) {
