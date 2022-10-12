@@ -11,8 +11,9 @@ exports.run = async (client, interaction, permissions) => {
 		const roleId = await interaction.options.get("role").value;
 		const message = await interaction.options.getString("message");
 
+		
 		await sendExampleMessage(client, interaction, message, roleId);
-
+		
 		await askForConfirmation(client, interaction, message, roleId);
 
 	}
