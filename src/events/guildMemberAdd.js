@@ -6,31 +6,37 @@ const { shuffleArray } = require("../modules/utils.js");
 
 module.exports = async (client, member) => { // eslint-disable-line
 
-	try {
-		if (member.user.bot) return;
 
-		const settings = await getGuildSettings(member);
+	if (member.user.bot) return;
 
-		// setup done || notifications !disabled
-		if (settings && settings.notification_channel != null) {
+	const settings = await getGuildSettings(member);
+
+	// notifications
+	if (settings && settings.notification_channel) {
+
+		try {
 			const channel = await member.guild.channels.cache.get(settings.notification_channel);
-
-			channel.send(
-				{
-					embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })],
-				},
-			);
+			channel.send({ embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })], },);
+		}
+		catch (error) {
+			handleError(error)
 		}
 
-		// setup done || greetings !disabled
-		if (settings && settings.greetings_channel != null && !settings.is_main) {
+	}
+
+	// greetings
+	if (settings && settings.greetings_channel && !settings.is_main) {
+
+		try {
 			const channel = await member.guild.channels.cache.get(settings.greetings_channel);
 			channel.send(await getGreetingMessage(member));
 		}
+		catch (error) {
+			handleError(error)
+		}
+
 	}
-	catch (error) {
-		handleError(error);
-	}
+
 };
 
 
