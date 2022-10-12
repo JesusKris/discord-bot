@@ -27,70 +27,62 @@ exports.verifyEmoji = async (reference, emoji) => {
 };
 
 exports.verifyMessageLink = async (reference, message_link) => {
+
+	// example link
+	// https://discordapp.com/channels/1023167499365366746/1026826999911626185/1028283654394368000
+
+	const matchedIds = message_link.match(/[0-9]+/g);
+
+	// if no matches
+	if (!matchedIds) {
+		return { isVerifiedMessage: false, message: null };
+	}
+
+	// !3 ids -> guild|channel|message
+	if (matchedIds.length < 3) {
+		return { isVerifiedMessage: false, message: null };
+	}
+
+
+	const channelId = matchedIds[1];
+	const messageId = matchedIds[2];
+
+
+	let channel;
+	let message;
 	try {
-		// example link
-		// https://discordapp.com/channels/1023167499365366746/1026826999911626185/1028283654394368000
 
-		const matchedIds = message_link.match(/[0-9]+/g);
-
-		// if no matches
-		if (!matchedIds) {
-			return { isVerifiedMessage: false, message: null };
-		}
-
-		// !3 ids -> guild|channel|message
-		if (matchedIds.length < 3) {
-			return { isVerifiedMessage: false, message: null };
-		}
-
-
-		const channelId = matchedIds[1];
-		const messageId = matchedIds[2];
-
-
-		let channel;
-		let message;
-		try {
-			// trying to fetch a channel with id, catching if not valid
-			// trying to fetch a message with id, catching if not valid
-			channel = await reference.guild.channels.fetch(channelId);
-			message = await channel.messages.fetch(messageId);
-		}
-		catch { }
-
-		if (!channel) {
-			return { isVerifiedMessage: false, message: null };
-		}
-
-		if (!message) {
-			return { isVerifiedMessage: false, message: null };
-		}
-
-		return { isVerifiedMessage: true, message };
-
+		// trying to fetch with id, catching if not valid
+		channel = await reference.guild.channels.fetch(channelId);
+		message = await channel.messages.fetch(messageId);
+		
 	}
-	catch (error) {
-		handleError(error);
+	catch { }
+
+	if (!channel) {
+		return { isVerifiedMessage: false, message: null };
 	}
+
+	if (!message) {
+		return { isVerifiedMessage: false, message: null };
+	}
+
+	return { isVerifiedMessage: true, message };
+
 };
 
 exports.verifyChannel = async (reference, channel) => {
+
+	if (channel.type != 0) {
+		return false;
+	}
+
+	let result;
 	try {
-		if (channel.type != 0) {
-			return false;
-		}
-
-		let result;
-		try {
-			result = await reference.guild.channels.fetch(channel.id);
-		}
-		catch { }
-
-		return result
-
+		result = await reference.guild.channels.fetch(channel.id);
 	}
-	catch (error) {
-		handleError(error);
-	}
+	catch { }
+
+	return result
 
 };
