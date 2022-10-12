@@ -9,7 +9,7 @@ module.exports = async (client, message) => {
 	}
 
 	const reactMessage = await isReactMessage(message);
-	
+
 	if (!reactMessage) return;
 
 	await deleteRolesFromUsers(message, reactMessage);

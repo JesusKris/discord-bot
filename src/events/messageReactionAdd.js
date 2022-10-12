@@ -36,18 +36,18 @@ module.exports = async (client, reaction, user) => {
 
 			const users = await reaction.users.fetch();
 
-			const filteredUsers = users.filter(u => u.id == user.id)
+			const filteredUsers = users.filter(u => u.id == user.id);
 
 			if (filteredUsers.first()) {
-				count++
+				count++;
 			}
 
 		}));
 
 		if (count > 1) {
-			return reaction.users.remove(user)
+			return reaction.users.remove(user);
 		}
-		return
+		return;
 	}
 
 
@@ -76,10 +76,10 @@ async function isReactMessage(message) {
 async function isReactRole(emojiObject, reactMessage) {
 	for (const reaction of reactMessage.R_Role_Reactions) {
 		if (reaction.emoji == await getRawEmoji(emojiObject)) {
-			return reaction
+			return reaction;
 		}
 	}
-	return false
+	return false;
 
 }
 
@@ -102,7 +102,7 @@ async function addRoleToMember(client, reactRole, reaction, user) {
 
 		const guild = await client.guilds.cache.get(reaction.message.guildId);
 
-		const member = guild.members.cache.get(user.id)
+		const member = guild.members.cache.get(user.id);
 
 		await member.roles.add(reactRole.role);
 

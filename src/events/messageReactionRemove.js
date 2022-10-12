@@ -53,10 +53,10 @@ async function isReactMessage(message) {
 async function isReactRole(emojiObject, reactMessage) {
 	for (const reaction of reactMessage.R_Role_Reactions) {
 		if (reaction.emoji == await getRawEmoji(emojiObject)) {
-			return reaction
+			return reaction;
 		}
 	}
-	return false
+	return false;
 
 }
 
@@ -79,7 +79,7 @@ async function removeRoleFromMember(client, reactRole, reaction, user) {
 
 		const guild = await client.guilds.cache.get(reaction.message.guildId);
 
-		const member = guild.members.cache.get(user.id)
+		const member = guild.members.cache.get(user.id);
 
 		await member.roles.remove(reactRole.role);
 
