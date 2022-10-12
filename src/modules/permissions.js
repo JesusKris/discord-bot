@@ -1,7 +1,7 @@
 const config = require("../appconfig.js");
 
 exports.getUserPermissions = async (guildSettings, reference) => {
-	const userLevels = [this.defaultPermission()];
+	const userLevels = [await this.defaultPermission()];
 
 	if (guildSettings && reference.member.roles.cache.has(guildSettings.admin_role)) {
 		userLevels.push(config.client.commands.permissions.admin);
@@ -14,7 +14,7 @@ exports.getUserPermissions = async (guildSettings, reference) => {
 	return userLevels;
 };
 
-exports.defaultPermission = () => {
+exports.defaultPermission = async () => {
 	return config.client.commands.permissions.user;
 };
 
