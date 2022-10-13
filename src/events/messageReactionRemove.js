@@ -42,7 +42,10 @@ async function isReactMessage(message) {
 			}],
 		});
 
-		return result.toJSON();
+		if (result) {
+			return result.toJSON();
+		}
+
 	}
 	catch (error) {
 		handleError(error);

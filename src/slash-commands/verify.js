@@ -125,11 +125,10 @@ async function formatUsername(interaction, member, type) {
 
 async function grantRoles(settings, member, type) {
 
-	if (type == "stduent") {
+	if (type == "student") {
 		await member.roles.add(settings.student_role);
 		return await member.roles.add(settings.batch_role);
 	}
-
 
 	if (type == "guest") {
 		return await member.roles.add(settings.guest_role);

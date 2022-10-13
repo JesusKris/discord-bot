@@ -20,7 +20,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 			// channel has been deleted
 			if (!channel) return;
 
-			return channel.send({ embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })] });
+			channel.send({ embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })] });
 		}
 		catch (error) {
 			handleError(error);
@@ -38,7 +38,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 			// channel has been deleted
 			if (!channel) return;
 
-			return channel.send(await getGreetingMessage(member));
+			channel.send(await getGreetingMessage(member));
 		}
 		catch (error) {
 			handleError(error);

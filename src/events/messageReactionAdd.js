@@ -27,7 +27,7 @@ module.exports = async (client, reaction, user) => {
 		return reaction.users.remove(user);
 	}
 
-	   if (reactMessage.type == "single") {
+	if (reactMessage.type == "single") {
 
 
 		let count = 0;
@@ -65,7 +65,9 @@ async function isReactMessage(message) {
 			}],
 		});
 
-		return result.toJSON();
+		if (result) {
+			return result.toJSON();
+		}
 	}
 	catch (error) {
 		handleError(error);
