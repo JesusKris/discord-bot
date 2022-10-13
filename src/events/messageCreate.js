@@ -1,45 +1,46 @@
 const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getUserPermissions, hasPermission } = require("../modules/permissions.js");
-const { shuffleArray } = require("../modules/utils.js");
+const { shuffleArray, sleep } = require("../modules/utils.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 module.exports = async (client, message) => { // eslint-disable-line
 	const { container } = client;
 
-	// if bot
 	if (message.author.bot) return;
 
-	// if someone @'s the bot
-	const clientPing = new RegExp(`^<@!?${client.user.id}> ?$`);
-	if (message.content.match(clientPing)) {
-		const randomNr = Math.floor(Math.random() * config.client.pingResponses.choices.length);
-		const shuffledArray = await shuffleArray(config.client.pingResponses.choices);
-		return message.channel.send(shuffledArray[randomNr]);
+	// @bot
+	if (message.content.match(new RegExp(`^<@!?${client.user.id}> ?$`))) {
+		return message.channel.send(await getPingReply());
 	}
 
+
 	// If the member on a guild is invisible or not cached, fetch them.
-	if (message.guild && !message.member) await message.guild.members.fetch(message.author);
+	if (message.guild && !message.member) {
+
+		try {
+			await message.guild.members.fetch(message.author);
+		}
+		catch (error) {
+			handleError(error);
+		}
+
+	}
 
 	const prefix = new RegExp(`^\\${config.client.prefix}`).exec(message.content);
 	if (!prefix) return;
 
 
 	const commandAndInitialArgs = await getCommandAndInitialArgs(message.content, prefix);
-
-
 	const cmd = await container.commands.get(commandAndInitialArgs.command);
-
 
 	// if cmd does not exist
 	if (!cmd) return;
 
-
-	// Some commands may not be useable in DMs. This check prevents those commands from running
+	// guild only
 	if (cmd && !message.guild && cmd.config.guildOnly) return;
 
-
-	// check if enabled
+	// if enabled
 	if (!cmd.config.enabled) return;
 
 
@@ -48,50 +49,44 @@ module.exports = async (client, message) => { // eslint-disable-line
 	const userPermissions = await getUserPermissions(guildSettings, message);
 
 
-	// special case for setup
-	if (cmd.config.name == "setup" && guildSettings == null && await hasPermission(userPermissions, cmd)) {
-		try {
-			return await cmd.run(client, message, args);
-		}
-		catch (error) {
-			handleError(error);
-		}
-	}
-
-	if (cmd.config.name == "setup" && guildSettings != null && await hasPermission(userPermissions, cmd)) {
-		await message.delete();
-		return message.author.send({ embeds: [await getWarningEmbed(null, "You have already completed setup in that server!")] });
-	}
-
-
-	// if setup is required but guild has not done setup
-	if (cmd.config.setupRequired && guildSettings == null) {
-		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet!")] });
+	// if server owner
+	if (cmd.config.setupRequired && !guildSettings && message.user.id === message.member.guild.ownerId) {
+		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You have not completed server setup yet.")] });
 
 		await sleep(2500);
+
 		await warning.delete();
-		await messageObject.delete();
-		return;
+
+		return await message.delete();
+	}
+
+
+	// user
+	if (cmd.config.setupRequired && !guildSettings) {
+		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet.")] });
+
+		await sleep(2500);
+
+		await warning.delete();
+
+		return await message.delete();
 	}
 
 
 	// if user has required permission level to run the command
 	if (await hasPermission(userPermissions, cmd)) {
-		try {
-			await cmd.run(client, message, args, userPermissions);
-		}
-		catch (error) {
-			handleError(error);
-		}
-	}
-	else {
-		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You don't have permission to use this command!")] });
-		await this.sleep(2500);
-		await warning.delete();
-		await message.delete();
-		return;
+		return await cmd.run(client, message, args, userPermissions);
+
 	}
 
+
+	const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You don't have permissions to use this command.")] });
+
+	await this.sleep(2500);
+
+	await warning.delete();
+
+	return await message.delete();
 };
 
 async function getCommandAndInitialArgs(content, prefix) {
@@ -116,4 +111,10 @@ async function getCorrectArgs(command, args) {
 		}
 	}
 	return realArgs;
+}
+
+async function getPingReply() {
+	const randomNr = Math.floor(Math.random() * config.client.pingResponses.choices.length);
+	const shuffledArray = await shuffleArray(config.client.pingResponses.choices);
+	return shuffledArray[randomNr];
 }

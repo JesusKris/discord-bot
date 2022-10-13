@@ -1,39 +1,23 @@
 const logger = require("./modules/logger.js");
 
-// This will check if the node version you are running is the required Node version, if it isn't it will throw the following error to inform you.
-// if (Number(process.version.slice(1).split('.')[0]) < 17) logger.error('Node 17.x or higher is required. Update Node on your system.');
+// check required Node version
+if (Number(process.version.slice(1).split(".")[0]) < 17) logger.error("Node 17.x or higher is required. Update Node on your system.");
 
-const config = require('./appconfig.js');
-const { Client, Collection, IntentsBitField, Routes, Partials } = require('discord.js');
-const { readdirSync } = require('fs');
-const { pingDB } = require('./modules/database.js');
-const {sleep} = require("./modules/utils.js")
-const { REST } = require('@discordjs/rest');
+const config = require("./appconfig.js");
+const { Client, Collection, IntentsBitField, Routes, Partials } = require("discord.js");
+const { readdirSync } = require("fs");
+const { REST } = require("@discordjs/rest");
+const { pingDB } = require("./modules/database.js");
 
-
-
-// Utilizing discord client and providing intents -> what it will use/can use
-const client = new Client({
-	intents: new IntentsBitField(config.client.intents),
-	partials: config.client.partials,
-});
-
-const commands = new Collection();
-const slashCommands = new Collection();
-
-client.container = {
-	commands,
-	slashCommands,
-};
 
 exports.initApp = async () => {
 
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({
-		intents: new IntentsBitField(config.client.intents),
-		partials: config.client.partials,
+		shards: 'auto',
+		intents: new IntentsBitField(["Guilds", "GuildMembers", "GuildBans", "GuildMessages", "GuildMessageReactions", "MessageContent", "GuildEmojisAndStickers"]),
+		partials: [Partials.User, Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction],
 	});
-
 
 	const commands = new Collection();
 	const slashCommands = new Collection();
@@ -59,13 +43,13 @@ exports.initApp = async () => {
 		client.container.slashCommands.set(props.config.name, props);
 	}
 
-	// chat commands
-	// const commandsDir = readdirSync("./commands/").filter(file => file.endsWith(".js"));
-	// for (const file of commandsDir) {
-	// 	const props = require(`./commands/${file}`);
-	// 	logger.log(`Loading Command: ${props.config.name}`);
-	// 	client.container.commands.set(props.config.name, props);
-	// }
+	// chat legacy commands
+	const commandsDir = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+	for (const file of commandsDir) {
+		const props = require(`./commands/${file}`);
+		logger.log(`Loading Command: ${props.config.name}`);
+		client.container.commands.set(props.config.name, props);
+	}
 
 	// events
 	const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
@@ -83,11 +67,14 @@ exports.initApp = async () => {
 	const rest = new REST({ version: "10" }).setToken(config.client.token);
 	try {
 		logger.ready("Started refreshing application (/) commands.");
+
+		// For development, enable test guild commands
 		await rest.put(
 			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
 			{ body: slashBuilders },
 		);
 
+		// For production, enable global commands
 		/* 	await rest.put(
 			Routes.applicationCommands(config.client.Id),
 			{ body: []},
@@ -100,9 +87,7 @@ exports.initApp = async () => {
 	}
 
 	client.login(config.client.token);
-
-	// await sleep(20000)
-	pingDB();
+	await pingDB();
 
 };
 

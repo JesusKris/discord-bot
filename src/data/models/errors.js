@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 	 * This method is not a part of Sequelize lifecycle.
 	 * The `models/index` file will call this method automatically.
 	 */
-		static associate(models) {
+		static associate(models) { // eslint-disable-line
 			// define association here
 		}
 	}
@@ -26,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		trace: {
 			type: DataTypes.TEXT,
-			allowNull: false,
+			allowNull: true,
 		},
 
 	}, {
 		timestamps: true,
-		createdAt: true,
+		createdAt: "created_at",
 		updatedAt: false,
 		sequelize,
 		modelName: "Errors",

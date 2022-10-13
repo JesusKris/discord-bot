@@ -3,18 +3,13 @@ module.exports = {
 	async up(queryInterface, Sequelize) {
 		await queryInterface.createTable("Guilds", {
 			id: {
-				allowNull: false,
-				autoIncrement: true,
 				primaryKey: true,
-				type: Sequelize.INTEGER,
-			},
-			guild_id: {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			is_main_server: {
+			is_main: {
 				allowNull: false,
-				type: Sequelize.BOOLEAN
+				type: Sequelize.BOOLEAN,
 			},
 			notification_channel: {
 				allowNull: true,
@@ -25,7 +20,7 @@ module.exports = {
 				type: Sequelize.STRING,
 			},
 			admin_role: {
-				allowNull:false,
+				allowNull: false,
 				type: Sequelize.STRING,
 			},
 			guest_role: {
@@ -40,11 +35,23 @@ module.exports = {
 				allowNull: true,
 				type: Sequelize.STRING,
 			},
-			createdAt: {
+			master_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			student_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			guest_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			created_at: {
 				allowNull: false,
 				type: Sequelize.DATE,
 			},
-			updatedAt: {
+			updated_at: {
 				allowNull: false,
 				type: Sequelize.DATE,
 			},

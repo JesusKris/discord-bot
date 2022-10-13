@@ -13,10 +13,10 @@ module.exports = {
 				type: Sequelize.STRING,
 			},
 			trace: {
-				allowNull: false,
+				allowNull: true,
 				type: Sequelize.TEXT,
 			},
-			createdAt: {
+			created_at: {
 				allowNull: false,
 				type: Sequelize.DATE(6),
 			},

@@ -22,8 +22,8 @@ services:
     healthcheck:
       test: ["CMD-SHELL", 'mysqladmin -p$MARIADB_PASSWORD ping']
       interval: 10s
-      timeout: 2s
-      retries: 10
+      timeout: 4s
+      retries: 5
     restart: unless-stopped
 
 

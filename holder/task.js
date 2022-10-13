@@ -1,1 +1,0 @@
-// take input !task {task.name}, then form the url of the 01 git repositor, then check if it exists -> if it does, send it to discord, if not, give example usage or error

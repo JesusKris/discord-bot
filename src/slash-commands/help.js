@@ -2,23 +2,11 @@ const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { bold, codeBlock } = require("discord.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard");
-const { defaultPermission } = require("../modules/permissions.js");
-const { getWarningEmbed } = require("../bot-responses/embeds/warning")
 
-exports.run = async (client, interaction, permissions) => {
-
+exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
-		const option = await interaction.options.getString("category");
 
-		if (!option) {
-			return sendHelpEmbed(client, interaction, await defaultPermission());
-		}
-
-		if (!permissions.includes(option)) { // you'd have to properly format the thing to match here
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You don't have permission to use this command!")], ephemeral: true });
-		}
-
-		return sendHelpEmbed(client, interaction, option);
+		return sendHelpEmbed(client, interaction, "admin");
 
 	}
 	catch (error) {
@@ -33,22 +21,27 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: "This will give you all the available commands.",
-	args: [""],
-	maxArgs: 0,
+	description: "List all the available commands",
+	args: "",
+	// Needed for legacy commands
+	// maxArgs: 0,
 };
 
 
 async function sendHelpEmbed(client, interaction, permission) {
 	const { container } = client;
 	const arrayOfCommands = [];
-	container.slashCommands.forEach((value, index) => {
-		if (value.config.requiredPermission == permission && value.config.enabled) {
+
+	for (const cmd of container.slashCommands) {
+
+		if (cmd[1].config.enabled) {
 			const oneCommand = {};
-			oneCommand.name = `${config.client.prefix}${value.config.name} ${value.config.args}`;
-			oneCommand.value = codeBlock(value.config.description);
+			oneCommand.name = `${config.client.prefix}${cmd[1].config.name} ${cmd[1].config.args}`;
+			oneCommand.value = codeBlock(cmd[1].config.description);
 			arrayOfCommands.push(oneCommand);
 		}
-	});
-	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true  });
+
+	}
+
+	interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true });
 }

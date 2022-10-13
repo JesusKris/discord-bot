@@ -8,52 +8,72 @@ module.exports = {
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName("create")
-				.setDescription("Create a reaction role message.")
-				.addChannelOption(option =>
-					option
-						.setName("channel")
-						.setDescription("The channel you want to post the reaction role message.")
-						.setRequired(true),
-				)
+				.setDescription("Create a reaction role message")
 				.addStringOption(option =>
 					option
 						.setName("title")
-						.setDescription("The title you want the message to have.")
+						.setDescription("Set the title for the message")
 						.setRequired(true),
 				)
 				.addStringOption(option =>
 					option
 						.setName("description")
-						.setDescription("The description you want the message to have.")
+						.setDescription("Set the description for the message")
+						.setRequired(true),
+				)
+				.addChannelOption(option =>
+					option.setName("channel")
+						.setDescription("Set the channel where the message will be posted")
+						.setRequired(true),
+				)
+				.addStringOption(option =>
+					option.setName("type")
+						.setDescription("Set the type of the reaction role message")
+						.setRequired(true)
+						.addChoices(
+							{ name: "single", value: "single" },
+							{ name: "multiple", value: "multiple" },
+						),
+				),
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName("add")
+				.setDescription("Add a react-role to a message")
+				.addStringOption(option =>
+					option
+						.setName("message-link")
+						.setDescription("The link to the message that you want to add a react-role to")
+						.setRequired(true),
+				)
+				.addRoleOption(option =>
+					option.setName("role")
+						.setDescription("Set the role a person receives when reacting to a role")
+						.setRequired(true),
+				)
+				.addStringOption(option =>
+					option
+						.setName("emoji")
+						.setDescription("Set the emoji a person can react to")
 						.setRequired(true),
 				),
-
 
 		)
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName("edit")
-				.setDescription("Edit a reaction role message.")
+				.setName("remove")
+				.setDescription("Remove a react-role from a message")
 				.addStringOption(option =>
 					option
-						.setName("message_id")
-						.setDescription("The reaction role message id you wish to edit.")
+						.setName("message-link")
+						.setDescription("The link to the message that you want to remove a react-role from")
 						.setRequired(true),
-				),
-
-
-		)
-		.addSubcommand(subcommand =>
-			subcommand
-				.setName("delete")
-				.setDescription("Delete a reaction role message.")
+				)
 				.addStringOption(option =>
 					option
-						.setName("message_id")
-						.setDescription("The reaction role message id you wish to delete.")
+						.setName("emoji")
+						.setDescription("Select a react-role that will be removed based on emoji")
 						.setRequired(true),
 				),
 		),
-
-
 };

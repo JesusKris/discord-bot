@@ -9,24 +9,18 @@ exports.handleError = async (error) => {
 	const errorId = uuid.v4();
 	logger.error(`Unexpected error: ${error.stack} \n    id ${errorId}`);
 
-	try {
+	await clearExpiredErrorLogs();
 
-		await clearExpiredErrorLogs();
-		await createNewErrorLog(error, errorId);
+	await createNewErrorLog(error, errorId);
 
-	}
-	catch (error1) {
-		logger.error(`Failed to save error to database: ${error1.stack}`);
-	}
 };
 
 
 async function clearExpiredErrorLogs() {
 	try {
-
 		await db.sequelize.models.Errors.destroy({
 			where: {
-				createdAt: {
+				created_at: {
 					[Op.lte]: config.errorLogs.expired,
 				},
 			},
@@ -45,10 +39,10 @@ async function createNewErrorLog(error, errorId) {
 				id: errorId,
 				name: error.name,
 				trace: error.stack,
-				createdAt: new Date(),
+				created_at: new Date(),
 			});
 	}
 	catch (error1) {
-		logger.error(`Failed to create a new error log:  ${error1.stack}`);
+		logger.error(`Failed to save error to database: ${error1.stack}`);
 	}
 }

@@ -9,7 +9,7 @@ module.exports = async (client, guild) => {
 
 	try {
 		await db.sequelize.models.Guilds.destroy({
-			where: { guild_id: guild.id },
+			where: { id: guild.id },
 		});
 		logger.guild(`${guild.name}, (id:${guild.id}) removed the client.`);
 	}

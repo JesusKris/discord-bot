@@ -1,4 +1,5 @@
 "use strict";
+/** @type {import('sequelize-cli').Migration} */
 const {
 	Model, // eslint-disable-line
 } = require("sequelize");
@@ -11,22 +12,24 @@ module.exports = (sequelize, DataTypes) => {
 	 */
 		static associate(models) {
 			// define association here
+
+			Guilds.hasMany(models.R_Role_Messages, {
+				foreignKey: "guild_id",
+			});
+			Guilds.hasMany(models.R_Role_Reactions, {
+				foreignKey: "guild_id",
+			});
 		}
 	}
 	Guilds.init({
 		id: {
-			allowNull: false,
-			autoIncrement: true,
 			primaryKey: true,
-			type: DataTypes.INTEGER,
-		},
-		guild_id: {
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
-		is_main_server: {
+		is_main: {
 			allowNull: false,
-			type: DataTypes.BOOLEAN
+			type: DataTypes.BOOLEAN,
 		},
 		notification_channel: {
 			allowNull: true,
@@ -52,10 +55,22 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: true,
 			type: DataTypes.STRING,
 		},
+		master_password: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		student_password: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		guest_password: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
 	}, {
 		timestamps: true,
-		createdAt: true,
-		updatedAt: true,
+		createdAt: "created_at",
+		updatedAt: "updated_at",
 		sequelize,
 		modelName: "Guilds",
 	});
