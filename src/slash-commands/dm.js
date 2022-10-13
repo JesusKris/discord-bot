@@ -109,9 +109,20 @@ async function sendResult(interaction, answer, message, roleId) {
 
 				for (const member of members) {
 					if (member[1].roles.cache.has(roleId) && !member[1].user.bot) {
-						member[1].send(content);
-						count++;
+						try {
+							await member[1].send(content);
+							count++;
+						}
+						catch { }
 					}
+				}
+
+				if (count == 0) {
+					return await interaction.editReply({ embeds: [await getWarningEmbed(null, `There were no users available with the selected role.`)], content: "", components: [], ephemeral: true });
+				}
+
+				if (count == 1) {
+					return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} user:\n\n${message}`)], content: "", components: [], ephemeral: true });
 				}
 
 				return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
