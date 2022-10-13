@@ -23,7 +23,7 @@ async function sendIntroductionsToOwner(guild) {
 }
 
 async function getIntroductionDescription() {
-	return `"Hey! My name is Robert. To awaken ${bold(config.client.name)}, you must first use either ${bold("/setup main")} or ${bold("/setup sprint")} command.\n\nMore about the command arguments:`;
+	return `"Hey! My name is Robert. To awaken ${bold(config.client.name)}, you must first use either ${bold("/setup main")} or ${bold("/setup sprint")} command. ${bold("NB! Make sure to put bot role all the way to the top in the role hierarchy!")}\n\nMore about the setup command arguments:`;
 }
 
 async function getIntroductionFields() {
