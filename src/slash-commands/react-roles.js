@@ -23,7 +23,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected channel is not valid.")], ephemeral: true });
 			}
 
-			const message_id = await sendReactMessageAndGetId(interaction, title, description, channel);
+			const message_id = await sendReactMessageAndGetId(title, description, channel);
 
 			await saveReactMessage(interaction, message_id, title, description);
 
@@ -73,8 +73,8 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 
 			// perform  availabity checks
-			if (await isEveryoneOrHereRole(role)) {
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone and here roles can't be used in a react-role message.")], ephemeral: true });
+			if (await isEveryoneRole(role)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be used in a react-role message.")], ephemeral: true });
 
 			}
 
@@ -125,7 +125,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 
 			// perform  availabity checks
-			if (await isAvailableEmoji(emoji, message)) {
+			if (!await isAvailableEmoji(emoji, message)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected emoji is not being used in that message.")], ephemeral: true });
 			}
 
@@ -159,7 +159,7 @@ exports.config = {
 	// maxArgs: 0,
 };
 
-async function sendReactMessageAndGetId(interaction, title, description, channel) {
+async function sendReactMessageAndGetId(title, description, channel) {
 
 	const message = await channel.send({ embeds: [await getStandardEmbed(title, description, null, null, null, { text: "react-role message" })] });
 
@@ -187,15 +187,15 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-		case "create":
-			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-			break;
-		case "add":
-			message = "Successfully added a reaction role to a message.";
-			break;
-		case "remove":
-			message = "Successfully removed a reaction role from a message.";
-			break;
+			case "create":
+				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+				break;
+			case "add":
+				message = "Successfully added a reaction role to a message.";
+				break;
+			case "remove":
+				message = "Successfully removed a reaction role from a message.";
+				break;
 		}
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
@@ -207,7 +207,9 @@ async function sendResponse(interaction, channel, type) {
 
 async function isReactRoleMessage(message) {
 	try {
-		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id);
+		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
+			attributes: ["id"]
+		});
 
 		return result;
 
@@ -223,6 +225,7 @@ async function isAvailableRole(role) {
 			where: {
 				role: role.id,
 			},
+			attributes: ["id"]
 		});
 
 		return result;
@@ -239,7 +242,7 @@ async function isAvailableEmoji(emoji, message) {
 				message_id: message.id,
 				emoji: emoji,
 			},
-			raw: true,
+			attributes: ["id"]
 		});
 
 		return result;
@@ -282,10 +285,10 @@ async function applyTextToReactMessage(message) {
 
 			if (reaction.emoji.match(/[0-9]+/g)) {
 				finalDescription += `<:_:${reaction.emoji}> - ${roleMention(reaction.role)}\n`;
+				continue
 			}
-			else {
-				finalDescription += `${reaction.emoji} - ${roleMention(reaction.role)}\n`;
-			}
+
+			finalDescription += `${reaction.emoji} - ${roleMention(reaction.role)}\n`;
 
 		}
 
@@ -418,7 +421,7 @@ async function checkForVerificationRole(role, settings) {
 	}
 }
 
-async function isEveryoneOrHereRole(role) {
+async function isEveryoneRole(role) {
 	if (role.name.match(EveryonePattern)) {
 		return true;
 	}
