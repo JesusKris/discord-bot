@@ -10,8 +10,7 @@
     "scripts": {
         "lint": "eslint --debug src/",
         "lint-fix": "eslint --debug src/ --fix",
-        "start": "node engine.js src/",
-        "pm": "pm2 start src/engine.js"
+        "start": "node engine.js src/"
     },
     "homepage": "https://github.com/JesusKris/kood-bot#readme",
     "dependencies": {
@@ -22,7 +21,6 @@
         "dotenv": "^16.0.1",
         "mariadb": "^3.0.0",
         "mysql2": "^2.3.3",
-        "pm2": "^5.2.0",
         "sequelize": "^6.21.2",
         "uuid": "^8.3.2"
     },

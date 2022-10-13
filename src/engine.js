@@ -14,6 +14,7 @@ exports.initApp = async () => {
 
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({
+		shards: 'auto',
 		intents: new IntentsBitField(["Guilds", "GuildMembers", "GuildBans", "GuildMessages", "GuildMessageReactions", "MessageContent", "GuildEmojisAndStickers"]),
 		partials: [Partials.User, Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction],
 	});
