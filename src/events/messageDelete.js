@@ -64,6 +64,7 @@ async function deleteRole(message, roleId) {
 
 		const role = await message.guild.roles.cache.get(roleId);
 
+		//if role deleted
 		if (!role) return;
 
 		await message.guild.roles.create({
