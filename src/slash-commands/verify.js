@@ -44,7 +44,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			await grantRoles(settings, member, "guest");
 		}
 
-		return interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
+		return await interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
 
 	}
 	catch (error) {
@@ -85,7 +85,7 @@ async function checkPassword(interaction, settings) {
 async function sendDmConfirmation(interaction, member) {
 	try {
 
-		member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
+		await member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
 
 	}
 	catch (error) {
@@ -146,7 +146,7 @@ async function sendGreetings(settings, member) {
 		//channel deleted
 		if (!channel) return;
 
-		channel.send(await getGreetingMessage(member));
+		await channel.send(await getGreetingMessage(member));
 
 	}
 	catch (error) {
