@@ -58,8 +58,8 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.user,
 	guildOnly: true,
-	description: "Verify yourself in the server with a code provided by kood/",
-	args: "",
+	description: "Users can verify themselves in server with a code provided by kood/",
+	args: "<student> <guest>",
 	// Needed for legacy commands
 	// maxArgs: 0,
 };
