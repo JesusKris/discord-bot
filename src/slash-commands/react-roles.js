@@ -292,7 +292,7 @@ async function applyTextToReactMessage(message) {
 
 		}
 
-		message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
+		message.edit({embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
 
 	}
 	catch (error) {
@@ -353,6 +353,7 @@ async function deleteRoleFromMembers(interaction, message, emoji) {
 
 		const role = await interaction.guild.roles.cache.get(reactionRole.role);
 
+		//if role deleted
 		if (!role) return;
 
 		await interaction.guild.roles.create({
@@ -365,7 +366,12 @@ async function deleteRoleFromMembers(interaction, message, emoji) {
 
 		});
 
-		role.delete();
+
+		try {
+			await role.delete();
+		}
+		catch {}
+
 
 	}
 	catch (error) {

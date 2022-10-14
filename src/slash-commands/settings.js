@@ -119,10 +119,10 @@ async function validateInput(interaction, setting, input) {
 
 	if (setting == "notification_channel" || setting == "greetings_channel") {
 
-		if (input.match(ChannelsPattern) || input == "Disabled") {
+		if (input.match(ChannelsPattern) || input == "Disable") {
 
 			let channel;
-			if (input == "Disabled") {
+			if (input == "Disable") {
 				channel = null;
 			}
 			else {
@@ -186,7 +186,7 @@ async function sendResponse(interaction, isCorrect) {
 		await interaction.reply({ embeds: [await getStandardEmbed(null, "Setting changed successfully.")], ephemeral: true });
 	}
 	else {
-		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")},${bold("role")} or ${bold("text")}.`)], ephemeral: true });
+		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")}, ${bold("role")} or ${bold("text")}.`)], ephemeral: true });
 	}
 }
 
@@ -219,11 +219,7 @@ async function checkForReactRole(interaction, roleId) {
 			raw: true,
 		});
 
-		if (result) {
-			return false;
-		}
-
-		return true;
+		return result
 	}
 	catch (error) {
 		handleError(error);

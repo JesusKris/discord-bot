@@ -27,29 +27,29 @@ module.exports = async (client, reaction, user) => {
 		return reaction.users.remove(user);
 	}
 
-	if (reactMessage.type == "single") {
-
-
-		let count = 0;
-
-		await Promise.all(reaction.message.reactions.cache.map(async (reaction) => {
-
-			const users = await reaction.users.fetch();
-
-			const filteredUsers = users.filter(u => u.id == user.id);
-
-			if (filteredUsers.first()) {
-				count++;
+	/* 	if (reactMessage.type == "single") {
+	
+	
+			let count = 0;
+	
+			await Promise.all(reaction.message.reactions.cache.map(async (reaction) => {
+	
+				const users = await reaction.users.fetch();
+	
+				const filteredUsers = users.filter(u => u.id == user.id);
+	
+				if (filteredUsers.first()) {
+					count++;
+				}
+	
+			}));
+	
+			if (count > 1) {
+				return reaction.users.remove(user);
 			}
-
-		}));
-
-		if (count > 1) {
-			return reaction.users.remove(user);
+			return;
 		}
-		return;
-	}
-
+	 */
 
 	await addRoleToMember(client, reactRole, reaction, user);
 };
@@ -106,7 +106,11 @@ async function addRoleToMember(client, reactRole, reaction, user) {
 
 		const member = guild.members.cache.get(user.id);
 
-		await member.roles.add(reactRole.role);
+		try {
+			await member.roles.add(reactRole.role);
+		}
+		catch { }
+
 
 	}
 	catch (error) {

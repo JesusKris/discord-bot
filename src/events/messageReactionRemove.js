@@ -84,8 +84,11 @@ async function removeRoleFromMember(client, reactRole, reaction, user) {
 
 		const member = guild.members.cache.get(user.id);
 
-		await member.roles.remove(reactRole.role);
+		try {
+			await member.roles.remove(reactRole.role);
 
+		}
+		catch { }
 	}
 	catch (error) {
 		handleError(error);

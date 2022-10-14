@@ -110,10 +110,7 @@ async function formatUsername(interaction, member, type) {
 
 
 		if (type == "guest") {
-
 			return await member.setNickname(name);
-
-
 		}
 
 	}
@@ -126,12 +123,18 @@ async function formatUsername(interaction, member, type) {
 async function grantRoles(settings, member, type) {
 
 	if (type == "student") {
-		await member.roles.add(settings.student_role);
-		return await member.roles.add(settings.batch_role);
+		try {
+			await member.roles.add(settings.student_role);
+			return await member.roles.add(settings.batch_role);
+		}
+		catch { }
 	}
 
 	if (type == "guest") {
-		return await member.roles.add(settings.guest_role);
+		try {
+			return await member.roles.add(settings.guest_role);
+		}
+		catch { }
 	}
 }
 
@@ -139,6 +142,9 @@ async function sendGreetings(settings, member) {
 	try {
 
 		const channel = await member.guild.channels.cache.get(settings.greetings_channel);
+
+		//channel deleted
+		if (!channel) return;
 
 		channel.send(await getGreetingMessage(member));
 
