@@ -2,7 +2,7 @@ const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const db = require("../data/models/index.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
-const { bold } = require("discord.js");
+const { bold, MessageMentions: { ChannelsPattern, RolesPattern, UsersPattern, EveryonePattern } } = require("discord.js");
 const { verifyChannel } = require("../modules/inputVerification.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 
@@ -10,6 +10,40 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 	try {
 
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
+
+		if (await isEveryoneRole(interaction.options.get("admin-role").role.name)) {
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be selected as a setting.")], ephemeral: true });
+		}
+
+		// -> /setup main
+		if (interaction.options.get("master-password")) {
+
+
+			//@everyone not allowed
+			if (await isEveryoneRole(interaction.options.get("student-role").role.name) || await isEveryoneRole(interaction.options.get("batch-role").role.name) || await isEveryoneRole(interaction.options.get("guest-role").role.name) || await isEveryoneRole(interaction.options.get("master-password").value) || await isEveryoneRole(interaction.options.get("student-password").value) || await isEveryoneRole(interaction.options.get("guest-password").value)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be selected as a setting.")], ephemeral: true });
+			}
+
+			
+			//-> passwords
+			//roles
+			if (await isRoleMention(interaction.options.get("master-password").value) || await isRoleMention(interaction.options.get("guest-password").value) || await isRoleMention(interaction.options.get("student-password").value)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain a role.")], ephemeral: true });
+			}
+
+
+			//usermentions
+			if (await isUserMention(interaction.options.get("master-password").value) || await isUserMention(interaction.options.get("guest-password").value) || await isUserMention(interaction.options.get("student-password").value)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain users.")], ephemeral: true });
+			}
+
+
+			//channels
+			if (await isChannelMention(interaction.options.get("master-password").value) || await isChannelMention(interaction.options.get("guest-password").value) || await isChannelMention(interaction.options.get("student-password").value)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain a channel.")], ephemeral: true });
+			}
+		}
+
 
 		if (interaction.options.get("notification-channel")) {
 			if (!await verifyChannel(interaction, interaction.options.get("notification-channel").channel)) {
@@ -107,6 +141,7 @@ async function prepareGuildData(interaction) {
 
 }
 
+
 async function saveGuildData(data) {
 	try {
 		await db.sequelize.models.Guilds.create({
@@ -134,4 +169,37 @@ async function saveGuildData(data) {
 
 async function sendResponse(interaction) {
 	interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}.`)], ephemeral: true });
+}
+
+async function isEveryoneRole(value) {
+	if (value.match(EveryonePattern)) {
+		return true;
+	}
+
+	return false;
+}
+
+async function isUserMention(value) {
+	if (value.match(UsersPattern)) {
+		return true
+	}
+
+	return false
+}
+
+
+async function isRoleMention(value) {
+	if (value.match(RolesPattern)) {
+		return true;
+	}
+
+	return false
+}
+
+async function isChannelMention(value) {
+	if (value.match(ChannelsPattern)) {
+		return true
+	}
+
+	return false
 }
