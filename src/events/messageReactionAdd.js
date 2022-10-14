@@ -104,7 +104,7 @@ async function addRoleToMember(client, reactRole, reaction, user) {
 
 		const guild = await client.guilds.cache.get(reaction.message.guildId);
 
-		const member = guild.members.cache.get(user.id);
+		const member = await guild.members.cache.get(user.id);
 
 		try {
 			await member.roles.add(reactRole.role);

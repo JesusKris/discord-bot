@@ -292,7 +292,7 @@ async function applyTextToReactMessage(message) {
 
 		}
 
-		message.edit({embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
+		await message.edit({embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
 
 	}
 	catch (error) {

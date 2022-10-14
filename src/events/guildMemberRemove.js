@@ -37,7 +37,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 	if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 3500)) {
 
 		try {
-			return channel.send(
+			return await channel.send(
 				{
 					embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
 						name: "Reason",
@@ -58,7 +58,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 	if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 3500)) {
 
 		try {
-			return channel.send(
+			return await channel.send(
 				{
 					embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
 						name: "Reason",
@@ -77,7 +77,7 @@ module.exports = async (client, member) => { // eslint-disable-line
 
 	// leaving
 	try {
-		channel.send(
+		await channel.send(
 			{
 				embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
 					name: "Reason",
