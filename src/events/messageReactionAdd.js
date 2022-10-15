@@ -26,15 +26,21 @@ module.exports = async (client, reaction, user) => {
 		return reaction.users.remove(user);
 	}
 
-	
+
 	await addRoleToMember(client, reactRole, reaction, user);
 
 	if (reactMessage.type == "single") {
+
+		for (const r of reaction.message.reactions.cache) {
+			await r[1].users.resolve()
+		}
+
 		const filtered = reaction.message.reactions.cache.filter(r => r.users.resolve(user.id) && (r.emoji.name != reaction.emoji.name || r.emoji.id != reaction.emoji.id))
-		
-		for (const reaction of filtered) {
+
+		for (const r of filtered) {
+
 			try {
-				await reaction[1].users.remove(user)
+				await r[1].users.remove(user)
 			}
 			catch (error) {
 				handleError(error)
