@@ -26,15 +26,6 @@ module.exports = {
 						.setDescription("Set the channel where the message will be posted")
 						.setRequired(true),
 				)
-				.addStringOption(option =>
-					option.setName("type")
-						.setDescription("Set the type of the reaction role message")
-						.setRequired(true)
-						.addChoices(
-							{ name: "single", value: "single" },
-							{ name: "multiple", value: "multiple" },
-						),
-				),
 		)
 		.addSubcommand(subcommand =>
 			subcommand

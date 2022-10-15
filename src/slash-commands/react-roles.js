@@ -179,7 +179,6 @@ async function saveReactMessage(interaction, message_id, title, description, cha
 			channel_id: channel.id,
 			title: title,
 			description: description,
-			type: await interaction.options.getString("type"),
 			created_at: new Date(),
 			updated_at: new Date(),
 		});
@@ -298,7 +297,7 @@ async function applyTextToReactMessage(message) {
 
 		}
 
-		await message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
+		await message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message • single" })] });
 
 	}
 	catch (error) {

@@ -8,6 +8,9 @@ module.exports = async (client, reaction, user) => {
 		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
 		try {
 			await reaction.fetch();
+			await user.fetch()
+			await reaction.message.fetch();
+			await reaction.message.reactions.fetch()
 		}
 		catch { }
 	}
@@ -26,33 +29,13 @@ module.exports = async (client, reaction, user) => {
 		return reaction.users.remove(user);
 	}
 
-
 	await addRoleToMember(client, reactRole, reaction, user);
-
-	if (reactMessage.type == "single") {
-
-		for (const r of reaction.message.reactions.cache) {
-			await r[1].users.resolve()
-		}
-
-		const filtered = reaction.message.reactions.cache.filter(r => r.users.resolve(user.id) && (r.emoji.name != reaction.emoji.name || r.emoji.id != reaction.emoji.id))
-
-		for (const r of filtered) {
-
-			try {
-				await r[1].users.remove(user)
-			}
-			catch (error) {
-				handleError(error)
-			}
-		}
-	}
 };
 
 async function isReactMessage(message) {
 	try {
 		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
-			attributes: ["id", "type"],
+			attributes: ["id"],
 			include: [{
 				model: db.sequelize.models.R_Role_Reactions,
 				attributes: ["role", "emoji"],
