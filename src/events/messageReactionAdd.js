@@ -18,7 +18,6 @@ module.exports = async (client, reaction, user) => {
 
 	if (!reactMessage) return;
 
-
 	// perhaps checking if the author of the reaction was the bot?
 	// would be more optimized
 	const reactRole = await isReactRole(reaction.emoji, reactMessage);
@@ -27,37 +26,27 @@ module.exports = async (client, reaction, user) => {
 		return reaction.users.remove(user);
 	}
 
-	/* 	if (reactMessage.type == "single") {
 	
-	
-			let count = 0;
-	
-			await Promise.all(reaction.message.reactions.cache.map(async (reaction) => {
-	
-				const users = await reaction.users.fetch();
-	
-				const filteredUsers = users.filter(u => u.id == user.id);
-	
-				if (filteredUsers.first()) {
-					count++;
-				}
-	
-			}));
-	
-			if (count > 1) {
-				return reaction.users.remove(user);
-			}
-			return;
-		}
-	 */
-
 	await addRoleToMember(client, reactRole, reaction, user);
+
+	if (reactMessage.type == "single") {
+		const filtered = reaction.message.reactions.cache.filter(r => r.users.resolve(user.id) && (r.emoji.name != reaction.emoji.name || r.emoji.id != reaction.emoji.id))
+		
+		for (const reaction of filtered) {
+			try {
+				await reaction[1].users.remove(user)
+			}
+			catch (error) {
+				handleError(error)
+			}
+		}
+	}
 };
 
 async function isReactMessage(message) {
 	try {
 		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
-			attributes: ["id"],
+			attributes: ["id", "type"],
 			include: [{
 				model: db.sequelize.models.R_Role_Reactions,
 				attributes: ["role", "emoji"],

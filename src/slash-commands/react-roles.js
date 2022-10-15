@@ -25,9 +25,11 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			const message_id = await sendReactMessageAndGetId(title, description, channel);
 
-			await saveReactMessage(interaction, message_id, title, description);
+			await saveReactMessage(interaction, message_id, title, description, channel);
 
-			return await sendResponse(interaction, channel, "create");
+			await sendResponse(interaction, channel, "create");
+
+			await filterDeletedMessagesFromDb(interaction)
 
 		}
 		catch (error) {
@@ -58,6 +60,9 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
 
+			if (await checkForBotRole(role)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected role is a bot role which can't be used in a react-role message.")], ephemeral: true });
+			}
 
 			// exluding admin_role|batch_role|student_role|guest_role -> main|sprint
 			const guildSettings = await getGuildSettings(interaction);
@@ -166,11 +171,12 @@ async function sendReactMessageAndGetId(title, description, channel) {
 	return message.id;
 }
 
-async function saveReactMessage(interaction, message_id, title, description) {
+async function saveReactMessage(interaction, message_id, title, description, channel) {
 	try {
 		await db.sequelize.models.R_Role_Messages.create({
 			guild_id: interaction.guild.id,
 			id: message_id,
+			channel_id: channel.id,
 			title: title,
 			description: description,
 			type: await interaction.options.getString("type"),
@@ -292,7 +298,7 @@ async function applyTextToReactMessage(message) {
 
 		}
 
-		await message.edit({embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
+		await message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
 
 	}
 	catch (error) {
@@ -370,7 +376,7 @@ async function deleteRoleFromMembers(interaction, message, emoji) {
 		try {
 			await role.delete();
 		}
-		catch {}
+		catch { }
 
 
 	}
@@ -432,4 +438,53 @@ async function isEveryoneRole(role) {
 		return true;
 	}
 	return false;
+}
+
+
+
+async function checkForBotRole(role) {
+	try {
+		if (role.managed) {
+			return true
+		}
+		return false
+	}
+	catch (error) {
+		handleError(error)
+	}
+}
+
+
+async function filterDeletedMessagesFromDb(interaction) {
+	try {
+		const reactChannels = await db.sequelize.models.R_Role_Messages.findAll({
+			attributes: ["channel_id"],
+			where: {
+				guild_id: interaction.guild.id
+			},
+			raw: true
+		})
+
+		for await (const channel of reactChannels) {
+
+			let ch
+			try {
+				ch = await interaction.guild.channels.fetch(channel.channel_id)
+
+			}
+			catch { }
+
+			if (!ch) {
+				await db.sequelize.models.R_Role_Messages.destroy({
+					where: {
+						channel_id: channel.channel_id
+					}
+				})
+			}
+		}
+
+	}
+	catch (error) {
+		handleError(error)
+	}
 }
