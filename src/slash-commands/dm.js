@@ -117,15 +117,21 @@ async function sendResult(interaction, answer, message, roleId) {
 					}
 				}
 
+
+				let message;
 				if (count == 0) {
-					return await interaction.editReply({ embeds: [await getWarningEmbed(null, `There were no users available with the selected role.`)], content: "", components: [], ephemeral: true });
+					message = `There were no users available with the selected role.`
 				}
 
 				if (count == 1) {
-					return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} user:\n\n${message}`)], content: "", components: [], ephemeral: true });
+					message = `Successfully sent the message to ${count} user:\n\n${message}`
 				}
 
-				return await interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully sent the message to ${count} users:\n\n${message}`)], content: "", components: [], ephemeral: true });
+				if (count > 1) {
+					message = `Successfully sent the message to ${count} users:\n\n${message}`
+				}
+
+				return await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], content: "", components: [], ephemeral: true });
 
 			case "no":
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
