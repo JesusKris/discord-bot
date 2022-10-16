@@ -1,5 +1,5 @@
 <!-- ctrl + shift + v to preview -->
-# kood/bot - A Discord bot
+# kood/Bot - A Discord bot
 
 
 ## A discord bot made with the intent to improve the overall experience of [kood/Johvi](https://kood.tech/) Discord server for the students and school staff.
