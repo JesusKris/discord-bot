@@ -14,8 +14,7 @@ exports.initApp = async () => {
 
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({
-		shards: 'auto',
-		intents: new IntentsBitField(["Guilds", "GuildMembers", "GuildBans", "GuildMessages", "GuildMessageReactions", "MessageContent", "GuildEmojisAndStickers"]),
+		intents: new IntentsBitField(config.client.intents),
 		partials: [Partials.User, Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction],
 	});
 
@@ -74,11 +73,16 @@ exports.initApp = async () => {
 			{ body: slashBuilders },
 		);
 
+		/* 		await rest.put(
+					Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
+					{ body: [] },
+				); */
+
 		// For production, enable global commands
-		/* 	await rest.put(
+		/* await rest.put(
 			Routes.applicationCommands(config.client.Id),
-			{ body: []},
-		); */
+			{ body: [slashBuilders]},
+		) */
 
 		logger.ready("Successfully reloaded application (/) commands.");
 	}

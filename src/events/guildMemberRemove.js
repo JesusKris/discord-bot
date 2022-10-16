@@ -18,72 +18,76 @@ module.exports = async (client, member) => { // eslint-disable-line
 	if (!channel) return;
 
 
-	const fetchedKickLogs = await member.guild.fetchAuditLogs({
-		limit: 1,
-		type: AuditLogEvent.MemberKick,
-	});
-
-	const fetchedBanLogs = await member.guild.fetchAuditLogs({
-		limit: 1,
-		type: AuditLogEvent.MemberBanAdd,
-	});
-
-
+	const fetchedKickLogs = await getKickLogs(member);
 	const kickLog = fetchedKickLogs.entries.first();
-	const banLog = fetchedBanLogs.entries.first();
-
 
 	// kick
 	if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 3500)) {
 
-		try {
-			return channel.send(
-				{
-					embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
-						name: "Reason",
-						value: `Kicked by ${userMention(kickLog.executor.id)}`,
-						inline: false,
-					}])],
-				},
-			);
-		}
-		catch (error) {
-			handleError(error);
-		}
+		return await sendNotification(channel, member, "kick", kickLog);
 
 	}
 
+
+	const fetchedBanLogs = await getBanLogs(member);
+	const banLog = fetchedBanLogs.entries.first();
 
 	// ban
 	if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 3500)) {
 
-		try {
-			return channel.send(
-				{
-					embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
-						name: "Reason",
-						value: `Banned by ${userMention(banLog.executor.id)}`,
-						inline: false,
-					}])],
-				},
-			);
-		}
-		catch (error) {
-			handleError(error);
-		}
+		return await sendNotification(channel, member, "ban", banLog);
 
 	}
 
-
 	// leaving
+	await sendNotification(channel, member, "left", null);
+
+};
+
+
+async function getKickLogs(member) {
+	const data = await member.guild.fetchAuditLogs({
+		limit: 1,
+		type: AuditLogEvent.MemberKick,
+	});
+
+	return data;
+}
+
+async function getBanLogs(member) {
+	const data = await member.guild.fetchAuditLogs({
+		limit: 1,
+		type: AuditLogEvent.MemberBanAdd,
+	});
+
+	return data;
+}
+
+
+async function sendNotification(channel, member, type, logs) {
+
+	const reason = {
+		name: "Reason",
+		value: null,
+		inline: false,
+	};
+
+	switch (type) {
+	case "kick":
+		reason.value = `Kicked by ${userMention(logs.executor.id)}`;
+		break;
+	case "ban":
+		reason.value = `Banned by ${userMention(logs.executor.id)}`;
+		break;
+	case "left":
+		reason.value = "Left";
+		break;
+	}
+
 	try {
-		channel.send(
+		await channel.send(
 			{
-				embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [{
-					name: "Reason",
-					value: "Left",
-					inline: false,
-				}])],
+				embeds: [await getWarningEmbed("User has left the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) }, [reason])],
 			},
 		);
 	}
@@ -91,5 +95,5 @@ module.exports = async (client, member) => { // eslint-disable-line
 		handleError(error);
 	}
 
+}
 
-};

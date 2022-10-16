@@ -11,19 +11,20 @@ module.exports = async (client) => {
 	logger.ready(`Online in ${client.guilds.cache.size} servers`);
 
 
-	async function setActivityStatus() {
-		const random = Math.floor(Math.random() * config.client.activityStatus.choices.length);
-		try {
-			await client.user.setActivity(`${config.client.activityStatus.choices[random]}`, { type: ActivityType.Playing });
-		}
-		catch (error) {
-			handleError(error);
-		}
-	}
-
 	// activity status
 	setInterval(setActivityStatus, config.client.activityStatus.timer);
 	// database auth
 	setInterval(pingDB, config.statusChecks.databaseTimer);
 
 };
+
+
+async function setActivityStatus() {
+	const random = Math.floor(Math.random() * config.client.activityStatus.choices.length);
+	try {
+		await client.user.setActivity(`${config.client.activityStatus.choices[random]}`, { type: ActivityType.Playing });
+	}
+	catch (error) {
+		handleError(error);
+	}
+}

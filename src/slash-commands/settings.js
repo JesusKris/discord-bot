@@ -2,10 +2,11 @@ const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const db = require("../data/models/index.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
-const { bold, channelMention, roleMention, MessageMentions: { ChannelsPattern, RolesPattern, UsersPattern, EveryonePattern } } = require("discord.js");
+const { bold, channelMention, roleMention } = require("discord.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const { getRawId } = require("../modules/utils.js");
+const { isChannelMention, isEveryoneRole, isRoleMention, isUserMention } = require("../modules/inputVerification");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
@@ -119,10 +120,10 @@ async function validateInput(interaction, setting, input) {
 
 	if (setting == "notification_channel" || setting == "greetings_channel") {
 
-		if (input.match(ChannelsPattern) || input == "Disabled") {
+		if (await isChannelMention(input) || input == "Disable") {
 
 			let channel;
-			if (input == "Disabled") {
+			if (input == "Disable") {
 				channel = null;
 			}
 			else {
@@ -137,7 +138,7 @@ async function validateInput(interaction, setting, input) {
 	}
 
 	if (setting == "admin_role" || setting == "guest_role" || setting == "student_role" || setting == "batch_role") {
-		if (input.match(RolesPattern)) {
+		if (await isRoleMention(input)) {
 			const roleId = await getRawId(input);
 
 			// checking if the selected role is not being used as react role
@@ -159,7 +160,8 @@ async function validateInput(interaction, setting, input) {
 
 	if (setting == "master_password" || setting == "student_password" || setting == "guest_password") {
 
-		if (!input.match(ChannelsPattern) && !input.match(RolesPattern) && !input.match(UsersPattern) && !input.match(EveryonePattern)) {
+
+		if (!await isChannelMention(input) && !await isRoleMention(input) && !await isUserMention(input) && !await isEveryoneRole(input)) {
 			changeSetting(interaction, setting, input);
 			return sendResponse(interaction, true);
 		}
@@ -186,7 +188,7 @@ async function sendResponse(interaction, isCorrect) {
 		await interaction.reply({ embeds: [await getStandardEmbed(null, "Setting changed successfully.")], ephemeral: true });
 	}
 	else {
-		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")},${bold("role")} or ${bold("text")}.`)], ephemeral: true });
+		await interaction.reply({ embeds: [await getWarningEmbed(null, `Wrong input provided. Please check if the setting requires a ${bold("channel")}, ${bold("role")} or ${bold("text")}.`)], ephemeral: true });
 	}
 }
 
@@ -212,6 +214,7 @@ async function checkAvailableSetting(interaction, setting) {
 async function checkForReactRole(interaction, roleId) {
 	try {
 		const result = await db.sequelize.models.R_Role_Reactions.findOne({
+			attributes: ["id"],
 			where: {
 				guild_id: interaction.guild.id,
 				role: roleId,
@@ -219,11 +222,7 @@ async function checkForReactRole(interaction, roleId) {
 			raw: true,
 		});
 
-		if (result) {
-			return false;
-		}
-
-		return true;
+		return result;
 	}
 	catch (error) {
 		handleError(error);

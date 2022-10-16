@@ -14,22 +14,13 @@ module.exports = async (client, message) => { // eslint-disable-line
 		return message.channel.send(await getPingReply());
 	}
 
-
 	// If the member on a guild is invisible or not cached, fetch them.
 	if (message.guild && !message.member) {
-
-		try {
-			await message.guild.members.fetch(message.author);
-		}
-		catch (error) {
-			handleError(error);
-		}
-
+		await fetchMember(member);
 	}
 
-	const prefix = new RegExp(`^\\${config.client.prefix}`).exec(message.content);
+	const prefix = await getPrefix(message);
 	if (!prefix) return;
-
 
 	const commandAndInitialArgs = await getCommandAndInitialArgs(message.content, prefix);
 	const cmd = await container.commands.get(commandAndInitialArgs.command);
@@ -51,43 +42,38 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	// if server owner
 	if (cmd.config.setupRequired && !guildSettings && message.user.id === message.member.guild.ownerId) {
-		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You have not completed server setup yet.")] });
-
-		await sleep(2500);
-
-		await warning.delete();
-
-		return await message.delete();
+		return await sendWarningResponse(message, "You have not completed server setup yet.");
 	}
 
 
 	// user
 	if (cmd.config.setupRequired && !guildSettings) {
-		const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet.")] });
-
-		await sleep(2500);
-
-		await warning.delete();
-
-		return await message.delete();
+		return await sendWarningResponse(message, "The server owner has not completed setup process yet.");
 	}
 
 
 	// if user has required permission level to run the command
 	if (await hasPermission(userPermissions, cmd)) {
 		return await cmd.run(client, message, args, userPermissions);
-
 	}
 
+	return await sendWarningResponse(message, "You don't have permissions to use this command.");
 
-	const warning = await message.channel.send({ embeds: [await getWarningEmbed(null, "You don't have permissions to use this command.")] });
-
-	await this.sleep(2500);
-
-	await warning.delete();
-
-	return await message.delete();
 };
+
+async function fetchMember(message) {
+	try {
+		await message.guild.members.fetch(message.author);
+	}
+	catch (error) {
+		handleError(error);
+	}
+}
+
+async function getPrefix(message) {
+
+	return new RegExp(`^\\${config.client.prefix}`).exec(message.content);
+}
 
 async function getCommandAndInitialArgs(content, prefix) {
 	// if starts with prefix
@@ -117,4 +103,21 @@ async function getPingReply() {
 	const randomNr = Math.floor(Math.random() * config.client.pingResponses.choices.length);
 	const shuffledArray = await shuffleArray(config.client.pingResponses.choices);
 	return shuffledArray[randomNr];
+}
+
+
+async function sendWarningResponse(messageObject, message) {
+	try {
+		const warning = await messageObject.channel.send({ embeds: [await getWarningEmbed(null, message)] });
+
+		await sleep(2500);
+
+		await warning.delete();
+
+		await messageObject.delete();
+
+	}
+	catch (error) {
+		handleError(error);
+	}
 }

@@ -44,7 +44,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			await grantRoles(settings, member, "guest");
 		}
 
-		return interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
+		return await interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
 
 	}
 	catch (error) {
@@ -58,8 +58,8 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.user,
 	guildOnly: true,
-	description: "Verify yourself in the server with a code provided by kood/",
-	args: "",
+	description: "Users can verify themselves in server with a code provided by kood/",
+	args: "<student> <guest>",
 	// Needed for legacy commands
 	// maxArgs: 0,
 };
@@ -74,18 +74,31 @@ async function checkVerification(settings, member) {
 }
 
 async function checkPassword(interaction, settings) {
+
 	const password = await interaction.options.getString("code");
-	if (password == settings.master_password || password == settings.guest_password || password == settings.student_password) {
-		return true;
+	if (interaction.options.getSubcommand() === "student") {
+		if (password == settings.master_password || password == settings.student_password) {
+			return true;
+		}
+
+		return false;
+
 	}
 
-	return false;
+	if (interaction.options.getSubcommand() === "guest") {
+		if (password == settings.master_password || password == settings.guest_password) {
+			return true;
+		}
+
+		return false;
+
+	}
 }
 
 async function sendDmConfirmation(interaction, member) {
 	try {
 
-		member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
+		await member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
 
 	}
 	catch (error) {
@@ -110,10 +123,7 @@ async function formatUsername(interaction, member, type) {
 
 
 		if (type == "guest") {
-
 			return await member.setNickname(name);
-
-
 		}
 
 	}
@@ -125,14 +135,19 @@ async function formatUsername(interaction, member, type) {
 
 async function grantRoles(settings, member, type) {
 
-	if (type == "stduent") {
-		await member.roles.add(settings.student_role);
-		return await member.roles.add(settings.batch_role);
+	if (type == "student") {
+		try {
+			await member.roles.add(settings.student_role);
+			return await member.roles.add(settings.batch_role);
+		}
+		catch { }
 	}
 
-
 	if (type == "guest") {
-		return await member.roles.add(settings.guest_role);
+		try {
+			return await member.roles.add(settings.guest_role);
+		}
+		catch { }
 	}
 }
 
@@ -141,7 +156,10 @@ async function sendGreetings(settings, member) {
 
 		const channel = await member.guild.channels.cache.get(settings.greetings_channel);
 
-		channel.send(await getGreetingMessage(member));
+		// channel deleted
+		if (!channel) return;
+
+		await channel.send(await getGreetingMessage(member));
 
 	}
 	catch (error) {

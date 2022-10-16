@@ -28,15 +28,15 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		channel_id: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
 		title: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
 		description: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		type: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},

@@ -17,15 +17,15 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
+			channel_id: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
 			title: {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
 			description: {
-				type: Sequelize.STRING,
-				allowNull: false,
-			},
-			type: {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},

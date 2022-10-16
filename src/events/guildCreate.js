@@ -4,7 +4,7 @@ const logger = require("../modules/logger.js");
 const { bold } = require("discord.js");
 const config = require("../appconfig.js");
 
-module.exports = async (client, guild) => {
+module.exports = async (client, guild) => { // eslint-disable-line
 	logger.guild(`${guild.name}, (id:${guild.id}) added the client.`);
 
 	await sendIntroductionsToOwner(guild);
@@ -13,8 +13,14 @@ module.exports = async (client, guild) => {
 
 async function sendIntroductionsToOwner(guild) {
 	try {
-		const user = await guild.members.fetch(guild.ownerId);
-		await user.send({ embeds: [await getStandardEmbed("A bird whispers:", await getIntroductionDescription(), null, await getIntroductionFields())] });
+
+		const member = await guild.members.fetch(guild.ownerId);
+
+		await member.send({
+			embeds: [await getStandardEmbed("A bird whispers:",
+
+				await getIntroductionDescription(), null, await getIntroductionFields())],
+		});
 
 	}
 	catch (error) {

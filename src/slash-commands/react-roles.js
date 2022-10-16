@@ -3,9 +3,10 @@ const config = require("../appconfig.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const db = require("../data/models/index.js");
+const { isReactMessage } = require("../events/messageReactionAdd.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
-const { verifyEmoji, verifyMessageLink, verifyChannel } = require("../modules/inputVerification");
+const { verifyEmoji, verifyMessageLink, verifyChannel, isBotRole, isEveryoneRole } = require("../modules/inputVerification");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 
@@ -25,9 +26,11 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			const message_id = await sendReactMessageAndGetId(title, description, channel);
 
-			await saveReactMessage(interaction, message_id, title, description);
+			await saveReactMessage(interaction, message_id, title, description, channel);
 
-			return await sendResponse(interaction, channel, "create");
+			await sendResponse(interaction, channel, "create");
+
+			await filterDeletedMessagesFromDb(interaction);
 
 		}
 		catch (error) {
@@ -54,19 +57,24 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.")], ephemeral: true });
 			}
 
-			if (!await isReactRoleMessage(message)) {
+			if (!await isReactMessage(message)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
 
+			
+
+			if (await isBotRole(role)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected role is a bot role which can't be used in a react-role message.")], ephemeral: true });
+			}
 
 			// exluding admin_role|batch_role|student_role|guest_role -> main|sprint
-			const guildSettings = await getGuildSettings(interaction);
-			if (!await checkForVerificationRole(role, guildSettings)) {
-				if (guildSettings.is_main) {
+			const settings = await getGuildSettings(interaction);
+			if (!await checkForVerificationRole(role, settings)) {
+				if (settings.is_main) {
 					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin|batch|student|guest role as a reaction role.")], ephemeral: true });
 				}
 
-				if (!guildSettings.is_main) {
+				if (!settings.is_main) {
 					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin role as a reaction role.")], ephemeral: true });
 				}
 			}
@@ -119,7 +127,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.")], ephemeral: true });
 			}
 
-			if (!await isReactRoleMessage(message)) {
+			if (!await isReactMessage(message)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
 
@@ -166,14 +174,14 @@ async function sendReactMessageAndGetId(title, description, channel) {
 	return message.id;
 }
 
-async function saveReactMessage(interaction, message_id, title, description) {
+async function saveReactMessage(interaction, message_id, title, description, channel) {
 	try {
 		await db.sequelize.models.R_Role_Messages.create({
 			guild_id: interaction.guild.id,
 			id: message_id,
+			channel_id: channel.id,
 			title: title,
 			description: description,
-			type: await interaction.options.getString("type"),
 			created_at: new Date(),
 			updated_at: new Date(),
 		});
@@ -187,15 +195,15 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-			case "create":
-				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-				break;
-			case "add":
-				message = "Successfully added a reaction role to a message.";
-				break;
-			case "remove":
-				message = "Successfully removed a reaction role from a message.";
-				break;
+		case "create":
+			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+			break;
+		case "add":
+			message = "Successfully added a reaction role to a message.";
+			break;
+		case "remove":
+			message = "Successfully removed a reaction role from a message.";
+			break;
 		}
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
@@ -205,30 +213,16 @@ async function sendResponse(interaction, channel, type) {
 	}
 }
 
-async function isReactRoleMessage(message) {
-	try {
-		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
-			attributes: ["id"]
-		});
-
-		return result;
-
-	}
-	catch (error) {
-		handleError(error);
-	}
-}
-
 async function isAvailableRole(role) {
 	try {
-		const result = await db.sequelize.models.R_Role_Reactions.findOne({
+		const data = await db.sequelize.models.R_Role_Reactions.findOne({
 			where: {
 				role: role.id,
 			},
-			attributes: ["id"]
+			attributes: ["id"],
 		});
 
-		return result;
+		return data;
 	}
 	catch (error) {
 		handleError(error);
@@ -237,15 +231,15 @@ async function isAvailableRole(role) {
 
 async function isAvailableEmoji(emoji, message) {
 	try {
-		const result = await db.sequelize.models.R_Role_Reactions.findOne({
+		const data = await db.sequelize.models.R_Role_Reactions.findOne({
 			where: {
 				message_id: message.id,
 				emoji: emoji,
 			},
-			attributes: ["id"]
+			attributes: ["id"],
 		});
 
-		return result;
+		return data;
 	}
 	catch (error) {
 		handleError(error);
@@ -285,14 +279,14 @@ async function applyTextToReactMessage(message) {
 
 			if (reaction.emoji.match(/[0-9]+/g)) {
 				finalDescription += `<:_:${reaction.emoji}> - ${roleMention(reaction.role)}\n`;
-				continue
+				continue;
 			}
 
 			finalDescription += `${reaction.emoji} - ${roleMention(reaction.role)}\n`;
 
 		}
 
-		message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
+		await message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message • single" })] });
 
 	}
 	catch (error) {
@@ -353,6 +347,7 @@ async function deleteRoleFromMembers(interaction, message, emoji) {
 
 		const role = await interaction.guild.roles.cache.get(reactionRole.role);
 
+		// if role deleted
 		if (!role) return;
 
 		await interaction.guild.roles.create({
@@ -365,7 +360,12 @@ async function deleteRoleFromMembers(interaction, message, emoji) {
 
 		});
 
-		role.delete();
+
+		try {
+			await role.delete();
+		}
+		catch { }
+
 
 	}
 	catch (error) {
@@ -421,9 +421,36 @@ async function checkForVerificationRole(role, settings) {
 	}
 }
 
-async function isEveryoneRole(role) {
-	if (role.name.match(EveryonePattern)) {
-		return true;
+async function filterDeletedMessagesFromDb(interaction) {
+	try {
+		const reactChannels = await db.sequelize.models.R_Role_Messages.findAll({
+			attributes: ["channel_id"],
+			where: {
+				guild_id: interaction.guild.id,
+			},
+			raw: true,
+		});
+
+		for await (const channel of reactChannels) {
+
+			let ch;
+			try {
+				ch = await interaction.guild.channels.fetch(channel.channel_id);
+
+			}
+			catch { }
+
+			if (!ch) {
+				await db.sequelize.models.R_Role_Messages.destroy({
+					where: {
+						channel_id: channel.channel_id,
+					},
+				});
+			}
+		}
+
 	}
-	return false;
+	catch (error) {
+		handleError(error);
+	}
 }

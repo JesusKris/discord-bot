@@ -34,7 +34,7 @@ module.exports = {
 				.addStringOption(option =>
 					option
 						.setName("value")
-						.setDescription("Set the new value for the setting specified. To disable notifications or greetings, enter \"Disabled\"")
+						.setDescription("Set the new value for the setting specified. To disable notifications or greetings, enter \"Disable\"")
 						.setRequired(true),
 				),
 		),

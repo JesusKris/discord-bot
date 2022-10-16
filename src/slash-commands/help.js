@@ -6,7 +6,7 @@ const { getStandardEmbed } = require("../bot-responses/embeds/standard");
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
 
-		return sendHelpEmbed(client, interaction, "admin");
+		return await sendHelpEmbed(client, interaction);
 
 	}
 	catch (error) {
@@ -28,7 +28,7 @@ exports.config = {
 };
 
 
-async function sendHelpEmbed(client, interaction, permission) {
+async function sendHelpEmbed(client, interaction) {
 	const { container } = client;
 	const arrayOfCommands = [];
 
@@ -43,5 +43,5 @@ async function sendHelpEmbed(client, interaction, permission) {
 
 	}
 
-	interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands for ${bold(permission)}:`, null, arrayOfCommands)], ephemeral: true });
+	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, "Available commands:", null, arrayOfCommands)], ephemeral: true });
 }

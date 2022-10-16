@@ -1,79 +1,50 @@
 const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
+const { getRawEmoji } = require("../modules/utils.js");
 
 module.exports = async (client, reaction, user) => {
 	if (user.bot) return;
 
 	if (reaction.partial) {
-		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
-		try {
-			await reaction.fetch();
-		}
-		catch { }
+		await this.fetchPartialReaction(reaction, user);
 	}
 
 	if (!reaction.message.author.bot) return;
 
-	const reactMessage = await isReactMessage(reaction.message);
+	const reactMessage = await this.isReactMessage(reaction.message);
 
 	if (!reactMessage) return;
 
-
-	// perhaps checking if the author of the reaction was the bot?
-	// would be more optimized
-	const reactRole = await isReactRole(reaction.emoji, reactMessage);
+	const reactRole = await this.isReactRole(reaction.emoji, reactMessage);
 
 	if (!reactRole) {
 		return reaction.users.remove(user);
 	}
 
-	   if (reactMessage.type == "single") {
-
-
-		let count = 0;
-
-		await Promise.all(reaction.message.reactions.cache.map(async (reaction) => {
-
-			const users = await reaction.users.fetch();
-
-			const filteredUsers = users.filter(u => u.id == user.id);
-
-			if (filteredUsers.first()) {
-				count++;
-			}
-
-		}));
-
-		if (count > 1) {
-			return reaction.users.remove(user);
-		}
-		return;
-	}
-
-
 	await addRoleToMember(client, reactRole, reaction, user);
 };
 
-async function isReactMessage(message) {
+exports.isReactMessage = async (message) => {
 	try {
 		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
 			attributes: ["id"],
 			include: [{
 				model: db.sequelize.models.R_Role_Reactions,
 				attributes: ["role", "emoji"],
-				separate: true,
 			}],
 		});
 
-		return result.toJSON();
+		if (result) {
+			return result.toJSON();
+		}
 	}
 	catch (error) {
 		handleError(error);
 	}
 
-}
+};
 
-async function isReactRole(emojiObject, reactMessage) {
+exports.isReactRole = async (emojiObject, reactMessage) => {
 	for (const reaction of reactMessage.R_Role_Reactions) {
 		if (reaction.emoji == await getRawEmoji(emojiObject)) {
 			return reaction;
@@ -81,30 +52,31 @@ async function isReactRole(emojiObject, reactMessage) {
 	}
 	return false;
 
-}
+};
 
-async function getRawEmoji(emoji) {
+exports.fetchPartialReaction = async (reaction, user) => {
 	try {
-		if (!emoji.id) {
-			return emoji.name;
-		}
-		else {
-			return emoji.id;
-		}
+		await reaction.fetch();
+		await user.fetch();
+		await reaction.message.fetch();
+		await reaction.message.reactions.fetch();
 	}
-	catch (error) {
-		handleError(error);
-	}
-}
+	catch { }
+};
+
 
 async function addRoleToMember(client, reactRole, reaction, user) {
 	try {
 
 		const guild = await client.guilds.cache.get(reaction.message.guildId);
 
-		const member = guild.members.cache.get(user.id);
+		const member = await guild.members.cache.get(user.id);
 
-		await member.roles.add(reactRole.role);
+		try {
+			await member.roles.add(reactRole.role);
+		}
+		catch { }
+
 
 	}
 	catch (error) {
