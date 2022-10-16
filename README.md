@@ -17,28 +17,34 @@
 
 
 ## General Information
-<!-- - Provide general information about your project here.
-- What problem does it (intend to) solve?
-- What is the purpose of your project?
-- Why did you undertake it? -->
 
-_to be added_
+This bot intends to make life at [kood/Johvi](https://kood.tech/) better for the students and the school staff by adding features that discord is lacking. The bot supports multi servers. 
+
+This bot is also a student project that helps students learn about maintaining a project, writing maintanable code and deploying an application.
+
+The bot is currently maintained by [@JesusKris](https://github.com/JesusKris) 
 
 
 ## Technologies Used
-- [JavaScript](https://www.javascript.com/) - Used for building the backend of the application.
-- [Node.js](https://nodejs.dev/) - Used for building the backend of the application.
-- [MariaDB](https://mariadb.org/) - DBMS to store data.
-- [Sequalize](https://www.npmjs.com/package/sequelize) - Used to make it easier to interact with SQL DBMS.
-- [Docker](https://www.docker.com/) - Used to deploy both the application and database.
-- [Discord.js](https://www.npmjs.com/package/discord.js) - Used to make it easier to communicate with Discord API.
-- [ESLint](https://www.npmjs.com/package/eslint) - Used to make code consistent during development.
-- [dotenv](https://www.npmjs.com/package/dotenv) - Used to keep environment variables.
+- [Node.js](https://nodejs.dev/) - Backend.
+- [MariaDB](https://mariadb.org/) - DBMS.
+- [Sequalize](https://www.npmjs.com/package/sequelize) - ORM.
+- [Docker](https://www.docker.com/) - App depoloyment.
+- [Discord.js](https://www.npmjs.com/package/discord.js) - Discord API wrapper.
+- [ESLint](https://www.npmjs.com/package/eslint) - Linter.
+- [dotenv](https://www.npmjs.com/package/dotenv) - Env variables
 
 
 ## Features
-_to be added_
-
+- Multi server support with the use of [MariaDB](https://mariadb.org/)
+- Settings - Changable per server settings
+- Direct message - Direct message users costum messages
+- Verification - Verify users and create costum passwords
+- Admin notification - Notifications about user joining/leaving/kicked/banned
+- Greetings - Greet your users on joining a server or completing verification
+- Reaction roles - Create costum react-roles messages that support costum emojis 
+- Slash commands - All commmands are slash commands for optimal user experience
+- Permissions - A per command internal permission system 
 
 ## Setup
 <!-- What are the project requirements/dependencies? Where are they listed? A requirements.txt or a Pipfile.lock file perhaps? Where is it located?
@@ -59,8 +65,8 @@ _in progress_
 
 
 ## Acknowledgements
-- [AnIdiotsGuide](https://github.com/AnIdiotsGuide/guidebot) - This showed me the basics of building a discord bot.
-- [Rtxeon](https://github.com/Rtxeon/Command-Handler-V13-With-Custom-Prefix-For-Each-Guild) - Also helped with getting the basic structure down.
+- [AnIdiotsGuide](https://github.com/AnIdiotsGuide/guidebot) - The basics of building a discord bot.
+- [Rtxeon](https://github.com/Rtxeon/Command-Handler-V13-With-Custom-Prefix-For-Each-Guild) - Basic command handling structure.
 
 
 ## Contact
