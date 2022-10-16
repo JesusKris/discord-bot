@@ -1,4 +1,5 @@
 const { handleError } = require("./errorHandling");
+const { MessageMentions: { ChannelsPattern, RolesPattern, UsersPattern, EveryonePattern } } = require("discord.js");
 
 exports.verifyEmoji = async (reference, emoji) => {
 	try {
@@ -86,3 +87,37 @@ exports.verifyChannel = async (reference, channel) => {
 	return result;
 
 };
+
+
+exports.isEveryoneRole = async (value) => {
+	if (value.match(EveryonePattern)) {
+		return true;
+	}
+
+	return false;
+}
+
+exports.isUserMention = async (value) => {
+	if (value.match(UsersPattern)) {
+		return true
+	}
+
+	return false
+}
+
+
+exports.isRoleMention = async (value) => {
+	if (value.match(RolesPattern)) {
+		return true;
+	}
+
+	return false
+}
+
+exports.isChannelMention = async (value) => {
+	if (value.match(ChannelsPattern)) {
+		return true
+	}
+
+	return false
+}
