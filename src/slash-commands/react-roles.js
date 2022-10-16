@@ -3,6 +3,7 @@ const config = require("../appconfig.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const db = require("../data/models/index.js");
+const { isReactMessage } = require("../events/messageReactionAdd.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { verifyEmoji, verifyMessageLink, verifyChannel } = require("../modules/inputVerification");
@@ -56,7 +57,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.")], ephemeral: true });
 			}
 
-			if (!await isReactRoleMessage(message)) {
+			if (!await isReactMessage(message)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
 
@@ -124,7 +125,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.")], ephemeral: true });
 			}
 
-			if (!await isReactRoleMessage(message)) {
+			if (!await isReactMessage(message)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
 
@@ -204,20 +205,6 @@ async function sendResponse(interaction, channel, type) {
 		}
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
-	}
-	catch (error) {
-		handleError(error);
-	}
-}
-
-async function isReactRoleMessage(message) {
-	try {
-		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
-			attributes: ["id"]
-		});
-
-		return result;
-
 	}
 	catch (error) {
 		handleError(error);
