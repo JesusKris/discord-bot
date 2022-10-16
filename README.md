@@ -1,5 +1,5 @@
 <!-- ctrl + shift + v to preview -->
-# kood-bot - A Discord bot
+# kood/bot - A Discord bot
 
 
 ## A discord bot made with the intent to improve the overall experience of [kood/Johvi](https://kood.tech/) Discord server for the students and school staff.
@@ -37,14 +37,14 @@ The bot is currently maintained by [@JesusKris](https://github.com/JesusKris)
 
 ## Features
 - Multi server support with the use of [MariaDB](https://mariadb.org/)
-- Settings - Changable per server settings
-- Direct message - Direct message users costum messages
-- Verification - Verify users and create costum passwords
-- Admin notification - Notifications about user joining/leaving/kicked/banned
-- Greetings - Greet your users on joining a server or completing verification
-- Reaction roles - Create costum react-roles messages that support costum emojis 
-- Slash commands - All commmands are slash commands for optimal user experience
-- Permissions - A per command internal permission system 
+- **Settings** - Changable per server settings
+- **Direct message** - Direct message users costum messages
+- **Verification** - Verify users and create costum passwords
+- **Admin notification** - Notifications about user joining/leaving/kicked/banned
+- **Greetings** - Greet your users on joining a server or completing verification
+- **Reaction roles** - Create costum react-roles messages that support costum emojis 
+- **Slash commands** - All commmands are slash commands for optimal user experience
+- **Permissions** - A per command internal permission system 
 
 ## Setup
 <!-- What are the project requirements/dependencies? Where are they listed? A requirements.txt or a Pipfile.lock file perhaps? Where is it located?
