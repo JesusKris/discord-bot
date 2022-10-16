@@ -121,3 +121,11 @@ exports.isChannelMention = async (value) => {
 
 	return false;
 };
+
+
+exports.isBotRole = async (role) => {
+	if (role.managed) {
+		return true;
+	}
+	return false;
+}

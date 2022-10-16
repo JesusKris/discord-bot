@@ -6,7 +6,7 @@ const db = require("../data/models/index.js");
 const { isReactMessage } = require("../events/messageReactionAdd.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
-const { verifyEmoji, verifyMessageLink, verifyChannel } = require("../modules/inputVerification");
+const { verifyEmoji, verifyMessageLink, verifyChannel, isBotRole, isEveryoneRole } = require("../modules/inputVerification");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 
@@ -61,18 +61,20 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
 
-			if (await checkForBotRole(role)) {
+			
+
+			if (await isBotRole(role)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected role is a bot role which can't be used in a react-role message.")], ephemeral: true });
 			}
 
 			// exluding admin_role|batch_role|student_role|guest_role -> main|sprint
-			const guildSettings = await getGuildSettings(interaction);
-			if (!await checkForVerificationRole(role, guildSettings)) {
-				if (guildSettings.is_main) {
+			const settings = await getGuildSettings(interaction);
+			if (!await checkForVerificationRole(role, settings)) {
+				if (settings.is_main) {
 					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin|batch|student|guest role as a reaction role.")], ephemeral: true });
 				}
 
-				if (!guildSettings.is_main) {
+				if (!settings.is_main) {
 					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin role as a reaction role.")], ephemeral: true });
 				}
 			}
@@ -213,14 +215,14 @@ async function sendResponse(interaction, channel, type) {
 
 async function isAvailableRole(role) {
 	try {
-		const result = await db.sequelize.models.R_Role_Reactions.findOne({
+		const data = await db.sequelize.models.R_Role_Reactions.findOne({
 			where: {
 				role: role.id,
 			},
 			attributes: ["id"],
 		});
 
-		return result;
+		return data;
 	}
 	catch (error) {
 		handleError(error);
@@ -229,7 +231,7 @@ async function isAvailableRole(role) {
 
 async function isAvailableEmoji(emoji, message) {
 	try {
-		const result = await db.sequelize.models.R_Role_Reactions.findOne({
+		const data = await db.sequelize.models.R_Role_Reactions.findOne({
 			where: {
 				message_id: message.id,
 				emoji: emoji,
@@ -237,7 +239,7 @@ async function isAvailableEmoji(emoji, message) {
 			attributes: ["id"],
 		});
 
-		return result;
+		return data;
 	}
 	catch (error) {
 		handleError(error);
@@ -418,27 +420,6 @@ async function checkForVerificationRole(role, settings) {
 		handleError(error);
 	}
 }
-
-async function isEveryoneRole(role) {
-	if (role.name.match(EveryonePattern)) {
-		return true;
-	}
-	return false;
-}
-
-
-async function checkForBotRole(role) {
-	try {
-		if (role.managed) {
-			return true;
-		}
-		return false;
-	}
-	catch (error) {
-		handleError(error);
-	}
-}
-
 
 async function filterDeletedMessagesFromDb(interaction) {
 	try {

@@ -9,14 +9,14 @@ exports.handleError = async (error) => {
 	const errorId = uuid.v4();
 	logger.error(`Unexpected error: ${error.stack} \n    id ${errorId}`);
 
-	await clearExpiredErrorLogs();
+	await clearExpiredLogs();
 
-	await createNewErrorLog(error, errorId);
+	await createErrorLog(error, errorId);
 
 };
 
 
-async function clearExpiredErrorLogs() {
+async function clearExpiredLogs() {
 	try {
 		await db.sequelize.models.Errors.destroy({
 			where: {
@@ -32,7 +32,7 @@ async function clearExpiredErrorLogs() {
 	}
 }
 
-async function createNewErrorLog(error, errorId) {
+async function createErrorLog(error, errorId) {
 	try {
 		await db.sequelize.models.Errors.create(
 			{

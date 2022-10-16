@@ -14,9 +14,9 @@ module.exports = async (client, guild) => { // eslint-disable-line
 async function sendIntroductionsToOwner(guild) {
 	try {
 
-		const user = await guild.members.fetch(guild.ownerId);
+		const member = await guild.members.fetch(guild.ownerId);
 
-		await user.send({
+		await member.send({
 			embeds: [await getStandardEmbed("A bird whispers:",
 
 				await getIntroductionDescription(), null, await getIntroductionFields())],
