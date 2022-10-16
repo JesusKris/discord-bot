@@ -26,12 +26,12 @@ The bot is currently maintained by [@JesusKris](https://github.com/JesusKris)
 
 
 ## Technologies Used
-- [Node.js](https://nodejs.dev/) - Backend.
-- [MariaDB](https://mariadb.org/) - DBMS.
-- [Sequalize](https://www.npmjs.com/package/sequelize) - ORM.
-- [Docker](https://www.docker.com/) - App depoloyment.
+- [Node.js](https://nodejs.dev/) - Backend
+- [MariaDB](https://mariadb.org/) - DBMS
+- [Sequalize](https://www.npmjs.com/package/sequelize) - ORM
+- [Docker](https://www.docker.com/) - App deployment
 - [Discord.js](https://www.npmjs.com/package/discord.js) - Discord API wrapper.
-- [ESLint](https://www.npmjs.com/package/eslint) - Linter.
+- [ESLint](https://www.npmjs.com/package/eslint) - Linter
 - [dotenv](https://www.npmjs.com/package/dotenv) - Env variables
 
 
