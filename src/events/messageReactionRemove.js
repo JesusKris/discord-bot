@@ -1,15 +1,11 @@
-const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
+const { isReactMessage, isReactRole, fetchPartialReaction } = require("./messageReactionAdd.js")
 
 module.exports = async (client, reaction, user) => {
 	if (user.bot) return;
 
 	if (reaction.partial) {
-		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
-		try {
-			await reaction.fetch();
-		}
-		catch { }
+		await fetchPartialReaction(reaction, user)
 	}
 
 	if (!reaction.message.author.bot) return;
@@ -18,9 +14,6 @@ module.exports = async (client, reaction, user) => {
 
 	if (!reactMessage) return;
 
-
-	// perhaps checking if the author of the reaction was the bot?
-	// would be more optimized
 	const reactRole = await isReactRole(reaction.emoji, reactMessage);
 
 	if (!reactRole) {
@@ -31,51 +24,6 @@ module.exports = async (client, reaction, user) => {
 
 };
 
-async function isReactMessage(message) {
-	try {
-		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
-			attributes: ["id"],
-			include: [{
-				model: db.sequelize.models.R_Role_Reactions,
-				attributes: ["role", "emoji"],
-				separate: true,
-			}],
-		});
-
-		if (result) {
-			return result.toJSON();
-		}
-
-	}
-	catch (error) {
-		handleError(error);
-	}
-
-}
-
-async function isReactRole(emojiObject, reactMessage) {
-	for (const reaction of reactMessage.R_Role_Reactions) {
-		if (reaction.emoji == await getRawEmoji(emojiObject)) {
-			return reaction;
-		}
-	}
-	return false;
-
-}
-
-async function getRawEmoji(emoji) {
-	try {
-		if (!emoji.id) {
-			return emoji.name;
-		}
-		else {
-			return emoji.id;
-		}
-	}
-	catch (error) {
-		handleError(error);
-	}
-}
 
 async function removeRoleFromMember(client, reactRole, reaction, user) {
 	try {

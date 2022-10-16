@@ -1,29 +1,21 @@
 const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
+const { getRawEmoji } = require("../modules/utils.js")
 
 module.exports = async (client, reaction, user) => {
 	if (user.bot) return;
 
 	if (reaction.partial) {
-		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
-		try {
-			await reaction.fetch();
-			await user.fetch()
-			await reaction.message.fetch();
-			await reaction.message.reactions.fetch()
-		}
-		catch { }
+		await this.fetchPartialReaction(reaction, user)
 	}
 
 	if (!reaction.message.author.bot) return;
 
-	const reactMessage = await isReactMessage(reaction.message);
+	const reactMessage = await this.isReactMessage(reaction.message);
 
 	if (!reactMessage) return;
 
-	// perhaps checking if the author of the reaction was the bot?
-	// would be more optimized
-	const reactRole = await isReactRole(reaction.emoji, reactMessage);
+	const reactRole = await this.isReactRole(reaction.emoji, reactMessage);
 
 	if (!reactRole) {
 		return reaction.users.remove(user);
@@ -32,14 +24,13 @@ module.exports = async (client, reaction, user) => {
 	await addRoleToMember(client, reactRole, reaction, user);
 };
 
-async function isReactMessage(message) {
+exports.isReactMessage = async (message) => {
 	try {
 		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
 			attributes: ["id"],
 			include: [{
 				model: db.sequelize.models.R_Role_Reactions,
 				attributes: ["role", "emoji"],
-				separate: true,
 			}],
 		});
 
@@ -53,7 +44,7 @@ async function isReactMessage(message) {
 
 }
 
-async function isReactRole(emojiObject, reactMessage) {
+exports.isReactRole = async (emojiObject, reactMessage) => {
 	for (const reaction of reactMessage.R_Role_Reactions) {
 		if (reaction.emoji == await getRawEmoji(emojiObject)) {
 			return reaction;
@@ -63,19 +54,16 @@ async function isReactRole(emojiObject, reactMessage) {
 
 }
 
-async function getRawEmoji(emoji) {
+exports.fetchPartialReaction = async (reaction, user) => {
 	try {
-		if (!emoji.id) {
-			return emoji.name;
-		}
-		else {
-			return emoji.id;
-		}
+		await reaction.fetch();
+		await user.fetch()
+		await reaction.message.fetch();
+		await reaction.message.reactions.fetch()
 	}
-	catch (error) {
-		handleError(error);
-	}
+	catch { }
 }
+
 
 async function addRoleToMember(client, reactRole, reaction, user) {
 	try {
