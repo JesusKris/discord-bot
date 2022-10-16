@@ -156,7 +156,7 @@ async function sendGreetings(settings, member) {
 
 		const channel = await member.guild.channels.cache.get(settings.greetings_channel);
 
-		//channel deleted
+		// channel deleted
 		if (!channel) return;
 
 		await channel.send(await getGreetingMessage(member));

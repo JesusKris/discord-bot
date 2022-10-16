@@ -43,5 +43,5 @@ async function sendHelpEmbed(client, interaction) {
 
 	}
 
-	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, `Available commands:`, null, arrayOfCommands)], ephemeral: true });
+	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, "Available commands:", null, arrayOfCommands)], ephemeral: true });
 }

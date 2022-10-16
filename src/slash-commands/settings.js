@@ -6,7 +6,7 @@ const { bold, channelMention, roleMention } = require("discord.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const { getRawId } = require("../modules/utils.js");
-const { isChannelMention, isEveryoneRole, isRoleMention, isUserMention, } = require("../modules/inputVerification")
+const { isChannelMention, isEveryoneRole, isRoleMention, isUserMention } = require("../modules/inputVerification");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
@@ -222,7 +222,7 @@ async function checkForReactRole(interaction, roleId) {
 			raw: true,
 		});
 
-		return result
+		return result;
 	}
 	catch (error) {
 		handleError(error);

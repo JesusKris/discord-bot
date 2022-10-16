@@ -7,7 +7,7 @@ module.exports = async (client, guild) => { // eslint-disable-line
 	// If outage
 	if (!guild.available) return;
 
-	await deleteGuildData(guild)
+	await deleteGuildData(guild);
 
 };
 

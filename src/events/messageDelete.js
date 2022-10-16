@@ -1,6 +1,6 @@
 const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
-const { isReactMessage } = require("./messageReactionAdd.js")
+const { isReactMessage } = require("./messageReactionAdd.js");
 
 
 module.exports = async (client, message) => {
@@ -45,7 +45,7 @@ async function deleteRole(message, roleId) {
 
 		const role = await message.guild.roles.cache.get(roleId);
 
-		//if role deleted
+		// if role deleted
 		if (!role) return;
 
 		await message.guild.roles.create({

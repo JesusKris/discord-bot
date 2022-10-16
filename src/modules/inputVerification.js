@@ -95,15 +95,15 @@ exports.isEveryoneRole = async (value) => {
 	}
 
 	return false;
-}
+};
 
 exports.isUserMention = async (value) => {
 	if (value.match(UsersPattern)) {
-		return true
+		return true;
 	}
 
-	return false
-}
+	return false;
+};
 
 
 exports.isRoleMention = async (value) => {
@@ -111,13 +111,13 @@ exports.isRoleMention = async (value) => {
 		return true;
 	}
 
-	return false
-}
+	return false;
+};
 
 exports.isChannelMention = async (value) => {
 	if (value.match(ChannelsPattern)) {
-		return true
+		return true;
 	}
 
-	return false
-}
+	return false;
+};

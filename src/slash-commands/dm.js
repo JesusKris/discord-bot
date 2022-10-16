@@ -98,43 +98,43 @@ async function askForConfirmation(interaction, message, roleId) {
 async function sendResult(interaction, answer, message, roleId) {
 	try {
 		switch (answer) {
-			case "yes":
-				const members = await interaction.guild.members.fetch();
+		case "yes":
+			const members = await interaction.guild.members.fetch();
 
-				const content = {
-					embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, null, { text: `From server ${interaction.member.guild.name}` })],
-				};
+			const content = {
+				embeds: [await getLogEmbed(bold(`Message from ${interaction.member.nickname ?? interaction.member.user.username}`), message, null, null, null, { text: `From server ${interaction.member.guild.name}` })],
+			};
 
-				let count = 0;
+			let count = 0;
 
-				for (const member of members) {
-					if (member[1].roles.cache.has(roleId) && !member[1].user.bot) {
-						try {
-							await member[1].send(content);
-							count++;
-						}
-						catch { }
+			for (const member of members) {
+				if (member[1].roles.cache.has(roleId) && !member[1].user.bot) {
+					try {
+						await member[1].send(content);
+						count++;
 					}
+					catch { }
 				}
+			}
 
 
-				let message;
-				if (count == 0) {
-					message = `There were no users available with the selected role.`
-				}
+			let message;
+			if (count == 0) {
+				message = "There were no users available with the selected role.";
+			}
 
-				if (count == 1) {
-					message = `Successfully sent the message to ${count} user:\n\n${message}`
-				}
+			if (count == 1) {
+				message = `Successfully sent the message to ${count} user:\n\n${message}`;
+			}
 
-				if (count > 1) {
-					message = `Successfully sent the message to ${count} users:\n\n${message}`
-				}
+			if (count > 1) {
+				message = `Successfully sent the message to ${count} users:\n\n${message}`;
+			}
 
-				return await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], content: "", components: [], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], content: "", components: [], ephemeral: true });
 
-			case "no":
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
+		case "no":
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Canceled the operation.")], content: "", components: [], ephemeral: true });
 		}
 	}
 	catch (error) {

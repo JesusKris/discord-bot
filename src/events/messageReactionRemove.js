@@ -1,11 +1,11 @@
 const { handleError } = require("../modules/errorHandling");
-const { isReactMessage, isReactRole, fetchPartialReaction } = require("./messageReactionAdd.js")
+const { isReactMessage, isReactRole, fetchPartialReaction } = require("./messageReactionAdd.js");
 
 module.exports = async (client, reaction, user) => {
 	if (user.bot) return;
 
 	if (reaction.partial) {
-		await fetchPartialReaction(reaction, user)
+		await fetchPartialReaction(reaction, user);
 	}
 
 	if (!reaction.message.author.bot) return;

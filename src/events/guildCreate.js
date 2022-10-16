@@ -19,7 +19,7 @@ async function sendIntroductionsToOwner(guild) {
 		await user.send({
 			embeds: [await getStandardEmbed("A bird whispers:",
 
-				await getIntroductionDescription(), null, await getIntroductionFields())]
+				await getIntroductionDescription(), null, await getIntroductionFields())],
 		});
 
 	}

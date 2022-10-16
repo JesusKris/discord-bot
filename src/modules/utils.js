@@ -18,4 +18,4 @@ exports.getRawEmoji = async (emoji) => {
 
 	return emoji.id;
 
-}
+};

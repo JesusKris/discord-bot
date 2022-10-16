@@ -14,18 +14,18 @@ module.exports = async (client, member) => { // eslint-disable-line
 	// notifications
 	if (settings && settings.notification_channel) {
 
-		await sendNotification(settings, member)
+		await sendNotification(settings, member);
 
 	}
-	
-	
+
+
 	// greetings
 	if (settings && settings.greetings_channel && !settings.is_main) {
 
-		await sendSprintGreeting(settings, member)
+		await sendSprintGreeting(settings, member);
 
 	}
-	
+
 };
 
 async function sendNotification(settings, member) {
@@ -34,7 +34,7 @@ async function sendNotification(settings, member) {
 
 		// channel has been deleted
 		if (!channel) return;
-		
+
 		await channel.send({ embeds: [await getStandardEmbed("User has joined the server!", `Username: ${userMention(member.user.id)}`, { url: member.user.displayAvatarURL({ dynamic: true }) })] });
 	}
 	catch (error) {
@@ -45,10 +45,10 @@ async function sendNotification(settings, member) {
 async function sendSprintGreeting(settings, member) {
 	try {
 		const channel = await member.guild.channels.cache.get(settings.greetings_channel);
-		
+
 		// channel has been deleted
 		if (!channel) return;
-		
+
 		await channel.send(await getGreetingMessage(member));
 	}
 	catch (error) {

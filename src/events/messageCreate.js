@@ -16,10 +16,10 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	// If the member on a guild is invisible or not cached, fetch them.
 	if (message.guild && !message.member) {
-		await fetchMember(member)
+		await fetchMember(member);
 	}
 
-	const prefix = await getPrefix(message)
+	const prefix = await getPrefix(message);
 	if (!prefix) return;
 
 	const commandAndInitialArgs = await getCommandAndInitialArgs(message.content, prefix);
@@ -42,23 +42,23 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	// if server owner
 	if (cmd.config.setupRequired && !guildSettings && message.user.id === message.member.guild.ownerId) {
-		return await sendWarningResponse(message, "You have not completed server setup yet.")
+		return await sendWarningResponse(message, "You have not completed server setup yet.");
 	}
 
 
 	// user
 	if (cmd.config.setupRequired && !guildSettings) {
-		return await sendWarningResponse(message, "The server owner has not completed setup process yet.")
+		return await sendWarningResponse(message, "The server owner has not completed setup process yet.");
 	}
-	
+
 
 	// if user has required permission level to run the command
 	if (await hasPermission(userPermissions, cmd)) {
 		return await cmd.run(client, message, args, userPermissions);
 	}
-	
-	return await sendWarningResponse(message, "You don't have permissions to use this command.")
-	
+
+	return await sendWarningResponse(message, "You don't have permissions to use this command.");
+
 };
 
 async function fetchMember(message) {
@@ -71,17 +71,17 @@ async function fetchMember(message) {
 }
 
 async function getPrefix(message) {
-	
+
 	return new RegExp(`^\\${config.client.prefix}`).exec(message.content);
 }
 
 async function getCommandAndInitialArgs(content, prefix) {
 	// if starts with prefix
-	
+
 	const args = content.slice(prefix[0].length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
-	
-	
+
+
 	return { command, args };
 }
 
@@ -115,9 +115,9 @@ async function sendWarningResponse(messageObject, message) {
 		await warning.delete();
 
 		await messageObject.delete();
-		
+
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }

@@ -30,7 +30,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			await sendResponse(interaction, channel, "create");
 
-			await filterDeletedMessagesFromDb(interaction)
+			await filterDeletedMessagesFromDb(interaction);
 
 		}
 		catch (error) {
@@ -193,15 +193,15 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-			case "create":
-				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-				break;
-			case "add":
-				message = "Successfully added a reaction role to a message.";
-				break;
-			case "remove":
-				message = "Successfully removed a reaction role from a message.";
-				break;
+		case "create":
+			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+			break;
+		case "add":
+			message = "Successfully added a reaction role to a message.";
+			break;
+		case "remove":
+			message = "Successfully removed a reaction role from a message.";
+			break;
 		}
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
@@ -217,7 +217,7 @@ async function isAvailableRole(role) {
 			where: {
 				role: role.id,
 			},
-			attributes: ["id"]
+			attributes: ["id"],
 		});
 
 		return result;
@@ -234,7 +234,7 @@ async function isAvailableEmoji(emoji, message) {
 				message_id: message.id,
 				emoji: emoji,
 			},
-			attributes: ["id"]
+			attributes: ["id"],
 		});
 
 		return result;
@@ -277,7 +277,7 @@ async function applyTextToReactMessage(message) {
 
 			if (reaction.emoji.match(/[0-9]+/g)) {
 				finalDescription += `<:_:${reaction.emoji}> - ${roleMention(reaction.role)}\n`;
-				continue
+				continue;
 			}
 
 			finalDescription += `${reaction.emoji} - ${roleMention(reaction.role)}\n`;
@@ -345,7 +345,7 @@ async function deleteRoleFromMembers(interaction, message, emoji) {
 
 		const role = await interaction.guild.roles.cache.get(reactionRole.role);
 
-		//if role deleted
+		// if role deleted
 		if (!role) return;
 
 		await interaction.guild.roles.create({
@@ -427,16 +427,15 @@ async function isEveryoneRole(role) {
 }
 
 
-
 async function checkForBotRole(role) {
 	try {
 		if (role.managed) {
-			return true
+			return true;
 		}
-		return false
+		return false;
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }
 
@@ -446,16 +445,16 @@ async function filterDeletedMessagesFromDb(interaction) {
 		const reactChannels = await db.sequelize.models.R_Role_Messages.findAll({
 			attributes: ["channel_id"],
 			where: {
-				guild_id: interaction.guild.id
+				guild_id: interaction.guild.id,
 			},
-			raw: true
-		})
+			raw: true,
+		});
 
 		for await (const channel of reactChannels) {
 
-			let ch
+			let ch;
 			try {
-				ch = await interaction.guild.channels.fetch(channel.channel_id)
+				ch = await interaction.guild.channels.fetch(channel.channel_id);
 
 			}
 			catch { }
@@ -463,14 +462,14 @@ async function filterDeletedMessagesFromDb(interaction) {
 			if (!ch) {
 				await db.sequelize.models.R_Role_Messages.destroy({
 					where: {
-						channel_id: channel.channel_id
-					}
-				})
+						channel_id: channel.channel_id,
+					},
+				});
 			}
 		}
 
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }

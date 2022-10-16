@@ -18,29 +18,29 @@ module.exports = async (client, member) => { // eslint-disable-line
 	if (!channel) return;
 
 
-	const fetchedKickLogs = await getKickLogs(member)
+	const fetchedKickLogs = await getKickLogs(member);
 	const kickLog = fetchedKickLogs.entries.first();
-	
+
 	// kick
 	if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 3500)) {
-		
-		return await sendNotification(channel, member, "kick", kickLog)
-		
+
+		return await sendNotification(channel, member, "kick", kickLog);
+
 	}
-	
-	
-	const fetchedBanLogs = await getBanLogs(member)
+
+
+	const fetchedBanLogs = await getBanLogs(member);
 	const banLog = fetchedBanLogs.entries.first();
-	
+
 	// ban
 	if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 3500)) {
 
-		return await sendNotification(channel, member, "ban", banLog)
+		return await sendNotification(channel, member, "ban", banLog);
 
 	}
 
 	// leaving
-	await sendNotification(channel, member, "left", null)
+	await sendNotification(channel, member, "left", null);
 
 };
 
@@ -51,7 +51,7 @@ async function getKickLogs(member) {
 		type: AuditLogEvent.MemberKick,
 	});
 
-	return data
+	return data;
 }
 
 async function getBanLogs(member) {
@@ -60,28 +60,28 @@ async function getBanLogs(member) {
 		type: AuditLogEvent.MemberBanAdd,
 	});
 
-	return data
+	return data;
 }
 
 
 async function sendNotification(channel, member, type, logs) {
 
-	let reason = {
+	const reason = {
 		name: "Reason",
 		value: null,
-		inline: false
-	}
+		inline: false,
+	};
 
 	switch (type) {
-		case "kick":
-			reason.value = `Kicked by ${userMention(logs.executor.id)}`
-			break
-		case "ban":
-			reason.value = `Banned by ${userMention(logs.executor.id)}`
-			break
-		case "left":
-			reason.value = "Left"
-			break
+	case "kick":
+		reason.value = `Kicked by ${userMention(logs.executor.id)}`;
+		break;
+	case "ban":
+		reason.value = `Banned by ${userMention(logs.executor.id)}`;
+		break;
+	case "left":
+		reason.value = "Left";
+		break;
 	}
 
 	try {

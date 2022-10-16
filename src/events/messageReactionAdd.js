@@ -1,12 +1,12 @@
 const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
-const { getRawEmoji } = require("../modules/utils.js")
+const { getRawEmoji } = require("../modules/utils.js");
 
 module.exports = async (client, reaction, user) => {
 	if (user.bot) return;
 
 	if (reaction.partial) {
-		await this.fetchPartialReaction(reaction, user)
+		await this.fetchPartialReaction(reaction, user);
 	}
 
 	if (!reaction.message.author.bot) return;
@@ -42,7 +42,7 @@ exports.isReactMessage = async (message) => {
 		handleError(error);
 	}
 
-}
+};
 
 exports.isReactRole = async (emojiObject, reactMessage) => {
 	for (const reaction of reactMessage.R_Role_Reactions) {
@@ -52,17 +52,17 @@ exports.isReactRole = async (emojiObject, reactMessage) => {
 	}
 	return false;
 
-}
+};
 
 exports.fetchPartialReaction = async (reaction, user) => {
 	try {
 		await reaction.fetch();
-		await user.fetch()
+		await user.fetch();
 		await reaction.message.fetch();
-		await reaction.message.reactions.fetch()
+		await reaction.message.reactions.fetch();
 	}
 	catch { }
-}
+};
 
 
 async function addRoleToMember(client, reactRole, reaction, user) {

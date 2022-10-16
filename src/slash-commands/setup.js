@@ -19,26 +19,26 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 		if (interaction.options.get("master-password")) {
 
 
-			//@everyone not allowed
+			// @everyone not allowed
 			if (await isEveryoneRole(interaction.options.get("student-role").role.name) || await isEveryoneRole(interaction.options.get("batch-role").role.name) || await isEveryoneRole(interaction.options.get("guest-role").role.name) || await isEveryoneRole(interaction.options.get("master-password").value) || await isEveryoneRole(interaction.options.get("student-password").value) || await isEveryoneRole(interaction.options.get("guest-password").value)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be selected as a setting.")], ephemeral: true });
 			}
 
 
-			//-> passwords
-			//roles
+			// -> passwords
+			// roles
 			if (await isRoleMention(interaction.options.get("master-password").value) || await isRoleMention(interaction.options.get("guest-password").value) || await isRoleMention(interaction.options.get("student-password").value)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain a role.")], ephemeral: true });
 			}
 
 
-			//usermentions
+			// usermentions
 			if (await isUserMention(interaction.options.get("master-password").value) || await isUserMention(interaction.options.get("guest-password").value) || await isUserMention(interaction.options.get("student-password").value)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain users.")], ephemeral: true });
 			}
 
 
-			//channels
+			// channels
 			if (await isChannelMention(interaction.options.get("master-password").value) || await isChannelMention(interaction.options.get("guest-password").value) || await isChannelMention(interaction.options.get("student-password").value)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain a channel.")], ephemeral: true });
 			}

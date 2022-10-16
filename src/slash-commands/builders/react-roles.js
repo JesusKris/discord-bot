@@ -25,7 +25,7 @@ module.exports = {
 					option.setName("channel")
 						.setDescription("Set the channel where the message will be posted")
 						.setRequired(true),
-				)
+				),
 		)
 		.addSubcommand(subcommand =>
 			subcommand

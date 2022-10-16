@@ -79,10 +79,10 @@ exports.initApp = async () => {
 				); */
 
 		// For production, enable global commands
-			/* await rest.put(
+		/* await rest.put(
 			Routes.applicationCommands(config.client.Id),
 			{ body: [slashBuilders]},
-		) */;
+		) */
 
 		logger.ready("Successfully reloaded application (/) commands.");
 	}
