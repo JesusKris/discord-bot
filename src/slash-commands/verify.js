@@ -74,12 +74,25 @@ async function checkVerification(settings, member) {
 }
 
 async function checkPassword(interaction, settings) {
+
 	const password = await interaction.options.getString("code");
-	if (password == settings.master_password || password == settings.guest_password || password == settings.student_password) {
-		return true;
+	if (interaction.options.getSubcommand() === "student") {
+		if (password == settings.master_password || password == settings.student_password) {
+			return true;
+		}
+
+		return false;
+
 	}
 
-	return false;
+	if (interaction.options.getSubcommand() === "guest") {
+		if (password == settings.master_password || password == settings.guest_password) {
+			return true;
+		}
+
+		return false;
+
+	}
 }
 
 async function sendDmConfirmation(interaction, member) {
