@@ -1,7 +1,5 @@
 const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
-const { isReactMessage } = require("./messageReactionAdd.js");
-
 
 module.exports = async (client, message) => {
 
@@ -74,6 +72,25 @@ async function deleteReactMessageData(message) {
 				id: message.id,
 			},
 		});
+	}
+	catch (error) {
+		handleError(error);
+	}
+}
+
+async function isReactMessage(message) {
+	try {
+		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
+			attributes: ["id"],
+			include: [{
+				model: db.sequelize.models.R_Role_Reactions,
+				attributes: ["role", "emoji"],
+			}],
+		});
+
+		if (result) {
+			return result.toJSON();
+		}
 	}
 	catch (error) {
 		handleError(error);

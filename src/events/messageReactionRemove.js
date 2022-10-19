@@ -1,7 +1,10 @@
+const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
-const { isReactMessage, isReactRole, fetchPartialReaction } = require("./messageReactionAdd.js");
+const { getRawEmoji } = require("../modules/utils");
+const { fetchPartialReaction } = require("./messageReactionAdd.js");
 
 module.exports = async (client, reaction, user) => {
+
 	if (user.bot) return;
 
 	if (reaction.partial) {
@@ -22,7 +25,7 @@ module.exports = async (client, reaction, user) => {
 
 	await removeRoleFromMember(client, reactRole, reaction, user);
 
-};
+}
 
 
 async function removeRoleFromMember(client, reactRole, reaction, user) {
@@ -42,3 +45,32 @@ async function removeRoleFromMember(client, reactRole, reaction, user) {
 		handleError(error);
 	}
 }
+
+async function isReactMessage(message) {
+	try {
+		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
+			attributes: ["id"],
+			include: [{
+				model: db.sequelize.models.R_Role_Reactions,
+				attributes: ["role", "emoji"],
+			}],
+		});
+
+		if (result) {
+			return result.toJSON();
+		}
+	}
+	catch (error) {
+		handleError(error);
+	}
+}
+
+async function isReactRole(emojiObject, reactMessage) {
+	for (const reaction of reactMessage.R_Role_Reactions) {
+		if (reaction.emoji == await getRawEmoji(emojiObject)) {
+			return reaction;
+		}
+	}
+	return false;
+
+};

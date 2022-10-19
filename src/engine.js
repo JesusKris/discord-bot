@@ -9,8 +9,23 @@ const { readdirSync } = require("fs");
 const { REST } = require("@discordjs/rest");
 const { pingDB } = require("./modules/database.js");
 
+const express = require('express')
+
 
 exports.initApp = async () => {
+
+	const app = express()
+
+	app.get('/health', (req, res) => {
+		res.status(200);
+		res.send('Ok')
+	})
+
+	app.listen(config.client.healthcheck, () => {
+		console.log(`Example app listening`)
+	})
+
+
 
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({

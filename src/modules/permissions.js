@@ -7,7 +7,7 @@ exports.getUserPermissions = async (guildSettings, reference) => {
 		userLevels.push(config.client.commands.permissions.admin);
 	}
 
-	if (reference.user.id === reference.member.guild.ownerId) {
+	if (reference.member.id === reference.member.guild.ownerId) {
 		userLevels.push(config.client.commands.permissions.guildOwner);
 	}
 

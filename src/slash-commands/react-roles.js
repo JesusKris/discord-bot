@@ -1,9 +1,8 @@
-const { channelMention, roleMention, MessageMentions: { EveryonePattern } } = require("discord.js");
+const { channelMention, roleMention } = require("discord.js");
 const config = require("../appconfig.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const db = require("../data/models/index.js");
-const { isReactMessage } = require("../events/messageReactionAdd.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { verifyEmoji, verifyMessageLink, verifyChannel, isBotRole, isEveryoneRole } = require("../modules/inputVerification");
@@ -61,7 +60,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
 
-			
+
 
 			if (await isBotRole(role)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected role is a bot role which can't be used in a react-role message.")], ephemeral: true });
@@ -79,9 +78,8 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 				}
 			}
 
-
 			// perform  availabity checks
-			if (await isEveryoneRole(role)) {
+			if (await isEveryoneRole(role.name)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be used in a react-role message.")], ephemeral: true });
 
 			}
@@ -195,15 +193,15 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-		case "create":
-			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-			break;
-		case "add":
-			message = "Successfully added a reaction role to a message.";
-			break;
-		case "remove":
-			message = "Successfully removed a reaction role from a message.";
-			break;
+			case "create":
+				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+				break;
+			case "add":
+				message = "Successfully added a reaction role to a message.";
+				break;
+			case "remove":
+				message = "Successfully removed a reaction role from a message.";
+				break;
 		}
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
@@ -454,3 +452,23 @@ async function filterDeletedMessagesFromDb(interaction) {
 		handleError(error);
 	}
 }
+
+async function isReactMessage(message) {
+	try {
+		const result = await db.sequelize.models.R_Role_Messages.findByPk(message.id, {
+			attributes: ["id"],
+			include: [{
+				model: db.sequelize.models.R_Role_Reactions,
+				attributes: ["role", "emoji"],
+			}],
+		});
+
+		if (result) {
+			return result.toJSON();
+		}
+	}
+	catch (error) {
+		handleError(error);
+	}
+
+};

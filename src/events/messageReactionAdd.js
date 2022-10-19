@@ -3,6 +3,7 @@ const { handleError } = require("../modules/errorHandling");
 const { getRawEmoji } = require("../modules/utils.js");
 
 module.exports = async (client, reaction, user) => {
+
 	if (user.bot) return;
 
 	if (reaction.partial) {

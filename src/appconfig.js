@@ -11,10 +11,11 @@ module.exports = {
 	},
 	client: {
 		// ./engine.js
+		healthcheck: process.env.PORT,
 		name: process.env.BOT_NAME,
 		token: process.env.BOT_TOKEN,
 		prefix: process.env.PREFIX,
-		intents: process.env.prefix,
+		intents: JSON.parse(process.env.BOT_INTENTS),
 		Id: process.env.ID,
 		test_guild: process.env.TEST_GUILD,
 

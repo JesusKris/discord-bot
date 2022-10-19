@@ -10,3 +10,4 @@ docker-start.sh
 docker-stop.sh
 package-lock.json
 README.md
+backup/

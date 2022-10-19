@@ -3,6 +3,8 @@ version: "3.8"
 services:
 
   bot:
+    labels:
+      - autoheal=true
     container_name: bot
     image: bot:latest
     env_file:
@@ -10,9 +12,19 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
-    restart: unless-stopped
+    ports:
+      - "$PORT:$PORT"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:$PORT/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: always
 
   mariadb:
+    labels:
+      - autoheal=true
     container_name: database
     image: bitnami/mariadb:10.8
     env_file:
@@ -20,10 +32,36 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD-SHELL", 'mysqladmin -p$MARIADB_PASSWORD ping']
+      test: [ "CMD-SHELL", 'mysqladmin -p$MARIADB_PASSWORD ping' ]
       interval: 10s
-      timeout: 4s
+      timeout: 5s
       retries: 5
-    restart: unless-stopped
+    restart: always
+    user: root
 
+  monitor:
+    container_name: autoheal
+    image: willfarrell/autoheal
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      bot:
+        condition: service_healthy
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
+  periodic-backup:
+    build: ./backup
+    container_name: backup
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/robert/mysql/data:/var/lib/mysql
+    command: crond -f -d 8
+    restart: always

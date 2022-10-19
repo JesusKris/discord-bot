@@ -10,4 +10,6 @@ RUN npm install -g sequelize-cli
 
 RUN chmod +x entrypoint.sh
 
+RUN apk add curl sudo
+
 ENTRYPOINT ["/bin/sh","-c","./entrypoint.sh"]
