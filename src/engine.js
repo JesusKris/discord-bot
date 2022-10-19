@@ -48,6 +48,7 @@ exports.initApp = async () => {
 		const command = require(`./slash-commands/builders/${file}`);
 		slashBuilders.push(command.data.toJSON());
 	}
+	console.log(slashBuilders)
 
 	// slash commands
 	const slashCommandsDir = readdirSync("./slash-commands").filter(file => file.endsWith(".js"));
@@ -83,21 +84,21 @@ exports.initApp = async () => {
 		logger.ready("Started refreshing application (/) commands.");
 
 		// For development, enable test guild commands
-		await rest.put(
-			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
-			{ body: slashBuilders },
-		);
+		/* 		await rest.put(
+					Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
+					{ body: slashBuilders },
+				); */
 
 		/* 		await rest.put(
 					Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
 					{ body: [] },
-				); */
-
+				);
+		 */
 		// For production, enable global commands
-		/* await rest.put(
+		await rest.put(
 			Routes.applicationCommands(config.client.Id),
-			{ body: [slashBuilders]},
-		) */
+			{ body: slashBuilders },
+		)
 
 		logger.ready("Successfully reloaded application (/) commands.");
 	}

@@ -124,11 +124,11 @@ async function sendResult(interaction, answer, message, roleId) {
 			}
 
 			if (count == 1) {
-				finalMessage = `Successfully sent the message to ${count} user:\n\n${finalMessage}`;
+				finalMessage = `Successfully sent the message to ${count} user:\n\n${message}`;
 			}
 
 			if (count > 1) {
-				finalMessage = `Successfully sent the message to ${count} users:\n\n${finalMessage}`;
+				finalMessage = `Successfully sent the message to ${count} users:\n\n${message}`;
 			}
 
 			return await interaction.editReply({ embeds: [await getStandardEmbed(null, finalMessage)], content: "", components: [], ephemeral: true });

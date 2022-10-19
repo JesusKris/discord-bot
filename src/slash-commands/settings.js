@@ -144,7 +144,7 @@ async function validateInput(interaction, setting, input) {
 			// checking if the selected role is not being used as react role
 			const notReactRole = await checkForReactRole(interaction, roleId);
 
-			if (!notReactRole) {
+			if (notReactRole) {
 				return await interaction.reply({
 					embeds: [await getWarningEmbed(null, "The selected role is being used as a react-role. Please remove it to select it.")], ephemeral: true,
 				});
