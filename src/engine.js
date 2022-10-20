@@ -8,7 +8,6 @@ const { Client, Collection, IntentsBitField, Routes, Partials } = require("disco
 const { readdirSync } = require("fs");
 const { REST } = require("@discordjs/rest");
 const { pingDB } = require("./modules/database.js");
-
 const express = require('express')
 
 
@@ -18,11 +17,11 @@ exports.initApp = async () => {
 
 	app.get('/health', (req, res) => {
 		res.status(200);
-		res.send('Ok')
+		res.send('Ok\n')
 	})
 
 	app.listen(config.client.healthcheck, () => {
-		console.log(`Example app listening`)
+		logger.log(`Health point beating`)
 	})
 
 
@@ -84,10 +83,10 @@ exports.initApp = async () => {
 		logger.ready("Started refreshing application (/) commands.");
 
 		// For development, enable test guild commands
-		/* 		await rest.put(
-					Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
-					{ body: slashBuilders },
-				); */
+		await rest.put(
+			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
+			{ body: slashBuilders },
+		);
 
 		/* 		await rest.put(
 					Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
@@ -95,10 +94,10 @@ exports.initApp = async () => {
 				);
 		 */
 		// For production, enable global commands
-		await rest.put(
+		/* await rest.put(
 			Routes.applicationCommands(config.client.Id),
 			{ body: slashBuilders },
-		)
+		) */
 
 		logger.ready("Successfully reloaded application (/) commands.");
 	}
