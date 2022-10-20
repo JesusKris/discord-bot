@@ -129,3 +129,11 @@ exports.isBotRole = async (role) => {
 	}
 	return false;
 }
+
+exports.containsBatch = async (name) => {
+
+	if (name.toLowerCase().includes("batch")) {
+		return true
+	}
+	return false
+}

@@ -5,7 +5,7 @@ const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const db = require("../data/models/index.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
-const { verifyEmoji, verifyMessageLink, verifyChannel, isBotRole, isEveryoneRole } = require("../modules/inputVerification");
+const { verifyEmoji, verifyMessageLink, verifyChannel, isBotRole, isEveryoneRole, containsBatch } = require("../modules/inputVerification");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 
@@ -82,6 +82,10 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			if (await isEveryoneRole(role.name)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be used in a react-role message.")], ephemeral: true });
 
+			}
+
+			if (await containsBatch(role.name)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Due to safety precautions, batch in a role name is not allowed. Please rename your role or choose another one!")], ephemeral: true });
 			}
 
 			if (await isAvailableRole(role)) {

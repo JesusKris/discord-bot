@@ -13,18 +13,16 @@ const express = require('express')
 
 exports.initApp = async () => {
 
-	const app = express()
 
+	//setting up healthcheck port for docker-compose
+	const app = express()
 	app.get('/health', (req, res) => {
 		res.status(200);
 		res.send('Ok\n')
 	})
-
 	app.listen(config.client.healthcheck, () => {
 		logger.log(`Health point beating`)
 	})
-
-
 
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({
