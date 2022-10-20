@@ -62,7 +62,7 @@ async function getGreetingMessage(member) {
 		`Hope you got your best running shoes on 👟${userMention(member.id)}!`,
 		`Ready, set, goooo ${userMention(member.id)} 🏃!`,
 		`There's a new Sprinter lined up at the start ${userMention(member.id)} 🏁`,
-		`What is your average pace during the sprint going to be like ⌚ ${userMention(member.id)}?`
+		`What is your average pace during the sprint going to be like ⌚ ${userMention(member.id)}?`,
 	];
 
 	const randomNr = Math.floor(Math.random() * greetings.length);

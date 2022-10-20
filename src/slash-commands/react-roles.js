@@ -61,7 +61,6 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			}
 
 
-
 			if (await isBotRole(role)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected role is a bot role which can't be used in a react-role message.")], ephemeral: true });
 			}
@@ -197,15 +196,15 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-			case "create":
-				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-				break;
-			case "add":
-				message = "Successfully added a reaction role to a message.";
-				break;
-			case "remove":
-				message = "Successfully removed a reaction role from a message.";
-				break;
+		case "create":
+			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+			break;
+		case "add":
+			message = "Successfully added a reaction role to a message.";
+			break;
+		case "remove":
+			message = "Successfully removed a reaction role from a message.";
+			break;
 		}
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
@@ -475,4 +474,4 @@ async function isReactMessage(message) {
 		handleError(error);
 	}
 
-};
+}

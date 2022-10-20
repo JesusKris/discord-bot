@@ -8,21 +8,21 @@ const { Client, Collection, IntentsBitField, Routes, Partials } = require("disco
 const { readdirSync } = require("fs");
 const { REST } = require("@discordjs/rest");
 const { pingDB } = require("./modules/database.js");
-const express = require('express')
+const express = require("express");
 
 
 exports.initApp = async () => {
 
 
-	//setting up healthcheck port for docker-compose
-	const app = express()
-	app.get('/health', (req, res) => {
+	// setting up healthcheck port for docker-compose
+	const app = express();
+	app.get("/health", (req, res) => {
 		res.status(200);
-		res.send('Ok\n')
-	})
+		res.send("Ok\n");
+	});
 	app.listen(config.client.healthcheck, () => {
-		logger.log(`Health point beating`)
-	})
+		logger.log("Health point beating");
+	});
 
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({
@@ -45,7 +45,7 @@ exports.initApp = async () => {
 		const command = require(`./slash-commands/builders/${file}`);
 		slashBuilders.push(command.data.toJSON());
 	}
-	console.log(slashBuilders)
+	console.log(slashBuilders);
 
 	// slash commands
 	const slashCommandsDir = readdirSync("./slash-commands").filter(file => file.endsWith(".js"));

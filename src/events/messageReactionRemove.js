@@ -25,7 +25,7 @@ module.exports = async (client, reaction, user) => {
 
 	await removeRoleFromMember(client, reactRole, reaction, user);
 
-}
+};
 
 
 async function removeRoleFromMember(client, reactRole, reaction, user) {
@@ -73,4 +73,4 @@ async function isReactRole(emojiObject, reactMessage) {
 	}
 	return false;
 
-};
+}

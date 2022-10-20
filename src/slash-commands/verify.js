@@ -173,7 +173,7 @@ async function getGreetingMessage(member) {
 		`Hope you are ready for the ride 🎢 ${userMention(member.id)}!`,
 		`Hello world. 👋 Whoops sorry I mean Hello ${userMention(member.id)}!`,
 		`${userMention(member.id)}'s journey at kood/Jõhvi has kicked off! 🚀`,
-		`Eat, sleep, code, repeat. 💻 ${userMention(member.id)} get ready to start your journey at kood/Jõhvi!`
+		`Eat, sleep, code, repeat. 💻 ${userMention(member.id)} get ready to start your journey at kood/Jõhvi!`,
 	];
 
 	const randomNr = Math.floor(Math.random() * greetings.length);
