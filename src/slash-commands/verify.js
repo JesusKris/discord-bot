@@ -170,8 +170,10 @@ async function sendGreetings(settings, member) {
 
 async function getGreetingMessage(member) {
 	const greetings = [
-		`Everybody welcome ${userMention(member.id)} to kood/Jõhvi!`,
-		`Another student has entered the arena! ${userMention(member.id)} good luck!`,
+		`Hope you are ready for the ride 🎢 ${userMention(member.id)}!`,
+		`Hello world. 👋 Whoops sorry I mean Hello ${userMention(member.id)}!`,
+		`${userMention(member.id)}'s journey at kood/Jõhvi has kicked off! 🚀`,
+		`Eat, sleep, code, repeat. 💻 ${userMention(member.id)} get ready to start your journey at kood/Jõhvi!`
 	];
 
 	const randomNr = Math.floor(Math.random() * greetings.length);
