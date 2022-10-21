@@ -1,3 +1,4 @@
+backups/
 holder/
 node_modules/
 .env
@@ -10,4 +11,4 @@ docker-start.sh
 docker-stop.sh
 package-lock.json
 README.md
-backups/
+Dockerfile
