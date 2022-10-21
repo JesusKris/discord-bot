@@ -47,18 +47,31 @@ The bot is currently maintained by [@JesusKris](https://github.com/JesusKris)
 - **Permissions** - A per command internal permission system 
 
 ## Setup
-<!-- What are the project requirements/dependencies? Where are they listed? A requirements.txt or a Pipfile.lock file perhaps? Where is it located?
+Clone the project
+```
+git clone git@github.com:JesusKris/kood-bot.git
+```
+Install dependencies
+```
+npm install
+```
+Build the Docker image & change Docker compose to use your made image
+```
+docker build -t bot:[TAG] .
 
-Proceed to describe how to install / setup one's local environment / get started with the project. -->
-_to be added_
-
-
-## Usage
-<!-- How does one go about using it?
-Provide various use cases and code examples here. -->
-
-_to be added_
-
+ bot:
+    container_name: bot
+    image: bot:[TAG]
+    ...
+```
+Rename **.env-example** to **.env** and fill out the fields
+```
+.env-example -> .env
+```
+Run the docker-compose file
+```
+docker compose up --detach
+```
 
 ## Project Status
 _in progress_
