@@ -1,16 +1,13 @@
 version: "3.8"
 
-
 volumes:
   mariadb_data:
 
-
 services:
-
 
   bot:
     container_name: bot
-    image: bot:1.0.0
+    image: jesuskris/kood-bot:1.0.0
     labels:
       - autoheal=true
     depends_on:
@@ -38,7 +35,7 @@ services:
       - "3306:3306"
     user: root
     volumes:
-      - mariadb_data:/bitnami/mariadb
+      - mariadb-data:/bitnami/mariadb
     env_file:
       - .env
     healthcheck:

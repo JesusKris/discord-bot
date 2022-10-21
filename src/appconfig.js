@@ -27,7 +27,7 @@ module.exports = {
 				"Oh Snap!",
 				"BIM!",
 				"Googling...",
-				"PrintRune for life",
+				"PrintRune <3",
 				"You got this!",
 				"kood/Jõhvi",
 				"🚀",

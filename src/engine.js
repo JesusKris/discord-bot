@@ -45,7 +45,6 @@ exports.initApp = async () => {
 		const command = require(`./slash-commands/builders/${file}`);
 		slashBuilders.push(command.data.toJSON());
 	}
-	console.log(slashBuilders);
 
 	// slash commands
 	const slashCommandsDir = readdirSync("./slash-commands").filter(file => file.endsWith(".js"));
