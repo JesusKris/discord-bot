@@ -23,7 +23,6 @@ module.exports = {
 		// ./events/ready.js
 		activityStatus: {
 			choices: [
-				`${process.env.PREFIX}help`,
 				"Oh Snap!",
 				"BIM!",
 				"Googling...",
