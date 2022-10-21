@@ -27,12 +27,14 @@ module.exports = {
 				"Oh Snap!",
 				"BIM!",
 				"Googling...",
-				"PrintRune <3",
+				"PrintRune for life",
 				"You got this!",
 				"kood/Jõhvi",
-				"Sillamäe",
+				"🚀",
+				"No pressure!",
+				"@Jõhvi"
 			],
-			timer: 15000,
+			timer: 30000,
 		},
 
 		// ./events/messageCreate.js
