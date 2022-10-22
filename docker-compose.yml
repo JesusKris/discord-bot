@@ -7,7 +7,7 @@ services:
 
   bot:
     container_name: bot
-    image: jesuskris/kood-bot:1.0.0
+    image: jesuskris/kood-bot:1.0.1
     labels:
       - autoheal=true
     depends_on:
@@ -28,14 +28,14 @@ services:
 
   mariadb:
     container_name: database
-    image: bitnami/mariadb:10.8
+    image: bitnami/mariadb:10.9
     labels:
       - autoheal=true
     ports:
       - "3306:3306"
     user: root
     volumes:
-      - mariadb-data:/bitnami/mariadb
+      - mariadb_data:/bitnami/mariadb
     env_file:
       - .env
     healthcheck:
