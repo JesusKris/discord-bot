@@ -101,7 +101,7 @@ async function getCorrectArgs(command, args) {
 
 async function getPingReply() {
 
-	let pingResponses = {
+	const pingResponses = {
 		choices: [
 			"You didn't survive PrintRune to just give up now, right!?",
 			"Why are you wasting your time?",
@@ -166,7 +166,7 @@ async function getPingReply() {
 			"“You're not obligated to win. You're obligated to keep trying to do the best you can every day.” - Marian Wright Edelman",
 			"“Hard work beats talent when talent fails to work hard.”",
 		],
-	}
+	};
 
 	const randomNr = Math.floor(Math.random() * pingResponses.choices.length);
 	const shuffledArray = await shuffleArray(pingResponses.choices);

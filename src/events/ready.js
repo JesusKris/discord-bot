@@ -11,7 +11,7 @@ module.exports = async (client) => {
 	logger.ready(`Online in ${client.guilds.cache.size} servers`);
 
 	async function setActivityStatus() {
-		let activityStatus = {
+		const activityStatus = {
 			choices: [
 				"Oh Snap!",
 				"BIM!",
@@ -21,9 +21,9 @@ module.exports = async (client) => {
 				"kood/Jõhvi",
 				"🚀",
 				"No pressure!",
-				"@Jõhvi"
+				"@Jõhvi",
 			],
-		}
+		};
 
 		const random = Math.floor(Math.random() * activityStatus.choices.length);
 		try {
