@@ -11,9 +11,23 @@ module.exports = async (client) => {
 	logger.ready(`Online in ${client.guilds.cache.size} servers`);
 
 	async function setActivityStatus() {
-		const random = Math.floor(Math.random() * config.client.activityStatus.choices.length);
+		let activityStatus = {
+			choices: [
+				"Oh Snap!",
+				"BIM!",
+				"Googling...",
+				"PrintRune <3",
+				"You got this!",
+				"kood/Jõhvi",
+				"🚀",
+				"No pressure!",
+				"@Jõhvi"
+			],
+		}
+
+		const random = Math.floor(Math.random() * activityStatus.choices.length);
 		try {
-			await client.user.setActivity(`${config.client.activityStatus.choices[random]}`, { type: ActivityType.Playing });
+			await client.user.setActivity(`${activityStatus.choices[random]}`, { type: ActivityType.Playing });
 		}
 		catch (error) {
 			handleError(error);
@@ -21,7 +35,7 @@ module.exports = async (client) => {
 	}
 
 	// activity status
-	setInterval(setActivityStatus, config.client.activityStatus.timer);
+	setInterval(setActivityStatus, 30000);
 	// database auth
 	setInterval(pingDB, config.statusChecks.databaseTimer);
 
