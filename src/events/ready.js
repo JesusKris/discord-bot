@@ -22,6 +22,9 @@ module.exports = async (client) => {
 				"🚀",
 				"No pressure!",
 				"@Jõhvi",
+				"Coding",
+				"Sleeping",
+				"Sprinting",
 			],
 		};
 
