@@ -210,6 +210,7 @@
         ```
         npx sequelize-cli migration:generate --name [NAME]
         ```
+        Naming database migrations -> create, alter, update, delete
     - To apply all migrations
         ```
         npx sequelize-cli db:migrate
