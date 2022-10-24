@@ -29,6 +29,14 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 
 		if (interaction.options.getSubcommand() === "student") {
+			const name = await interaction.options.getString("full-name");
+			const gitea = await interaction.options.getString("gitea-name");
+
+			let nickname = `${name} / ${gitea}`
+			if (nickname.length > 32) {
+				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name and gitea username combined is longer than 32 characters. That's too much for discord.. Please only enter your first name instead of full.")], ephemeral: true });
+			}
+
 			await sendDmConfirmation(interaction, member);
 			await formatUsername(interaction, member, "student");
 			await grantRoles(settings, member, "student");
@@ -39,6 +47,13 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 		}
 
 		if (interaction.options.getSubcommand() === "guest") {
+			const name = await interaction.options.getString("full-name");
+
+			let nickname = `${name}`
+			if (nickname.length > 32) {
+				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name is longer than 32 characters. That's too much for discord.. Please try to shorten it.")], ephemeral: true });
+			}
+
 			await sendDmConfirmation(interaction, member);
 			await formatUsername(interaction, member, "guest");
 			await grantRoles(settings, member, "guest");

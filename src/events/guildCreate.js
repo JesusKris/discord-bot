@@ -48,7 +48,7 @@ async function getIntroductionFields() {
 		},
 		{
 			name: "quest-role",
-			value: "Guest role is needed to perform verfication for guests when they want to want to gain permissions. Only available in /setup main.",
+			value: "Guest role is needed to perform verfication for guests when they want to gain permissions. Only available in /setup main.",
 		},
 		{
 			name: "notification-channel",

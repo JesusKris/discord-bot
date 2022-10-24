@@ -3,7 +3,7 @@ const { handleError } = require("../modules/errorHandling.js");
 const db = require("../data/models/index.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { bold } = require("discord.js");
-const { verifyChannel, isEveryoneRole, isUserMention, isRoleMention, isChannelMention } = require("../modules/inputVerification.js");
+const { verifyChannel, isEveryoneRole, isUserMention, isRoleMention, isChannelMention, isBotRole } = require("../modules/inputVerification.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
@@ -15,13 +15,23 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be selected as a setting.")], ephemeral: true });
 		}
 
+		if (await isBotRole(interaction.options.get("admin-role").role)) {
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Bot role that is managed by the bot can't be selected as a setting.")], ephemeral: true });
+		}
+
+
 		// -> /setup main
 		if (interaction.options.get("master-password")) {
-
 
 			// @everyone not allowed
 			if (await isEveryoneRole(interaction.options.get("student-role").role.name) || await isEveryoneRole(interaction.options.get("batch-role").role.name) || await isEveryoneRole(interaction.options.get("guest-role").role.name) || await isEveryoneRole(interaction.options.get("master-password").value) || await isEveryoneRole(interaction.options.get("student-password").value) || await isEveryoneRole(interaction.options.get("guest-password").value)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Everyone role can't be selected as a setting.")], ephemeral: true });
+			}
+
+
+			//managed by bot role
+			if (await isBotRole(interaction.options.get("student-role").role) || await isBotRole(interaction.options.get("batch-role").role) || await isBotRole(interaction.options.get("guest-role").role)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Bot role that is managed by the bot can't be selected as a setting.")], ephemeral: true });
 			}
 
 

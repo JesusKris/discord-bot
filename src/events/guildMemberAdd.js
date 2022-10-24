@@ -58,8 +58,8 @@ async function sendSprintGreeting(settings, member) {
 
 async function getGreetingMessage(member) {
 	const greetings = [
-		`Happy marathoning at sprint pace 🛤️${userMention(member.id)}!`,
-		`Hope you got your best running shoes on 👟${userMention(member.id)}!`,
+		`Happy marathoning at sprint pace 🛤️ ${userMention(member.id)}!`,
+		`Hope you got your best running shoes on 👟 ${userMention(member.id)}!`,
 		`Ready, set, goooo ${userMention(member.id)} 🏃!`,
 		`There's a new Sprinter lined up at the start ${userMention(member.id)} 🏁`,
 		`What is your average pace during the sprint going to be like ⌚ ${userMention(member.id)}?`,

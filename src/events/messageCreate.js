@@ -53,7 +53,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 
 	// if user has required permission level to run the command
-	if (await hasPermission(userPermissions, cmd)) {
+	if (await hasPermission(userPermissions, cmd) || message.user.id === message.member.guild.ownerId) {
 		return await cmd.run(client, message, args, userPermissions);
 	}
 
@@ -104,12 +104,29 @@ async function getPingReply() {
 	const pingResponses = {
 		choices: [
 			"You didn't survive PrintRune to just give up now, right!?",
+			"Programmer - A machine that turns coffee into code.",
+			"Algorithm - Word used by programmers when they do not want to explain what they did.",
+			"Hardware - The part of a computer that you can kick.",
+			"Software developers like to solve problems. If there are no problems handily available they will create their own problems!",
+			"Debugging: Removing the needles from the haystack.",
+			"Software - The part of a computer that you can't hit.",
+			"Real programmers count from 0",
+			"A good programmer is someone who looks both ways before crossing a one-way street.",
+			"99 little bugs in the code, 99 bugs in the code, 1 bug fixed, compile again, 153 little bugs in the code",
+			"A programmer was arrested for writing unreadable code. He refused to comment.",
+			"Why do programmers like dark mode? Because light attracts bugs.",
+			"Why don't programmers like nature? There's too many bugs.",
+			"Why did the programmer's girlfriend leave him? He had problems committing.",
+			"What you call it when computer programmers make fun of each other? Cyber boolean.",
+			"Spiders are excellent programmers. They're just so great at debugging.",
+			"What language is most commonly used by programmers? Vulgar.",
+			"What does a programmer's ghost say? Bool!",
+			"Programmer: “Honey, you're my number one…” Wife: “Oh, really!? Well who's your number zero, you cheat!”",
 			"Why are you wasting your time?",
 			"Stop bothering me ugh..",
 			"Do you need something?",
 			"You got this!",
 			"Seems like you miss PrintRune..",
-			"Kadi is my favorite team member",
 			"Have you taken a break today?",
 			"I like you!",
 			"Take a break jheez..!",
@@ -119,9 +136,7 @@ async function getPingReply() {
 			"I'm not in the mood for talking…",
 			"I'm pleased to meet you.",
 			"I can't sleep.",
-			"“Think of how stupid the average person is and realize half of them are stupider than that.” - George Carlin",
 			"“Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.” - Albert Einstein",
-			"“I'm not offended by blonde jokes because I know I'm not dumb…and I also know that I'm not blonde.” - Dolly Parton",
 			"“An optimist is someone who falls off the Empire State Building, and after 50 floors says, 'So far so good!'” - Anonymous",
 			"“It's so much easier to suggest solutions when you don't know too much about the problem.” - Malcolm Forbes",
 			"“You can't believe everything you hear — but you can repeat it.” - Anonymous",

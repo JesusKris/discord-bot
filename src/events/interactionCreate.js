@@ -41,16 +41,16 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 
 	// if server owner
 	if (cmd.config.setupRequired && !guildSettings && interaction.user.id === interaction.member.guild.ownerId) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have not completed server setup yet.")], ephemeral: true });
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have not completed setup yet.")], ephemeral: true });
 	}
 
 	// user
 	if (cmd.config.setupRequired && !guildSettings) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup process yet.")], ephemeral: true });
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup yet.")], ephemeral: true });
 	}
 
-	// if has permission
-	if (await hasPermission(userPermissions, cmd)) {
+	// if has permission || guild owner
+	if (await hasPermission(userPermissions, cmd) || interaction.user.id === interaction.member.guild.ownerId) {
 		return await cmd.run(client, interaction, userPermissions);
 	}
 

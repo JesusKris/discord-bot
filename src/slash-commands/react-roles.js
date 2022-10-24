@@ -69,7 +69,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			const settings = await getGuildSettings(interaction);
 			if (!await checkForVerificationRole(role, settings)) {
 				if (settings.is_main) {
-					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin|batch|student|guest role as a reaction role.")], ephemeral: true });
+					return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You can't use admin|batch|student|guest roles as reaction roles.")], ephemeral: true });
 				}
 
 				if (!settings.is_main) {

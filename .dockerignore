@@ -12,3 +12,4 @@ docker-stop.sh
 package-lock.json
 README.md
 Dockerfile
+MAINTAINER.md

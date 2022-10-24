@@ -12,7 +12,7 @@ module.exports = {
 
 	client: {
 		// ./engine.js
-		healthcheck: process.env.HEALTHCHECK_PORT,
+		healthcheck: process.env.PORT,
 		name: process.env.BOT_NAME,
 		token: process.env.BOT_TOKEN,
 		prefix: process.env.BOT_PREFIX,

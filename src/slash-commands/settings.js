@@ -6,7 +6,7 @@ const { bold, channelMention, roleMention } = require("discord.js");
 const { getGuildSettings } = require("../modules/guildSettings.js");
 const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 const { getRawId } = require("../modules/utils.js");
-const { isChannelMention, isEveryoneRole, isRoleMention, isUserMention } = require("../modules/inputVerification");
+const { isChannelMention, isEveryoneRole, isRoleMention, isUserMention, isBotRole } = require("../modules/inputVerification");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
@@ -141,6 +141,14 @@ async function validateInput(interaction, setting, input) {
 		if (await isRoleMention(input)) {
 			const roleId = await getRawId(input);
 
+			const botRole = await checkForBotRole(interaction, roleId)
+
+			if (botRole) {
+				return await interaction.reply({
+					embeds: [await getWarningEmbed(null, "Bot role that is managed by the bot can't be selected as a setting.")], ephemeral: true,
+				});
+			}
+
 			// checking if the selected role is not being used as react role
 			const notReactRole = await checkForReactRole(interaction, roleId);
 
@@ -227,4 +235,20 @@ async function checkForReactRole(interaction, roleId) {
 	catch (error) {
 		handleError(error);
 	}
+}
+
+
+async function checkForBotRole(interaction, roleId) {
+	try {
+		const role = await interaction.guild.roles.fetch(roleId)
+
+		/* console.log(role) */
+		if (await isBotRole(role)) {
+			return true
+		}
+
+		return false
+
+	}
+	catch { }
 }
