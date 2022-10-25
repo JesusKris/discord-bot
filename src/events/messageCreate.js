@@ -16,7 +16,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	// If the member on a guild is invisible or not cached, fetch them.
 	if (message.guild && !message.member) {
-		await fetchMember(member);
+		await fetchMember(message);
 	}
 
 	const prefix = await getPrefix(message);

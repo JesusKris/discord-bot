@@ -29,7 +29,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			}
 
 
-			//managed by bot role
+			// managed by bot role
 			if (await isBotRole(interaction.options.get("student-role").role) || await isBotRole(interaction.options.get("batch-role").role) || await isBotRole(interaction.options.get("guest-role").role)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Bot role that is managed by the bot can't be selected as a setting.")], ephemeral: true });
 			}

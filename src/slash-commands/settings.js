@@ -141,7 +141,7 @@ async function validateInput(interaction, setting, input) {
 		if (await isRoleMention(input)) {
 			const roleId = await getRawId(input);
 
-			const botRole = await checkForBotRole(interaction, roleId)
+			const botRole = await checkForBotRole(interaction, roleId);
 
 			if (botRole) {
 				return await interaction.reply({
@@ -240,15 +240,15 @@ async function checkForReactRole(interaction, roleId) {
 
 async function checkForBotRole(interaction, roleId) {
 	try {
-		const role = await interaction.guild.roles.fetch(roleId)
+		const role = await interaction.guild.roles.fetch(roleId);
 
 		/* console.log(role) */
 		if (await isBotRole(role)) {
-			return true
+			return true;
 		}
 
-		return false
+		return false;
 
 	}
-	catch { }
+	catch { } // eslint-disable-line
 }

@@ -21,7 +21,6 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 
 	if (interaction.options.getSubcommand() == "create") {
-
 		try {
 			const title = interaction.options.getString("title");
 			const description = interaction.options.getString("description");
@@ -118,7 +117,6 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 		catch (error) {
 			handleError(error);
 		}
-
 	}
 
 
@@ -206,18 +204,18 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-			case "create":
-				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-				break;
-			case "add":
-				message = "Successfully added a reaction role to a message.";
-				break;
-			case "remove":
-				message = "Successfully removed a reaction role from a message.";
-				break;
-			case "sync":
-				message = "Successfully synced react-role messages in the server.";
-				break;
+		case "create":
+			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+			break;
+		case "add":
+			message = "Successfully added a reaction role to a message.";
+			break;
+		case "remove":
+			message = "Successfully removed a reaction role from a message.";
+			break;
+		case "sync":
+			message = "Successfully synced react-role messages in the server.";
+			break;
 		}
 
 
@@ -379,7 +377,7 @@ async function deleteRoleFromMembers(interaction, message, emoji) {
 		try {
 			await role.delete();
 		}
-		catch { }
+		catch { } // eslint-disable-line
 
 
 	}
@@ -410,7 +408,6 @@ async function removeReactionsFromMessage(message, emoji) {
 	catch (error) {
 		handleError(error);
 	}
-
 }
 
 
@@ -453,7 +450,7 @@ async function filterDeletedMessagesFromDb(interaction) {
 				ch = await interaction.guild.channels.fetch(channel.channel_id);
 
 			}
-			catch { }
+			catch { } // eslint-disable-line
 
 			if (!ch) {
 				await db.sequelize.models.R_Role_Messages.destroy({
@@ -491,11 +488,11 @@ async function isReactMessage(message) {
 
 async function reactionLimitReached(message) {
 
-	const reactions = await getReactionRoles(message.id)
-	
+	const reactions = await getReactionRoles(message.id);
+
 	if (reactions.length >= 20) {
-		return true
+		return true;
 	}
 
-	return false
+	return false;
 }

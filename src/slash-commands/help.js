@@ -1,18 +1,15 @@
 const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
-const { bold, codeBlock } = require("discord.js");
+const { codeBlock } = require("discord.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
-
 		return await sendHelpEmbed(client, interaction);
-
 	}
 	catch (error) {
 		handleError(error);
 	}
-
 };
 
 exports.config = {

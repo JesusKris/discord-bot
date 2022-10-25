@@ -32,7 +32,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			const name = await interaction.options.getString("full-name");
 			const gitea = await interaction.options.getString("gitea-name");
 
-			let nickname = `${name} / ${gitea}`
+			const nickname = `${name} / ${gitea}`;
 			if (nickname.length > 32) {
 				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name and gitea username combined is longer than 32 characters. That's too much for discord.. Please only enter your first name instead of full.")], ephemeral: true });
 			}
@@ -49,7 +49,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 		if (interaction.options.getSubcommand() === "guest") {
 			const name = await interaction.options.getString("full-name");
 
-			let nickname = `${name}`
+			const nickname = `${name}`;
 			if (nickname.length > 32) {
 				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name is longer than 32 characters. That's too much for discord.. Please try to shorten it.")], ephemeral: true });
 			}
@@ -85,7 +85,6 @@ async function checkVerification(settings, member) {
 		return true;
 	}
 	return false;
-
 }
 
 async function checkPassword(interaction, settings) {
@@ -97,7 +96,6 @@ async function checkPassword(interaction, settings) {
 		}
 
 		return false;
-
 	}
 
 	if (interaction.options.getSubcommand() === "guest") {
@@ -106,25 +104,20 @@ async function checkPassword(interaction, settings) {
 		}
 
 		return false;
-
 	}
 }
 
 async function sendDmConfirmation(interaction, member) {
 	try {
-
 		await member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
-
 	}
 	catch (error) {
 		handleError(error);
 	}
-
 }
 
 async function formatUsername(interaction, member, type) {
 	try {
-
 		if (interaction.guild.ownerId == member.id) {
 			return;
 		}
@@ -145,7 +138,6 @@ async function formatUsername(interaction, member, type) {
 	catch (error) {
 		handleError(error);
 	}
-
 }
 
 async function grantRoles(settings, member, type) {
@@ -155,20 +147,19 @@ async function grantRoles(settings, member, type) {
 			await member.roles.add(settings.student_role);
 			return await member.roles.add(settings.batch_role);
 		}
-		catch { }
+		catch { } // eslint-disable-line
 	}
 
 	if (type == "guest") {
 		try {
 			return await member.roles.add(settings.guest_role);
 		}
-		catch { }
+		catch { } // eslint-disable-line
 	}
 }
 
 async function sendGreetings(settings, member) {
 	try {
-
 		const channel = await member.guild.channels.cache.get(settings.greetings_channel);
 
 		// channel deleted
@@ -180,7 +171,6 @@ async function sendGreetings(settings, member) {
 	catch (error) {
 		handleError(error);
 	}
-
 }
 
 async function getGreetingMessage(member) {
@@ -195,5 +185,4 @@ async function getGreetingMessage(member) {
 	const shuffledArray = await shuffleArray(greetings);
 
 	return shuffledArray[randomNr];
-
 }

@@ -4,9 +4,7 @@ const { getRawEmoji } = require("../modules/utils");
 
 module.exports = async (client, reaction, user) => {
 
-	
 	if (user.bot) return;
-
 
 	if (reaction.partial) {
 		await reaction.fetch();
@@ -14,22 +12,19 @@ module.exports = async (client, reaction, user) => {
 
 	if (!reaction.message.author.bot) return;
 
-	
-	const reactMessage = await isReactMessage(reaction.message);
 
+	const reactMessage = await isReactMessage(reaction.message);
 
 	if (!reactMessage) return;
 
-	
+
 	const reactRole = await isReactRole(reaction.emoji, reactMessage);
-	
+
 	if (!reactRole) {
 		return reaction.users.remove(user);
 	}
 
-	/* console.log(`Reactrole: ${reactRole}, reaction: ${reaction}`) */
 	await removeRoleFromMember(client, reactRole, reaction, user);
-
 };
 
 
@@ -38,12 +33,12 @@ async function removeRoleFromMember(client, reactRole, reaction, user) {
 
 		const guild = await client.guilds.fetch(reaction.message.guildId);
 
-		let member; 
-		//try to get from cache
+		let member;
+		// try to get from cache
 		member = await guild.members.cache.get(user.id);
 
 		if (!member) {
-			//if not cached
+			// if not cached
 			member = await guild.members.fetch(user.id);
 		}
 
@@ -51,7 +46,7 @@ async function removeRoleFromMember(client, reactRole, reaction, user) {
 			await member.roles.remove(reactRole.role);
 
 		}
-		catch {}
+		catch {} // eslint-disable-line
 	}
 	catch (error) {
 		handleError(error);
@@ -84,5 +79,4 @@ async function isReactRole(emojiObject, reactMessage) {
 		}
 	}
 	return false;
-
 }

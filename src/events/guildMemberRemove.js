@@ -18,25 +18,19 @@ module.exports = async (client, member) => { // eslint-disable-line
 	if (!channel) return;
 
 
+	// kick
 	const fetchedKickLogs = await getKickLogs(member);
 	const kickLog = fetchedKickLogs.entries.first();
-
-	// kick
 	if (kickLog && kickLog.target.id == member.user.id && kickLog.createdTimestamp > (Date.now() - 3500)) {
-
 		return await sendNotification(channel, member, "kick", kickLog);
-
 	}
 
 
+	// ban
 	const fetchedBanLogs = await getBanLogs(member);
 	const banLog = fetchedBanLogs.entries.first();
-
-	// ban
 	if (banLog && banLog.target.id == member.user.id && banLog.createdTimestamp > (Date.now() - 3500)) {
-
 		return await sendNotification(channel, member, "ban", banLog);
-
 	}
 
 	// leaving

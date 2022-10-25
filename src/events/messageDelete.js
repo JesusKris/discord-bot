@@ -1,7 +1,7 @@
 const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
 
-module.exports = async (client, message) => {
+module.exports = async (client, message) => { // eslint-disable-line
 
 	if (message.author) {
 		if (!message.author.bot) return;

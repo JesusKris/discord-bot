@@ -70,6 +70,6 @@ module.exports = {
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName("sync")
-				.setDescription("Syncs and validates all react-role messages in the server.")
+				.setDescription("Syncs and validates all react-role messages in the server."),
 		),
 };

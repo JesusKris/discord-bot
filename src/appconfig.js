@@ -1,6 +1,6 @@
 require("dotenv").config({ path: "../.env" });
 module.exports = {
-
+	// ./data/config/config.js
 	sequelize: {
 		username: process.env.MARIADB_USER,
 		password: process.env.MARIADB_PASSWORD,
@@ -37,11 +37,5 @@ module.exports = {
 		// time ago when error logs are considered expired
 		// current date - days * hours * minutes * seconds * milliseconds
 		expired: (new Date() - 7 * 24 * 60 * 60 * 1000),
-	},
-
-	statusChecks: {
-		// ./events/ready.js
-		// hours * minutes * seconds * milliseconds
-		databaseTimer: 3 * 60 * 60 * 1000,
 	},
 };

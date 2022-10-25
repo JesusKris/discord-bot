@@ -20,7 +20,6 @@ exports.verifyEmoji = async (reference, emoji) => {
 		}
 
 		return { isVerifiedEmoji: true, emoji: firstMatch };
-
 	}
 	catch (error) {
 		handleError(error);
@@ -52,28 +51,20 @@ exports.verifyMessageLink = async (reference, message_link) => {
 	let channel;
 	let message;
 	try {
-
 		// trying to fetch with id, catching if not valid
 		channel = await reference.guild.channels.fetch(channelId);
 		message = await channel.messages.fetch(messageId);
-
 	}
-	catch { }
+	catch { } // eslint-disable-line
 
-	if (!channel) {
-		return { isVerifiedMessage: false, message: null };
-	}
-
-	if (!message) {
+	if (!channel || !message) {
 		return { isVerifiedMessage: false, message: null };
 	}
 
 	return { isVerifiedMessage: true, message };
-
 };
 
 exports.verifyChannel = async (reference, channel) => {
-
 	if (channel.type != 0) {
 		return false;
 	}
@@ -82,10 +73,9 @@ exports.verifyChannel = async (reference, channel) => {
 	try {
 		result = await reference.guild.channels.fetch(channel.id);
 	}
-	catch { }
+	catch { } // eslint-disable-line
 
 	return result;
-
 };
 
 
@@ -93,7 +83,6 @@ exports.isEveryoneRole = async (value) => {
 	if (value.match(EveryonePattern)) {
 		return true;
 	}
-
 	return false;
 };
 
@@ -101,7 +90,6 @@ exports.isUserMention = async (value) => {
 	if (value.match(UsersPattern)) {
 		return true;
 	}
-
 	return false;
 };
 
@@ -110,7 +98,6 @@ exports.isRoleMention = async (value) => {
 	if (value.match(RolesPattern)) {
 		return true;
 	}
-
 	return false;
 };
 
@@ -118,7 +105,6 @@ exports.isChannelMention = async (value) => {
 	if (value.match(ChannelsPattern)) {
 		return true;
 	}
-
 	return false;
 };
 

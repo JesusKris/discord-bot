@@ -13,7 +13,6 @@ const express = require("express");
 
 exports.initApp = async () => {
 
-
 	// setting up healthcheck port for docker-compose
 	const app = express();
 	app.get("/health", (req, res) => {

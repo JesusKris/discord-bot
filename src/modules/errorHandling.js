@@ -12,7 +12,6 @@ exports.handleError = async (error) => {
 	await clearExpiredLogs();
 
 	await createErrorLog(error, errorId);
-
 };
 
 

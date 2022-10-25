@@ -42,7 +42,6 @@ exports.isReactMessage = async (message) => {
 	catch (error) {
 		handleError(error);
 	}
-
 };
 
 exports.isReactRole = async (emojiObject, reactMessage) => {
@@ -52,12 +51,10 @@ exports.isReactRole = async (emojiObject, reactMessage) => {
 		}
 	}
 	return false;
-
 };
 
 async function addRoleToMember(client, reactRole, reaction, user) {
 	try {
-
 		const guild = await client.guilds.cache.get(reaction.message.guildId);
 
 		const member = await guild.members.cache.get(user.id);
@@ -65,9 +62,7 @@ async function addRoleToMember(client, reactRole, reaction, user) {
 		try {
 			await member.roles.add(reactRole.role);
 		}
-		catch { }
-
-
+		catch { } // eslint-disable-line
 	}
 	catch (error) {
 		handleError(error);

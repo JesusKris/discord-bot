@@ -1,6 +1,5 @@
-const logger = require("../modules/logger.js");
+const { handleError } = require("../modules/errorHandling.js");
+
 module.exports = async (client, warn) => {
-
-	logger.warn(`A ratelimit event was sent by Discord: \n${JSON.stringify(warn)}`);
-
+	handleError(JSON.stringify(warn));
 };

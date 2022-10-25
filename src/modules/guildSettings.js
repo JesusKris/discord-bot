@@ -9,7 +9,6 @@ exports.getGuildSettings = async (reference) => {
 		});
 
 		return settings;
-
 	}
 	catch (error) {
 		handleError(error);

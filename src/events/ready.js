@@ -1,6 +1,4 @@
-const config = require("./../appconfig.js");
 const logger = require("../modules/logger.js");
-const { pingDB } = require("../modules/database.js");
 const { ActivityType } = require("discord.js");
 const { handleError } = require("../modules/errorHandling.js");
 
@@ -39,8 +37,4 @@ module.exports = async (client) => {
 
 	// activity status
 	setInterval(setActivityStatus, 30000);
-	// database auth
-	setInterval(pingDB, config.statusChecks.databaseTimer);
-
 };
-

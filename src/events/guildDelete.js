@@ -13,7 +13,6 @@ module.exports = async (client, guild) => { // eslint-disable-line
 
 async function deleteGuildData(guild) {
 	try {
-
 		await db.sequelize.models.Guilds.destroy({
 			where: { id: guild.id },
 		});

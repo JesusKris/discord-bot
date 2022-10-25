@@ -13,17 +13,13 @@ module.exports = async (client, member) => { // eslint-disable-line
 
 	// notifications
 	if (settings && settings.notification_channel) {
-
 		await sendNotification(settings, member);
-
 	}
 
 
 	// greetings
 	if (settings && settings.greetings_channel && !settings.is_main) {
-
 		await sendSprintGreeting(settings, member);
-
 	}
 
 };

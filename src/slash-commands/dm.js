@@ -15,7 +15,6 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 	await sendExampleMessage(interaction, message, roleId);
 
 	await askForConfirmation(interaction, message, roleId);
-
 };
 
 exports.config = {
@@ -113,7 +112,7 @@ async function sendResult(interaction, answer, message, roleId) {
 						await member[1].send(content);
 						count++;
 					}
-					catch { }
+					catch { } // eslint-disable-line
 				}
 			}
 

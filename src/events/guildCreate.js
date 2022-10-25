@@ -21,7 +21,6 @@ async function sendIntroductionsToOwner(guild) {
 
 				await getIntroductionDescription(), null, await getIntroductionFields())],
 		});
-
 	}
 	catch (error) {
 		handleError(error);
