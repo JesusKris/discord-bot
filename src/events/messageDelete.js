@@ -3,7 +3,6 @@ const { handleError } = require("../modules/errorHandling");
 
 module.exports = async (client, message) => {
 
-
 	if (message.author) {
 		if (!message.author.bot) return;
 	}
@@ -30,7 +29,6 @@ async function deleteRolesFromUsers(message, reactMessage) {
 	catch (error) {
 		handleError(error);
 	}
-
 }
 
 async function deleteRole(message, roleId) {

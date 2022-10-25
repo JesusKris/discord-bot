@@ -7,7 +7,7 @@ module.exports = async (client, reaction, user) => {
 	if (user.bot) return;
 
 	if (reaction.partial) {
-		await this.fetchPartialReaction(reaction, user);
+		await reaction.fetch();
 	}
 
 	if (!reaction.message.author.bot) return;
@@ -54,17 +54,6 @@ exports.isReactRole = async (emojiObject, reactMessage) => {
 	return false;
 
 };
-
-exports.fetchPartialReaction = async (reaction, user) => {
-	try {
-		await reaction.fetch();
-		await user.fetch();
-		await reaction.message.fetch();
-		await reaction.message.reactions.fetch();
-	}
-	catch { }
-};
-
 
 async function addRoleToMember(client, reactRole, reaction, user) {
 	try {

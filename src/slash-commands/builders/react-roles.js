@@ -66,5 +66,10 @@ module.exports = {
 						.setDescription("Select a react-role that will be removed based on emoji")
 						.setRequired(true),
 				),
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName("sync")
+				.setDescription("Syncs and validates all react-role messages in the server.")
 		),
 };

@@ -1,28 +1,33 @@
 const db = require("../data/models");
 const { handleError } = require("../modules/errorHandling");
 const { getRawEmoji } = require("../modules/utils");
-const { fetchPartialReaction } = require("./messageReactionAdd.js");
 
 module.exports = async (client, reaction, user) => {
 
+	
 	if (user.bot) return;
 
+
 	if (reaction.partial) {
-		await fetchPartialReaction(reaction, user);
+		await reaction.fetch();
 	}
 
 	if (!reaction.message.author.bot) return;
 
+	
 	const reactMessage = await isReactMessage(reaction.message);
+
 
 	if (!reactMessage) return;
 
+	
 	const reactRole = await isReactRole(reaction.emoji, reactMessage);
-
+	
 	if (!reactRole) {
 		return reaction.users.remove(user);
 	}
 
+	/* console.log(`Reactrole: ${reactRole}, reaction: ${reaction}`) */
 	await removeRoleFromMember(client, reactRole, reaction, user);
 
 };
@@ -31,15 +36,22 @@ module.exports = async (client, reaction, user) => {
 async function removeRoleFromMember(client, reactRole, reaction, user) {
 	try {
 
-		const guild = await client.guilds.cache.get(reaction.message.guildId);
+		const guild = await client.guilds.fetch(reaction.message.guildId);
 
-		const member = await guild.members.cache.get(user.id);
+		let member; 
+		//try to get from cache
+		member = await guild.members.cache.get(user.id);
+
+		if (!member) {
+			//if not cached
+			member = await guild.members.fetch(user.id);
+		}
 
 		try {
 			await member.roles.remove(reactRole.role);
 
 		}
-		catch { }
+		catch {}
 	}
 	catch (error) {
 		handleError(error);

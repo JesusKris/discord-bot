@@ -1,4 +1,4 @@
-version: "3.8"
+version: "1"
 
 volumes:
   mariadb_data:
@@ -7,7 +7,7 @@ services:
 
   bot:
     container_name: bot
-    image: bot:test7
+    image: bot:test10
     labels:
       - autoheal=true
     depends_on:

@@ -11,6 +11,15 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 	await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
+	if (interaction.options.getSubcommand() == "sync") {
+
+		await filterDeletedMessagesFromDb(interaction);
+
+		await sendResponse(interaction, null, "sync");
+
+	}
+
+
 	if (interaction.options.getSubcommand() == "create") {
 
 		try {
@@ -28,8 +37,6 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			await saveReactMessage(interaction, message_id, title, description, channel);
 
 			await sendResponse(interaction, channel, "create");
-
-			await filterDeletedMessagesFromDb(interaction);
 
 		}
 		catch (error) {
@@ -84,7 +91,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			}
 
 			if (await containsBatch(role.name)) {
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Due to safety precautions, batch in a role name is not allowed. Please rename your role or choose another one!")], ephemeral: true });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Due to safety precautions, batch in a role name is not allowed. Please rename your role or choose another one.")], ephemeral: true });
 			}
 
 			if (await isAvailableRole(role)) {
@@ -93,6 +100,10 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			if (await isAvailableEmoji(emoji, message)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected emoji is already being used in that message.")], ephemeral: true });
+			}
+
+			if (await reactionLimitReached(message)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The maximum amount of reactions per message is 20. Please remove existing reaction to add a new one.")], ephemeral: true });
 			}
 
 			await saveReaction(message, emoji, role);
@@ -131,7 +142,6 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			if (!await isReactMessage(message)) {
 				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
 			}
-
 
 			// perform  availabity checks
 			if (!await isAvailableEmoji(emoji, message)) {
@@ -196,16 +206,20 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-		case "create":
-			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-			break;
-		case "add":
-			message = "Successfully added a reaction role to a message.";
-			break;
-		case "remove":
-			message = "Successfully removed a reaction role from a message.";
-			break;
+			case "create":
+				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+				break;
+			case "add":
+				message = "Successfully added a reaction role to a message.";
+				break;
+			case "remove":
+				message = "Successfully removed a reaction role from a message.";
+				break;
+			case "sync":
+				message = "Successfully synced react-role messages in the server.";
+				break;
 		}
+
 
 		await interaction.editReply({ embeds: [await getStandardEmbed(null, message)], ephemeral: true });
 	}
@@ -473,5 +487,15 @@ async function isReactMessage(message) {
 	catch (error) {
 		handleError(error);
 	}
+}
 
+async function reactionLimitReached(message) {
+
+	const reactions = await getReactionRoles(message.id)
+	
+	if (reactions.length >= 20) {
+		return true
+	}
+
+	return false
 }
