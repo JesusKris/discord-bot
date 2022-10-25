@@ -13,7 +13,6 @@ module.exports = {
 	client: {
 		// ./engine.js
 		healthcheck: process.env.PORT,
-		name: process.env.BOT_NAME,
 		token: process.env.BOT_TOKEN,
 		prefix: process.env.BOT_PREFIX,
 		intents: JSON.parse(process.env.BOT_INTENTS),

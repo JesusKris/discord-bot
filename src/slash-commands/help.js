@@ -1,7 +1,8 @@
-const config = require("../appconfig.js");
 const { handleError } = require("../modules/errorHandling.js");
 const { codeBlock } = require("discord.js");
 const { getStandardEmbed } = require("../bot-responses/embeds/standard");
+const config = require("../appconfig.js");
+
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
@@ -40,5 +41,5 @@ async function sendHelpEmbed(client, interaction) {
 
 	}
 
-	await interaction.reply({ embeds: [await getStandardEmbed(`${config.client.name} | Help`, "Available commands:", null, arrayOfCommands)], ephemeral: true });
+	await interaction.reply({ embeds: [await getStandardEmbed(`${client.user.username} | Help`, "Available commands:", null, arrayOfCommands)], ephemeral: true });
 }

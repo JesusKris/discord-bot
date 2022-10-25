@@ -2,16 +2,15 @@ const { getStandardEmbed } = require("../bot-responses/embeds/standard.js");
 const { handleError } = require("../modules/errorHandling.js");
 const logger = require("../modules/logger.js");
 const { bold } = require("discord.js");
-const config = require("../appconfig.js");
 
 module.exports = async (client, guild) => { // eslint-disable-line
 	logger.guild(`${guild.name}, (id:${guild.id}) added the client.`);
 
-	await sendIntroductionsToOwner(guild);
+	await sendIntroductionsToOwner(guild, client);
 
 };
 
-async function sendIntroductionsToOwner(guild) {
+async function sendIntroductionsToOwner(guild, client) {
 	try {
 
 		const member = await guild.members.fetch(guild.ownerId);
@@ -19,7 +18,7 @@ async function sendIntroductionsToOwner(guild) {
 		await member.send({
 			embeds: [await getStandardEmbed("A bird whispers:",
 
-				await getIntroductionDescription(), null, await getIntroductionFields())],
+				await getIntroductionDescription(client), null, await getIntroductionFields())],
 		});
 	}
 	catch (error) {
@@ -27,8 +26,8 @@ async function sendIntroductionsToOwner(guild) {
 	}
 }
 
-async function getIntroductionDescription() {
-	return `"Hey! My name is Robert. To awaken ${bold(config.client.name)}, you must first use either ${bold("/setup main")} or ${bold("/setup sprint")} command. ${bold("NB! Make sure to put bot role all the way to the top in the role hierarchy!")}\n\nMore about the setup command arguments:`;
+async function getIntroductionDescription(client) {
+	return `"Hey! My name is Robert. To awaken ${bold(client.user.username)}, you must first use either ${bold("/setup main")} or ${bold("/setup sprint")} command. ${bold("NB! Make sure to put bot role all the way to the top in the role hierarchy!")}\n\nMore about the setup command arguments:`;
 }
 
 async function getIntroductionFields() {
