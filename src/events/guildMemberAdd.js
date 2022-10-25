@@ -21,7 +21,6 @@ module.exports = async (client, member) => { // eslint-disable-line
 	if (settings && settings.greetings_channel && !settings.is_main) {
 		await sendSprintGreeting(settings, member);
 	}
-
 };
 
 async function sendNotification(settings, member) {

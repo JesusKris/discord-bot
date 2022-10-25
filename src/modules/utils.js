@@ -15,6 +15,5 @@ exports.getRawEmoji = async (emoji) => {
 	if (!emoji.id) {
 		return emoji.name;
 	}
-
 	return emoji.id;
 };

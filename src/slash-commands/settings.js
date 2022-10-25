@@ -134,7 +134,6 @@ async function validateInput(interaction, setting, input) {
 			return sendResponse(interaction, true);
 		}
 		return sendResponse(interaction, false);
-
 	}
 
 	if (setting == "admin_role" || setting == "guest_role" || setting == "student_role" || setting == "batch_role") {
@@ -162,7 +161,6 @@ async function validateInput(interaction, setting, input) {
 			return sendResponse(interaction, true);
 		}
 		return sendResponse(interaction, false);
-
 	}
 
 

@@ -426,7 +426,6 @@ async function checkForVerificationRole(role, settings) {
 			}
 			return true;
 		}
-
 	}
 	catch (error) {
 		handleError(error);
@@ -460,7 +459,6 @@ async function filterDeletedMessagesFromDb(interaction) {
 				});
 			}
 		}
-
 	}
 	catch (error) {
 		handleError(error);

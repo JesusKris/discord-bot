@@ -8,7 +8,6 @@ const { getWarningEmbed } = require("../bot-responses/embeds/warning.js");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
-
 		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
 
 		if (await isEveryoneRole(interaction.options.get("admin-role").role.name)) {

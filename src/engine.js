@@ -23,6 +23,7 @@ exports.initApp = async () => {
 		logger.log("Health point beating");
 	});
 
+
 	// Utilizing discord client and providing intents -> what it will use/can use
 	const client = new Client({
 		intents: new IntentsBitField(config.client.intents),
@@ -37,6 +38,7 @@ exports.initApp = async () => {
 		slashCommands,
 	};
 
+
 	// slash command schema builders
 	const slashBuilders = [];
 	const fsFiles = readdirSync("./slash-commands/builders").filter(file => file.endsWith(".js"));
@@ -44,6 +46,7 @@ exports.initApp = async () => {
 		const command = require(`./slash-commands/builders/${file}`);
 		slashBuilders.push(command.data.toJSON());
 	}
+
 
 	// slash commands
 	const slashCommandsDir = readdirSync("./slash-commands").filter(file => file.endsWith(".js"));
@@ -53,6 +56,7 @@ exports.initApp = async () => {
 		client.container.slashCommands.set(props.config.name, props);
 	}
 
+
 	// chat legacy commands
 	const commandsDir = readdirSync("./commands/").filter(file => file.endsWith(".js"));
 	for (const file of commandsDir) {
@@ -60,6 +64,7 @@ exports.initApp = async () => {
 		logger.log(`Loading Command: ${props.config.name}`);
 		client.container.commands.set(props.config.name, props);
 	}
+
 
 	// events
 	const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
@@ -84,11 +89,6 @@ exports.initApp = async () => {
 			{ body: slashBuilders },
 		);
 
-		/* 		await rest.put(
-					Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
-					{ body: [] },
-				);
-		 */
 		// For production, enable global commands
 		/* await rest.put(
 			Routes.applicationCommands(config.client.Id),
@@ -103,7 +103,6 @@ exports.initApp = async () => {
 
 	client.login(config.client.token);
 	await pingDB();
-
 };
 
 this.initApp();
