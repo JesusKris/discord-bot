@@ -5,7 +5,7 @@ module.exports = {
 
 	data: new SlashCommandBuilder()
 		.setName("dm")
-		.setDescription("Direct message people")
+		.setDescription("Direct message people with specific role")
 		.addRoleOption(option =>
 			option
 				.setName("role")
@@ -15,7 +15,7 @@ module.exports = {
 		.addStringOption(option =>
 			option
 				.setName("message")
-				.setDescription("The message you wish to send.")
+				.setDescription("The message you wish to send")
 				.setRequired(true),
 		),
 

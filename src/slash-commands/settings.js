@@ -144,7 +144,7 @@ async function validateInput(interaction, setting, input) {
 
 			if (botRole) {
 				return await interaction.reply({
-					embeds: [await getWarningEmbed(null, "Bot role that is managed by the bot can't be selected as a setting.")], ephemeral: true,
+					embeds: [await getWarningEmbed(null, "Bot role can't be selected as a setting.")], ephemeral: true,
 				});
 			}
 

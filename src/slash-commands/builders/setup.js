@@ -5,7 +5,7 @@ module.exports = {
 
 	data: new SlashCommandBuilder()
 		.setName("setup")
-		.setDescription("Set the bot up for use in the server")
+		.setDescription("Sets the bot up for use in the server")
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.addSubcommand(subcommand =>
 			subcommand

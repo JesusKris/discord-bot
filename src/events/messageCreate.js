@@ -58,7 +58,6 @@ module.exports = async (client, message) => { // eslint-disable-line
 	}
 
 	return await sendWarningResponse(message, "You don't have permissions to use this command.");
-
 };
 
 async function fetchMember(message) {
@@ -80,7 +79,6 @@ async function getCommandAndInitialArgs(content, prefix) {
 
 	const args = content.slice(prefix[0].length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
-
 
 	return { command, args };
 }

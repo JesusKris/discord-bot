@@ -17,7 +17,7 @@ module.exports = {
 				.addStringOption(option =>
 					option
 						.setName("setting")
-						.setDescription("Select the server setting you wish to change")
+						.setDescription("Select the server setting")
 						.setRequired(true)
 						.addChoices(
 							{ name: "notification_channel", value: "notification_channel" },
@@ -34,7 +34,7 @@ module.exports = {
 				.addStringOption(option =>
 					option
 						.setName("value")
-						.setDescription("Set the new value for the setting specified. To disable notifications or greetings, enter \"Disable\"")
+						.setDescription("Set a new value for the setting specified. To disable notifications or greetings, enter \"Disable\"")
 						.setRequired(true),
 				),
 		),

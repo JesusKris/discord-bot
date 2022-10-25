@@ -170,8 +170,8 @@ exports.config = {
 	setupRequired: true,
 	requiredPermission: config.client.commands.permissions.admin,
 	guildOnly: true,
-	description: "Create a react-roles message. Add a react-role to a message. Delete a react-role from a message",
-	args: "<create> <add> <delete>",
+	description: "Create a react-roles message. Add a react-role to a message. Delete a react-role from a message. Sync and validate all react-role messages.",
+	args: "<create> <add> <delete> <sync>",
 	// Needed for legacy commands
 	// maxArgs: 0,
 };

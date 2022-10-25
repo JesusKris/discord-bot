@@ -34,7 +34,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			const nickname = `${name} / ${gitea}`;
 			if (nickname.length > 32) {
-				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name and gitea username combined is longer than 32 characters. That's too much for discord.. Please only enter your first name instead of full.")], ephemeral: true });
+				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name and gitea username combined is longer than 32 characters. That's too much for discord.. Please only enter your first name instead.")], ephemeral: true });
 			}
 
 			await sendDmConfirmation(interaction, member);

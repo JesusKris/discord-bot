@@ -15,7 +15,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 		}
 
 		if (await isBotRole(interaction.options.get("admin-role").role)) {
-			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Bot role that is managed by the bot can't be selected as a setting.")], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Bot role can't be selected as a setting.")], ephemeral: true });
 		}
 
 
@@ -30,7 +30,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			// managed by bot role
 			if (await isBotRole(interaction.options.get("student-role").role) || await isBotRole(interaction.options.get("batch-role").role) || await isBotRole(interaction.options.get("guest-role").role)) {
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Bot role that is managed by the bot can't be selected as a setting.")], ephemeral: true });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Bot role can't be selected as a setting.")], ephemeral: true });
 			}
 
 
@@ -43,7 +43,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			// usermentions
 			if (await isUserMention(interaction.options.get("master-password").value) || await isUserMention(interaction.options.get("guest-password").value) || await isUserMention(interaction.options.get("student-password").value)) {
-				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain users.")], ephemeral: true });
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Passwords can't contain user tag.")], ephemeral: true });
 			}
 
 
@@ -177,5 +177,5 @@ async function saveGuildData(data) {
 }
 
 async function sendResponse(interaction) {
-	interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings: ${bold("/settings list")}.`)], ephemeral: true });
+	interaction.editReply({ embeds: [await getStandardEmbed(null, `Successfully completed setup. To view server settings use: ${bold("/settings list")}.`)], ephemeral: true });
 }

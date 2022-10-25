@@ -38,7 +38,7 @@ async function getIntroductionFields() {
 		},
 		{
 			name: "master-, student- && guest-password",
-			value: "These passwords are needed to perform verifcation for students when they want to gain permissions. Only available in /setup main.",
+			value: "These passwords are needed to perform verifcation for students or guests when they want to gain permissions. Only available in /setup main.",
 		},
 		{
 			name: "student-role && batch-role",

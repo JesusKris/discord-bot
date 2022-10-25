@@ -16,13 +16,13 @@ module.exports = async (client) => {
 				"Googling...",
 				"PrintRune <3",
 				"You got this!",
-				"kood/Jõhvi",
+				"@kood/Jõhvi",
 				"🚀",
 				"No pressure!",
-				"@Jõhvi",
 				"Coding",
 				"Sleeping",
 				"Sprinting",
+				"Eating",
 			],
 		};
 

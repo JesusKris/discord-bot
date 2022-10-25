@@ -38,7 +38,6 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have already completed setup in this server.")], ephemeral: true });
 	}
 
-
 	// if server owner
 	if (cmd.config.setupRequired && !guildSettings && interaction.user.id === interaction.member.guild.ownerId) {
 		return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have not completed setup yet.")], ephemeral: true });
