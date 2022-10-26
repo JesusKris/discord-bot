@@ -7,7 +7,7 @@ services:
 
   bot:
     container_name: bot
-    image: bot:test10
+    image: jesuskris/kood-bot:tag
     labels:
       - autoheal=true
     depends_on:
