@@ -60,14 +60,27 @@
         ```
         git clone git@github.com:JesusKris/kood-bot.git
         ```
+        Install dependencies
         ```
-        .env-example -> .env || fill the fields || Make sure BOT_TOKEN is a test bot token
+        npm install
         ```
+        Build the mariadb image 
         ```
-        docker build -t bot:[TAG] .
+        docker run --name mariadb -p 3306:3306 -e MARIADB_USER= -e MARIADB_PASSWORD= -e MARIADB_DATABASE= -e MARIADB_SKIP_TEST_DB= -e MARIADB_CHARACTER_SET= -e MARIADB_COLLATE= -e MARIADB_ROOT_PASSWORD= bitnami/mariadb:[TAG]
         ```
+        Rename **.env-example** to **.env** and fill out the fields
         ```
-        docker compose up --detach
+        .env-example -> .env
+        ```
+        Apply migrations to the database
+        ```bash
+        cd ./src/data
+
+        npx sequelize-cli db:migrate
+        ```
+        Run the bot
+        ```bash
+        node ./src/engine.js
         ```
 * ### Development Tools
     - This project is using [ESLint](https://www.npmjs.com/package/eslint) to keep the code consistent. Make sure to use it via npm scripts:
@@ -111,7 +124,6 @@
 ## Environmental Variables
 * ### Bot
     - **BOT_TOKEN** - The main key to access Discord API. This can never be shared with anyone. To generate a new token go to: **https://discord.com/developers/applications**
-    - **BOT_NAME** - Name for the bot that will get injected into some messages.
     - **BOT_PREFIX** - Needed to perform legacy commands. Bot will check for this prefix.
     - **BOT_INTENTS** -  Intents are named groups of pre-defined WebSocket events, which the discord.js client will receive. More information @ **https://discord-api-types.dev/api/discord-api-types-v10/enum/GatewayIntentBits**
     - **BOT_ID** - Needed to upload slash commands to Discord API.
@@ -125,6 +137,8 @@
     - **MARIADB_HOST** - The address where the database server is hosted. Depending on whether you are using compose or not, it can be localhost or host defined in the compose for the database.
     - **MARIADB_SKIP_TEST_DB** - Whether MariaDB client will create a test database on initial boot or not.
     - **DB_DIALECT** - Needed for various functionalties to define the DBMS our project is using.
+    - **MARIADB_CHARACTER_SET** - Needed to select whether to support emojis.
+    - **MARIADB_COLLATE** - Needed to tell database how to support emojis.
 * ### Healthchecks
     - **HEALTHCHECK_PORT** - The port of which an express server will be hosted in for docker compose healthcheck purposes.
     - **AUTOHEAL_CONTAINER_LABEL** This tells [willfarrell/autoheal](https://hub.docker.com/r/willfarrell/autoheal) to restart all containers that have **autoheal=true** label attached to them. Check @docker-compose.yaml.
@@ -219,6 +233,10 @@
         ```
         npx sequelize-cli db:migrate:undo:all
         ```
+    - To undo most recent migration
+        ```
+        npx sequelize-cli db:migrate:undo
+        ```
 ## Common Procedures
 * ### Change image version
     - To change an image version without restarting any of the other containers running inside the compose env, first you need to change the image you want to change in the compose file. Then run the following command:
@@ -245,4 +263,3 @@
         ```
         use [DATABASE];
         ```
-

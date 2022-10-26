@@ -55,22 +55,23 @@ Install dependencies
 ```
 npm install
 ```
-Build the Docker image & change Docker compose to use your made image
+Build the mariadb image 
 ```
-docker build -t bot:[TAG] .
-
- bot:
-    container_name: bot
-    image: bot:[TAG]
-    ...
+docker run --name mariadb -p 3306:3306 -e MARIADB_USER= -e MARIADB_PASSWORD= -e MARIADB_DATABASE= -e MARIADB_SKIP_TEST_DB= -e MARIADB_CHARACTER_SET= -e MARIADB_COLLATE= -e MARIADB_ROOT_PASSWORD= bitnami/mariadb:[TAG]
 ```
 Rename **.env-example** to **.env** and fill out the fields
 ```
 .env-example -> .env
 ```
-Run the docker-compose file
+Apply migrations to the database
+```bash
+cd ./src/data
+
+npx sequelize-cli db:migrate
 ```
-docker compose up --detach
+Run the bot
+```bash
+node ./src/engine.js
 ```
 
 ## Project Status
