@@ -1,36 +1,63 @@
-'use strict';
+"use strict";
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('Guilds', {
+		await queryInterface.createTable("Guilds", {
 			id: {
-				allowNull: false,
-				autoIncrement: false,
 				primaryKey: true,
+				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			setup_status: {
+			is_main: {
 				allowNull: false,
 				type: Sequelize.BOOLEAN,
+			},
+			notification_channel: {
+				allowNull: true,
+				type: Sequelize.STRING,
+			},
+			greetings_channel: {
+				allowNull: true,
+				type: Sequelize.STRING,
 			},
 			admin_role: {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			notificationChannel: {
-				allowNull: false,
+			guest_role: {
+				allowNull: true,
 				type: Sequelize.STRING,
 			},
-			createdAt: {
+			student_role: {
+				allowNull: true,
+				type: Sequelize.STRING,
+			},
+			batch_role: {
+				allowNull: true,
+				type: Sequelize.STRING,
+			},
+			master_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			student_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			guest_password: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			created_at: {
 				allowNull: false,
 				type: Sequelize.DATE,
 			},
-			updatedAt: {
+			updated_at: {
 				allowNull: false,
 				type: Sequelize.DATE,
 			},
 		});
 	},
 	async down(queryInterface, Sequelize) { // eslint-disable-line
-		await queryInterface.dropTable('Guilds');
+		await queryInterface.dropTable("Guilds");
 	},
 };

@@ -1,13 +1,12 @@
-const env = require('dotenv');
-env.config({ path: '../../.env' });
+const env = require("dotenv");
+env.config({ path: "../../.env" });
+const config = require("../../appconfig.js");
 
 module.exports = {
-	
-		username: process.env.DB_USERNAME,
-		password: process.env.DB_PASSWORD,
-		database: process.env.DB_DATABASE,
-		host: process.env.DB_HOST,
-		dialect: 'mariadb',
-		logging: false,
-	
+	username: config.sequelize.username,
+	password: config.sequelize.password,
+	database: config.sequelize.database,
+	host: config.sequelize.host,
+	dialect: config.sequelize.dialect,
+	logging: false,
 };

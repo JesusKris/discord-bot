@@ -1,0 +1,14 @@
+backups/
+holder/
+node_modules/
+.env
+.env-example
+.eslintignore
+.eslintrc.json
+.gitignore
+docker-compose.yml
+package-lock.json
+README.md
+Dockerfile
+MAINTAINER.md
+.github/

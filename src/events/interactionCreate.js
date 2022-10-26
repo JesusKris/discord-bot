@@ -1,8 +1,7 @@
-const { InteractionType } = require('discord.js');
-const { getWarningEmbed } = require('../bot-responses/embeds/warning');
-const { handleError } = require('../modules/errorHandling');
-const { getUserPermissions } = require('../modules/permissions.js');
-const { getGuildSettings, noPermissionsInteraction } = require('../modules/utils');
+const { InteractionType } = require("discord.js");
+const { getWarningEmbed } = require("../bot-responses/embeds/warning");
+const { getUserPermissions, hasPermission } = require("../modules/permissions.js");
+const { getGuildSettings } = require("../modules/guildSettings.js");
 
 module.exports = async (client, interaction) => { // eslint-disable-line 
 
@@ -10,40 +9,49 @@ module.exports = async (client, interaction) => { // eslint-disable-line
 
 	const { container } = client;
 
-	// Grab the command data from the client.container.slashcmds Collection
+	// get cmd data
 	const cmd = await container.slashCommands.get(interaction.commandName);
 
-	// If that command doesn't exist, silently exit and do nothing
+	// If cmd doesn't exist
 	if (!cmd) return;
 
+	// if cmd is called outside of guild chat
 	if (cmd && !interaction.inGuild() && cmd.config.guildOnly) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, 'This command is only available in a server.')], ephemeral: true });
-
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is only available in a server.")], ephemeral: true });
 	}
 
-	// check if enabled
+	// if enabled
 	if (!cmd.config.enabled) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, 'This command is currently disabled.')], ephemeral: true });
-
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "This command is currently disabled.")], ephemeral: true });
 	}
 
-	const guildSettings = await getGuildSettings(interaction.member);
+	const guildSettings = await getGuildSettings(interaction);
 	const userPermissions = await getUserPermissions(guildSettings, interaction);
 
-	if (cmd.config.setupRequired && guildSettings == null) {
-		return await interaction.reply({ embeds: [await getWarningEmbed(null, 'The server owner has not completed setup process yet!')], ephemeral: true });
+	// special case for setup -> owner -> not completed
+	if (cmd.config.name == "setup" && !guildSettings && await hasPermission(userPermissions, cmd)) {
+		return await cmd.run(client, interaction, userPermissions);
 	}
 
-	if (userPermissions.includes(cmd.config.requiredPermission)) {
-		try {
-			await cmd.run(client, interaction, userPermissions);
-		}
-		catch (error) {
-			handleError(error);
-		}
-	}
-	else {
-		noPermissionsInteraction(interaction);
+	// special case for setup -> owner -> completed
+	if (cmd.config.name == "setup" && guildSettings && await hasPermission(userPermissions, cmd)) {
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have already completed setup in this server.")], ephemeral: true });
 	}
 
+	// if server owner
+	if (cmd.config.setupRequired && !guildSettings && interaction.user.id === interaction.member.guild.ownerId) {
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "You have not completed setup yet.")], ephemeral: true });
+	}
+
+	// user
+	if (cmd.config.setupRequired && !guildSettings) {
+		return await interaction.reply({ embeds: [await getWarningEmbed(null, "The server owner has not completed setup yet.")], ephemeral: true });
+	}
+
+	// if has permission || guild owner
+	if (await hasPermission(userPermissions, cmd) || interaction.user.id === interaction.member.guild.ownerId) {
+		return await cmd.run(client, interaction, userPermissions);
+	}
+
+	return await interaction.reply({ embeds: [await getWarningEmbed(null, "You don't have permissions to use this command.")], ephemeral: true });
 };
