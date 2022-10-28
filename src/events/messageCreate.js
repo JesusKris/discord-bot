@@ -9,8 +9,7 @@ module.exports = async (client, message) => { // eslint-disable-line
 
 	if (message.author.bot) return;
 
-	// @bot
-	if (message.content.match(new RegExp(`^<@!?${client.user.id}> ?$`))) {
+	if (message.content.includes(`<@${client.user.id}>`)) {
 		return message.channel.send(await getPingReply());
 	}
 
