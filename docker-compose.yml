@@ -1,4 +1,4 @@
-version: "1"
+version: "3.8"
 
 volumes:
   mariadb_data:
@@ -21,8 +21,8 @@ services:
       test: [ "CMD-SHELL", "curl -f http://localhost:$PORT/health" ]
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 20s
+      retries: 5
+      start_period: 60s
     restart: always
 
 
@@ -33,15 +33,15 @@ services:
       - autoheal=true
     ports:
       - "3306:3306"
-    user: root
     volumes:
       - mariadb_data:/bitnami/mariadb
+    user: root
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD-SHELL", 'mysqladmin -p$MARIADB_PASSWORD ping' ]
-      interval: 10s
-      timeout: 5s
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 10s
       retries: 5
     restart: always
 
