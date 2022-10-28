@@ -84,16 +84,16 @@ exports.initApp = async () => {
 		logger.ready("Started refreshing application (/) commands.");
 
 		// For development, enable test guild commands
-		await rest.put(
+/* 		await rest.put(
 			Routes.applicationGuildCommands(config.client.Id, config.client.test_guild),
 			{ body: slashBuilders },
-		);
+		); */
 
 		// For production, enable global commands
-		/* await rest.put(
+		await rest.put(
 			Routes.applicationCommands(config.client.Id),
 			{ body: slashBuilders },
-		) */
+		)
 
 		logger.ready("Successfully reloaded application (/) commands.");
 	}
