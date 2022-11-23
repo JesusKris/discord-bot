@@ -65,19 +65,19 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			}
 
 			if (title) {
-				await editMessageTitle(title, message)
+				await editMessageTitle(title, message);
 			}
 
 			if (description) {
-				await editMessageDescription(description, message)
+				await editMessageDescription(description, message);
 			}
 
-			await applyTextToReactMessage(message)
+			await applyTextToReactMessage(message);
 
 			return await sendResponse(interaction, null, "edit");
 		}
 		catch (error) {
-			handleError(error)
+			handleError(error);
 		}
 	}
 
@@ -242,21 +242,21 @@ async function sendResponse(interaction, channel, type) {
 	try {
 		let message;
 		switch (type) {
-			case "create":
-				message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
-				break;
-			case "add":
-				message = "Successfully added a reaction role to a message.";
-				break;
-			case "edit":
-				message = "Successfully edited a reaction role message."
-				break
-			case "remove":
-				message = "Successfully removed a reaction role from a message.";
-				break;
-			case "sync":
-				message = "Successfully synced react-role messages in the server.";
-				break;
+		case "create":
+			message = `Successfully created the react-role message in ${channelMention(channel.id)}.`;
+			break;
+		case "add":
+			message = "Successfully added a reaction role to a message.";
+			break;
+		case "edit":
+			message = "Successfully edited a reaction role message.";
+			break;
+		case "remove":
+			message = "Successfully removed a reaction role from a message.";
+			break;
+		case "sync":
+			message = "Successfully synced react-role messages in the server.";
+			break;
 		}
 
 
@@ -539,31 +539,31 @@ async function reactionLimitReached(message) {
 async function editMessageTitle(title, message) {
 	try {
 		await db.sequelize.models.R_Role_Messages.update({
-			title: title
+			title: title,
 		},
-			{
-				where: {
-					id: message.id
-				}
-			})
+		{
+			where: {
+				id: message.id,
+			},
+		});
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }
 
 async function editMessageDescription(description, message) {
 	try {
 		await db.sequelize.models.R_Role_Messages.update({
-			description: description
+			description: description,
 		},
-			{
-				where: {
-					id: message.id
-				}
-			})
+		{
+			where: {
+				id: message.id,
+			},
+		});
 	}
 	catch (error) {
-		handleError(error)
+		handleError(error);
 	}
 }

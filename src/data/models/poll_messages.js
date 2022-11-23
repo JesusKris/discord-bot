@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 const {
-	Model
-} = require('sequelize');
+	Model,
+} = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
 	class Poll_Messages extends Model {
 		/**
@@ -45,8 +45,8 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		votes_limit: {
 			type: DataTypes.STRING,
-			allowNull: false
-		}
+			allowNull: false,
+		},
 	}, {
 		timestamps: true,
 		createdAt: "created_at",

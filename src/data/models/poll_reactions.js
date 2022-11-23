@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 const {
-	Model
-} = require('sequelize');
+	Model,
+} = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
 	class Poll_Reactions extends Model {
 		/**
@@ -40,8 +40,8 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		count: {
 			type: DataTypes.INTEGER,
-			allowNull: true
-		}
+			allowNull: true,
+		},
 	}, {
 		timestamps: true,
 		createdAt: "created_at",

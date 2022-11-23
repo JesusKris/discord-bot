@@ -48,7 +48,7 @@ module.exports = {
 						.setName("description")
 						.setDescription("The description you wish to edit")
 						.setRequired(false),
-				)
+				),
 		)
 		.addSubcommand(subcommand =>
 			subcommand
