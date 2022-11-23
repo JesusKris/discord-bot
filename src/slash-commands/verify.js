@@ -9,22 +9,25 @@ const { shuffleArray } = require("../modules/utils");
 
 exports.run = async (client, interaction, permissions) => { // eslint-disable-line
 	try {
+
+		await interaction.deferReply({ ephemeral: true, content: "Thinking..." });
+
 		const settings = await getGuildSettings(interaction);
 		if (!settings.is_main) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Verification is disabled in a sprint server.")], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Verification is disabled in a sprint server.")], ephemeral: true });
 		}
 
 		const member = await interaction.guild.members.fetch(interaction.user.id);
 
 		const isVerified = await checkVerification(settings, member);
 		if (isVerified) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "You are already verified.")], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You are already verified.")], ephemeral: true });
 		}
 
 
 		const isCorrectPassword = await checkPassword(interaction, settings);
 		if (!isCorrectPassword) {
-			return await interaction.reply({ embeds: [await getWarningEmbed(null, "Incorrect code provided. Please try again.")], ephemeral: true });
+			return await interaction.editReply({ embeds: [await getWarningEmbed(null, "Incorrect code provided. Please try again.")], ephemeral: true });
 		}
 
 
@@ -34,7 +37,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			const nickname = `${name} / ${gitea}`;
 			if (nickname.length > 32) {
-				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name and gitea username combined is longer than 32 characters. That's too much for discord.. Please only enter your first name instead.")], ephemeral: true });
+				return await interaction.editReply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name and gitea username combined is longer than 32 characters. That's too much for discord.. Please only enter your first name instead.")], ephemeral: true });
 			}
 
 			await sendDmConfirmation(interaction, member);
@@ -51,7 +54,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 
 			const nickname = `${name}`;
 			if (nickname.length > 32) {
-				return await interaction.reply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name is longer than 32 characters. That's too much for discord.. Please try to shorten it.")], ephemeral: true });
+				return await interaction.editReply({ embeds: [await getStandardEmbed("Oops!", "It looks like your full name is longer than 32 characters. That's too much for discord.. Please try to shorten it.")], ephemeral: true });
 			}
 
 			await sendDmConfirmation(interaction, member);
@@ -59,7 +62,7 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 			await grantRoles(settings, member, "guest");
 		}
 
-		return await interaction.reply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
+		return await interaction.editReply({ embeds: [await getStandardEmbed(null, "Successfully verified.")], ephemeral: true });
 
 	}
 	catch (error) {
@@ -111,9 +114,7 @@ async function sendDmConfirmation(interaction, member) {
 	try {
 		await member.send({ embeds: [await getLogEmbed(`Successfully verified in ${bold(interaction.guild.name)}.`)] });
 	}
-	catch (error) {
-		handleError(error);
-	}
+	catch (error) {}
 }
 
 async function formatUsername(interaction, member, type) {
