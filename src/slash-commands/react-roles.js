@@ -43,6 +43,44 @@ exports.run = async (client, interaction, permissions) => { // eslint-disable-li
 		}
 	}
 
+	if (interaction.options.getSubcommand() == "edit") {
+		try {
+
+			const title = interaction.options.getString("title");
+			const description = interaction.options.getString("description");
+			const message_link = await interaction.options.getString("message-link");
+
+
+			const { isVerifiedMessage, message } = await verifyMessageLink(interaction, message_link);
+			if (!isVerifiedMessage) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The message link you provided could not be validated or is not from this server. Please ensure that you link a message from this server.")], ephemeral: true });
+			}
+
+			if (!await isReactMessage(message)) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "The selected message is not a react-roles message. Look for embeds marked with 'react-role message'.")], ephemeral: true });
+			}
+
+			if (!title && !description) {
+				return await interaction.editReply({ embeds: [await getWarningEmbed(null, "You need to select atleast one thing to edit.")], ephemeral: true });
+			}
+
+			if (title) {
+				await editMessageTitle(title, message);
+			}
+
+			if (description) {
+				await editMessageDescription(description, message);
+			}
+
+			await applyTextToReactMessage(message);
+
+			return await sendResponse(interaction, null, "edit");
+		}
+		catch (error) {
+			handleError(error);
+		}
+	}
+
 
 	if (interaction.options.getSubcommand() == "add") {
 		try {
@@ -210,6 +248,9 @@ async function sendResponse(interaction, channel, type) {
 		case "add":
 			message = "Successfully added a reaction role to a message.";
 			break;
+		case "edit":
+			message = "Successfully edited a reaction role message.";
+			break;
 		case "remove":
 			message = "Successfully removed a reaction role from a message.";
 			break;
@@ -299,7 +340,7 @@ async function applyTextToReactMessage(message) {
 
 		}
 
-		await message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message • single" })] });
+		await message.edit({ embeds: [await getStandardEmbed(reactMessageData.title, finalDescription, null, null, null, { text: "react-role message" })] });
 
 	}
 	catch (error) {
@@ -493,4 +534,36 @@ async function reactionLimitReached(message) {
 	}
 
 	return false;
+}
+
+async function editMessageTitle(title, message) {
+	try {
+		await db.sequelize.models.R_Role_Messages.update({
+			title: title,
+		},
+		{
+			where: {
+				id: message.id,
+			},
+		});
+	}
+	catch (error) {
+		handleError(error);
+	}
+}
+
+async function editMessageDescription(description, message) {
+	try {
+		await db.sequelize.models.R_Role_Messages.update({
+			description: description,
+		},
+		{
+			where: {
+				id: message.id,
+			},
+		});
+	}
+	catch (error) {
+		handleError(error);
+	}
 }
