@@ -29,6 +29,29 @@ module.exports = {
 		)
 		.addSubcommand(subcommand =>
 			subcommand
+				.setName("edit")
+				.setDescription("Edit a reaction roles message title or description")
+				.addStringOption(option =>
+					option
+						.setName("message-link")
+						.setDescription("Link to the message that you want to edit")
+						.setRequired(true),
+				)
+				.addStringOption(option =>
+					option
+						.setName("title")
+						.setDescription("The title you wish to edit")
+						.setRequired(false),
+				)
+				.addStringOption(option =>
+					option
+						.setName("description")
+						.setDescription("The description you wish to edit")
+						.setRequired(false),
+				)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
 				.setName("add")
 				.setDescription("Add a react-role to a message")
 				.addStringOption(option =>
