@@ -75,7 +75,7 @@ node ./src/engine.js
 ```
 
 ## Project Status
-_in progress_
+_archived_
 
 
 ## Acknowledgements
