@@ -1,5 +1,5 @@
 <!-- ctrl + shift + v to preview -->
-# kood/Bot - A Discord bot
+# A Discord bot
 
 
 ## A discord bot made with the intent to improve the overall experience of [kood/Johvi](https://kood.tech/) Discord server for the students and school staff.
@@ -18,11 +18,7 @@
 
 ## General Information
 
-This bot intends to make life at [kood/Johvi](https://kood.tech/) better for the students and the school staff by adding features that discord is lacking. The bot supports multi servers. 
-
-This bot is also a student project that helps students learn about maintaining a project, writing maintanable code and deploying an application.
-
-The bot is currently maintained by [@JesusKris](https://github.com/JesusKris) 
+This bot intended to make life at [kood/Johvi](https://kood.tech/) better for the students and the school staff by adding features that discord is lacking. The bot supports multi servers. 
 
 
 ## Technologies Used
